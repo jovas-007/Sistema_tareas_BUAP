@@ -16,5 +16,14 @@
     "telefono": "2227654321",
     "sexo": "Masculino",
     "carrera": "Ingeniería en TI"
+  },
+  {
+    "id_usuario": "202300001",
+    "password": "sersh123",
+    "nombre_completo": "Sersh Diaz",
+    "correo": "sershdiaz@hotmail.com",
+    "telefono": "2221111111",
+    "sexo": "Masculino",
+    "carrera": "Ingeniería en TI"
   }
 ]

@@ -140,12 +140,6 @@ import { AuthService } from './auth.service';
             Volver al inicio de sesión
           </button>
         </form>
-
-        <div class="logged-in" *ngIf="isLoggedIn">
-          <h3>¡Bienvenido, {{ currentUser }}!</h3>
-          <p>Has iniciado sesión correctamente.</p>
-          <button class="btn-primary" (click)="logout()">Cerrar Sesión</button>
-        </div>
       </div>
     </div>
   `,
@@ -262,15 +256,6 @@ import { AuthService } from './auth.service';
     .btn-secondary:hover {
       background: #e2e8f0;
     }
-
-    .logged-in {
-      text-align: center;
-    }
-
-    .logged-in p {
-      color: #64748b;
-      margin-bottom: 20px;
-    }
   `]
 })
 export class LoginComponent {
@@ -289,25 +274,8 @@ export class LoginComponent {
   errorMessage = '';
   successMessage = '';
   showRegister = false;
-  isLoggedIn = false;
-  currentUser = '';
 
-  constructor(private authService: AuthService) {
-    // Verificar sesión después de que el componente esté listo
-    setTimeout(() => this.checkLoginStatus(), 0);
-  }
-
-  checkLoginStatus() {
-    try {
-      const user = this.authService.getCurrentUser();
-      if (user) {
-        this.isLoggedIn = true;
-        this.currentUser = user.nombre_completo;
-      }
-    } catch (error) {
-      console.error('Error checking login status:', error);
-    }
-  }
+  constructor(private authService: AuthService) {}
 
   async login() {
     this.errorMessage = '';
@@ -405,15 +373,5 @@ export class LoginComponent {
     this.confirmPassword = '';
     this.errorMessage = '';
     this.successMessage = '';
-  }
-
-  logout() {
-    this.authService.logout();
-    this.isLoggedIn = false;
-    this.currentUser = '';
-    this.successMessage = 'Sesión cerrada correctamente';
-    setTimeout(() => {
-      this.successMessage = '';
-    }, 2000);
   }
 }

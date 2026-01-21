@@ -78,10 +78,17 @@ El sistema incluye usuarios predeterminados para pruebas:
 - **Usuario 1:**
   - ID: `201912345`
   - Contraseña: `admin123`
+  - Correo: `admin@buap.mx`
 
 - **Usuario 2:**
   - ID: `202268439`
   - Contraseña: `samd`
+  - Correo: `jovany.solis@alumno.buap.mx`
+
+- **Usuario 3:**
+  - ID: `202300001`
+  - Contraseña: `sersh123`
+  - Correo: `sershdiaz@hotmail.com`
 
 ## 🛠️ Scripts Disponibles
 
@@ -94,10 +101,41 @@ El sistema incluye usuarios predeterminados para pruebas:
 
 El servidor backend expone los siguientes endpoints:
 
+### Usuarios
 - `POST /api/login` - Autenticación de usuarios
 - `POST /api/register` - Registro de nuevos usuarios
 - `GET /api/users` - Obtener lista de usuarios
 - `PUT /api/users/:id` - Actualizar información de usuario
+
+### Tareas
+- `GET /api/tasks` - Obtener todas las tareas
+- `GET /api/tasks/user/:id` - Obtener tareas de un usuario específico
+- `POST /api/tasks` - Crear nueva tarea
+- `PUT /api/tasks/:id` - Actualizar tarea existente
+- `DELETE /api/tasks/:id` - Eliminar tarea
+
+### Recordatorios
+- `POST /api/test-reminders` - Probar envío manual de recordatorios por email
+
+## 🔔 Sistema de Recordatorios
+
+El sistema incluye recordatorios automáticos por email:
+
+- **Automático**: Envía emails diariamente a las 9:00 AM para tareas que vencen al día siguiente
+- **Manual**: Botón "Probar Recordatorios" en la pantalla de tareas
+- **Configuración**: Ver archivo `HOTMAIL_CONFIG.md` para configuración de email
+
+## 🖥️ Pantallas de la Aplicación
+
+1. **Login/Registro**: Autenticación de usuarios
+2. **Pantalla de Inicio**: Menú principal con acceso a todas las funcionalidades
+3. **Pantalla de Tareas**: Gestión de tareas y recordatorios
+
+## ⚙️ Configuración Adicional
+
+Para configurar el servicio de email, consulta:
+- `CONFIGURACION_EMAIL.md` - Guía general de configuración de email
+- `HOTMAIL_CONFIG.md` - Instrucciones específicas para Hotmail/Outlook
 - `DELETE /api/users/:id` - Eliminar usuario
 
 ## 🐛 Solución de Problemas

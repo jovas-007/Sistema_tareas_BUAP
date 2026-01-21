@@ -60,6 +60,39 @@ h1 { margin: 0; color: var(--buap-blue); font-size: 1.8rem; }
 
 .data-item:last-child { border-bottom: none; }
 
+/* Estilo para items del menú */
+.menu-item {
+    cursor: pointer;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.menu-item:hover {
+    background: #f8fafc;
+    border-left-color: var(--buap-blue);
+    transform: translateX(5px);
+}
+
+.menu-item.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.menu-item.disabled:hover {
+    background: transparent;
+    border-left-color: transparent;
+    transform: none;
+}
+
+.menu-item .label {
+    font-size: 1.1rem;
+}
+
+.menu-item .value {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
 .label { font-weight: 600; color: #475569; }
 .value { color: #1e293b; font-weight: 500; }
 .highlight { color: var(--accent); font-weight: bold; }

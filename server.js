@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+const { startReminderScheduler, testReminders } = require('./email.service');
 
 const app = express();
 const PORT = 3000;
 const USERS_FILE = path.join(__dirname, 'users.json');
+const TASKS_FILE = path.join(__dirname, 'tasks.json');
 
 app.use(cors());
 app.use(express.json());
@@ -48,6 +50,27 @@ async function readUsers() {
 // Guardar usuarios
 async function saveUsers(users) {
   await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+// Leer tareas
+async function readTasks() {
+  const data = await fs.readFile(TASKS_FILE, 'utf8');
+  return JSON.parse(data);
+}
+
+// Guardar tareas
+async function saveTasks(tasks) {
+  await fs.writeFile(TASKS_FILE, JSON.stringify(tasks, null, 2));
+}
+
+// Inicializar archivo de tareas si no existe
+async function initTasksFile() {
+  try {
+    await fs.access(TASKS_FILE);
+  } catch {
+    const defaultTasks = [];
+    await fs.writeFile(TASKS_FILE, JSON.stringify(defaultTasks, null, 2));
+  }
 }
 
 // Login
@@ -110,10 +133,111 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-// Iniciar servidor
-initUsersFile().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
-    console.log(`📁 Usuarios guardados en: ${USERS_FILE}`);
-  });
+// ========== ENDPOINTS DE TAREAS ==========
+
+// Obtener todas las tareas
+app.get('/api/tasks', async (req, res) => {
+  try {
+    const tasks = await readTasks();
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener tareas' });
+  }
 });
+
+// Obtener tareas de un usuario específico
+app.get('/api/tasks/user/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const tasks = await readTasks();
+    const userTasks = tasks.filter(task => 
+      task.usuarios_asignados.includes(userId)
+    );
+    res.json(userTasks);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener tareas del usuario' });
+  }
+});
+
+// Crear nueva tarea
+app.post('/api/tasks', async (req, res) => {
+  try {
+    const { nombre_tarea, materia, fecha_entrega, usuarios_asignados } = req.body;
+    const tasks = await readTasks();
+    
+    const newTask = {
+      id_tarea: `TAREA${String(tasks.length + 1).padStart(3, '0')}`,
+      nombre_tarea,
+      materia,
+      fecha_entrega,
+      usuarios_asignados
+    };
+    
+    tasks.push(newTask);
+    await saveTasks(tasks);
+    res.json({ success: true, task: newTask });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al crear tarea' });
+  }
+});
+
+// Actualizar tarea
+app.put('/api/tasks/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const tasks = await readTasks();
+    const taskIndex = tasks.findIndex(t => t.id_tarea === taskId);
+    
+    if (taskIndex !== -1) {
+      tasks[taskIndex] = { ...tasks[taskIndex], ...req.body };
+      await saveTasks(tasks);
+      res.json({ success: true, task: tasks[taskIndex] });
+    } else {
+      res.status(404).json({ success: false, message: 'Tarea no encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al actualizar tarea' });
+  }
+});
+
+// Eliminar tarea
+app.delete('/api/tasks/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const tasks = await readTasks();
+    const filteredTasks = tasks.filter(t => t.id_tarea !== taskId);
+    
+    if (filteredTasks.length < tasks.length) {
+      await saveTasks(filteredTasks);
+      res.json({ success: true, message: 'Tarea eliminada' });
+    } else {
+      res.status(404).json({ success: false, message: 'Tarea no encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al eliminar tarea' });
+  }
+});
+
+// Endpoint para probar el envío de recordatorios manualmente
+app.post('/api/test-reminders', async (req, res) => {
+  try {
+    await testReminders();
+    res.json({ success: true, message: 'Recordatorios de prueba enviados' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al enviar recordatorios' });
+  }
+});
+
+// Iniciar servidor
+initUsersFile()
+  .then(() => initTasksFile())
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+      console.log(`📁 Usuarios guardados en: ${USERS_FILE}`);
+      console.log(`📋 Tareas guardadas en: ${TASKS_FILE}`);
+      
+      // Iniciar el scheduler de recordatorios
+      startReminderScheduler();
+    });
+  });

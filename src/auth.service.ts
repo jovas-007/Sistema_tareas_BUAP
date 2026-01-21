@@ -59,9 +59,14 @@ export class AuthService {
       );
 
       if (response.success && response.id_usuario) {
+        // Obtener datos completos del usuario
+        const users = await this.getAllUsers();
+        const fullUser = users.find(u => u.id_usuario === response.id_usuario);
+        
         const userData = JSON.stringify({
           id_usuario: response.id_usuario,
-          nombre_completo: response.nombre_completo
+          nombre_completo: response.nombre_completo,
+          correo: fullUser?.correo || ''
         });
         localStorage.setItem(this.CURRENT_USER_KEY, userData);
         return true;
@@ -78,7 +83,7 @@ export class AuthService {
     localStorage.removeItem(this.CURRENT_USER_KEY);
   }
 
-  getCurrentUser(): { id_usuario: string; nombre_completo: string } | null {
+  getCurrentUser(): { id_usuario: string; nombre_completo: string; correo?: string } | null {
     const userData = localStorage.getItem(this.CURRENT_USER_KEY);
     return userData ? JSON.parse(userData) : null;
   }
