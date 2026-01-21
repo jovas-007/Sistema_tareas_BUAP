@@ -5,12 +5,15 @@ const path = require('path');
 const { startReminderScheduler, testReminders } = require('./email.service');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const USERS_FILE = path.join(__dirname, 'users.json');
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
 
 app.use(cors());
 app.use(express.json());
+
+// Servir archivos estáticos de Angular (producción)
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // Inicializar archivo de usuarios si no existe
 async function initUsersFile() {
@@ -226,6 +229,11 @@ app.post('/api/test-reminders', async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al enviar recordatorios' });
   }
+});
+
+// Ruta catch-all: servir index.html para todas las rutas no API
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index-angular.html'));
 });
 
 // Iniciar servidor

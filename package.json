@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
+    "dev": "concurrently \"node server.js\" \"ng serve --port 4200\"",
     "build": "ng build",
-    "server": "node server.js",
-    "dev": "concurrently \"npm run server\" \"npm start\""
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@angular/animations": "20.3.14",
