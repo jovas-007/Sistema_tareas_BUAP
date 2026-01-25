@@ -7,8 +7,8 @@ const { startReminderScheduler, testReminders } = require('./email.service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const USERS_FILE = path.join(__dirname, 'users.json');
-const TASKS_FILE = path.join(__dirname, 'tasks.json');
+const USERS_FILE = path.join(__dirname, 'database', 'users.json');
+const TASKS_FILE = path.join(__dirname, 'database', 'tasks.json');
 const SALT_ROUNDS = 10;
 
 app.use(cors());
@@ -16,6 +16,9 @@ app.use(express.json());
 
 // Servir archivos estáticos de Angular (producción)
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// Servir archivos de src durante desarrollo
+app.use('/src', express.static(path.join(__dirname, 'src')));
 
 // Inicializar archivo de usuarios si no existe
 async function initUsersFile() {
@@ -99,7 +102,10 @@ app.post('/api/login', async (req, res) => {
         res.json({ 
           success: true, 
           id_usuario: user.id_usuario,
-          nombre_completo: user.nombre_completo
+          nombre_completo: user.nombre_completo,
+          correo: user.correo,
+          rol: user.rol,
+          carrera: user.carrera
         });
       } else {
         console.log('Login failed - incorrect password for:', id_usuario);
@@ -118,13 +124,13 @@ app.post('/api/login', async (req, res) => {
 // Registro
 app.post('/api/register', async (req, res) => {
   try {
-    const { id_usuario, password, nombre_completo, correo, telefono, sexo, carrera } = req.body;
+    const { id_usuario, password, nombre_completo, correo, telefono, sexo, carrera, rol } = req.body;
     const users = await readUsers();
     
-    // Verificar si la matrícula ya existe
+    // Verificar si la matrícula/ID ya existe
     const existingUser = users.find(u => u.id_usuario === id_usuario);
     if (existingUser) {
-      return res.json({ success: false, message: 'La matrícula ya está registrada' });
+      return res.json({ success: false, message: 'El ID de usuario ya está registrado' });
     }
 
     // Verificar si el correo ya existe
@@ -156,10 +162,28 @@ app.post('/api/register', async (req, res) => {
       return res.json({ success: false, message: 'La contraseña debe contener al menos un signo especial' });
     }
 
+    // Validar rol
+    const validRoles = ['docente', 'estudiante'];
+    if (!rol || !validRoles.includes(rol)) {
+      return res.json({ success: false, message: 'Rol de usuario inválido' });
+    }
+
     // Hashear contraseña antes de guardar
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    users.push({ id_usuario, password: hashedPassword, nombre_completo, correo, telefono, sexo, carrera });
+    // Crear el nuevo usuario con el rol
+    const newUser = { 
+      id_usuario, 
+      password: hashedPassword, 
+      nombre_completo, 
+      correo, 
+      telefono, 
+      sexo, 
+      carrera: carrera || 'N/A',
+      rol: rol
+    };
+
+    users.push(newUser);
     await saveUsers(users);
     res.json({ success: true });
   } catch (error) {
@@ -394,9 +418,20 @@ app.post('/api/reset-password', async (req, res) => {
   }
 });
 
-// Ruta catch-all: servir index.html para todas las rutas no API
+// Ruta catch-all: para login/registro redirigir a Angular (puerto 4200)
+// Para dashboards, servir los HTML
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index-angular.html'));
+  const requestPath = req.path;
+  
+  // Si es una ruta de dashboard, servir el HTML correspondiente
+  if (requestPath.includes('dashboard.html')) {
+    const filePath = path.join(__dirname, requestPath);
+    console.log('Serving dashboard:', filePath);
+    res.sendFile(filePath);
+  } else {
+    // Para cualquier otra ruta (incluyendo /), redirigir al login de Angular
+    res.redirect('http://localhost:4200');
+  }
 });
 
 // Iniciar servidor

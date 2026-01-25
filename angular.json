@@ -21,7 +21,17 @@
               "src/pantalla_inicio.html",
               "src/tareas.html",
               "src/diseños.css",
-              "src/pruebas.js"
+              "src/pruebas.js",
+              {
+                "glob": "**/*",
+                "input": "src/screens",
+                "output": "/screens"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              }
             ]
           }
         },

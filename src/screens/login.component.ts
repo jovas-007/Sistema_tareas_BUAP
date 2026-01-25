@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +32,7 @@ import { AuthService } from './auth.service';
           <p class="subtitle" *ngIf="!showRegister && !showForgotPassword && !showVerifyCode && !showResetPassword">Acceso</p>
         </div>
         
+        <!-- Formulario de Login -->
         <form (ngSubmit)="login()" *ngIf="!showRegister && !showForgotPassword && !showVerifyCode && !showResetPassword">
           <div class="form-group">
             <label>Matrícula o Correo Electrónico:</label>
@@ -69,115 +70,144 @@ import { AuthService } from './auth.service';
           </button>
         </form>
 
+        <!-- Formulario de Registro -->
         <form (ngSubmit)="register()" *ngIf="showRegister">
-          <div class="form-group">
-            <label>Matrícula:</label>
-            <input 
-              type="text" 
-              [(ngModel)]="newUser.id_usuario" 
-              name="id_usuario"
-              placeholder="9 dígitos"
-              pattern="[0-9]{9}"
-              maxlength="9"
-              inputmode="numeric"
-              (keypress)="onlyNumbers($event)"
-              required>
-          </div>
           
-          <div class="form-group">
-            <label>Nombre Completo:</label>
-            <input 
-              type="text" 
-              [(ngModel)]="newUser.nombre_completo" 
-              name="nombre_completo"
-              placeholder="Nombre completo"
-              required>
+          <!-- Selector de Tipo de Usuario -->
+          <div class="user-type-selector" *ngIf="!selectedUserType">
+            <h3>TIPO DE USUARIO</h3>
+            <div class="user-type-options">
+              <div class="user-type-option" (click)="selectUserType('docente')">
+                <div class="radio-circle"></div>
+                <span>Docente</span>
+              </div>
+              <div class="user-type-option" (click)="selectUserType('estudiante')">
+                <div class="radio-circle"></div>
+                <span>Estudiante</span>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Correo Electrónico:</label>
-            <input 
-              type="email" 
-              [(ngModel)]="newUser.correo" 
-              name="correo"
-              placeholder="ejemplo@correo.com"
-              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-              (blur)="validateEmail()"
-              required>
-            <small class="hint">Formato válido: usuario@dominio.com</small>
+          <!-- Formulario según el rol seleccionado -->
+          <div *ngIf="selectedUserType">
+            <div class="selected-role-badge">
+              <span>Registrando como: <strong>{{ selectedUserType === 'docente' ? 'Docente' : 'Estudiante' }}</strong></span>
+              <button type="button" class="btn-change-role" (click)="changeUserType()">Cambiar</button>
+            </div>
+
+            <!-- Campo de Matrícula (solo para Estudiante) -->
+            <div class="form-group" *ngIf="selectedUserType === 'estudiante'">
+              <label>Matrícula:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newUser.id_usuario" 
+                name="id_usuario"
+                placeholder="9 dígitos"
+                pattern="[0-9]{9}"
+                maxlength="9"
+                inputmode="numeric"
+                (keypress)="onlyNumbers($event)"
+                required>
+            </div>
+            
+            <div class="form-group">
+              <label>Nombre Completo:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newUser.nombre_completo" 
+                name="nombre_completo"
+                placeholder="Nombre completo"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label>Correo Electrónico:</label>
+              <input 
+                type="email" 
+                [(ngModel)]="newUser.correo" 
+                name="correo"
+                placeholder="ejemplo@correo.com"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+                (blur)="validateEmail()"
+                required>
+              <small class="hint">Formato válido: usuario@dominio.com</small>
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono:</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="newUser.telefono" 
+                name="telefono"
+                placeholder="2221234567"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required>
+              <small class="hint">10 dígitos sin espacios ni guiones</small>
+            </div>
+
+            <div class="form-group">
+              <label>Sexo:</label>
+              <select [(ngModel)]="newUser.sexo" name="sexo" required>
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <!-- Campo de Carrera (solo para Estudiante) -->
+            <div class="form-group" *ngIf="selectedUserType === 'estudiante'">
+              <label>Carrera:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newUser.carrera" 
+                name="carrera"
+                placeholder="Nombre de la carrera"
+                required>
+            </div>
+            
+            <div class="form-group">
+              <label>Contraseña:</label>
+              <input 
+                type="password" 
+                [(ngModel)]="newUser.password" 
+                name="password"
+                placeholder="Mínimo 8 caracteres"
+                minlength="8"
+                maxlength="15"
+                pattern="[a-zA-Z0-9]+"
+                required>
+              <small class="hint">8-15 caracteres alfanuméricos (letras y números)</small>
+            </div>
+
+            <div class="form-group">
+              <label>Confirmar Contraseña:</label>
+              <input 
+                type="password" 
+                [(ngModel)]="confirmPassword" 
+                name="confirmPassword"
+                placeholder="Repita su contraseña"
+                maxlength="15"
+                required>
+            </div>
+            
+            <div class="message success" *ngIf="successMessage">
+              {{ successMessage }}
+            </div>
+            <div class="message error" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </div>
+            
+            <button type="submit" class="btn-primary">Registrar</button>
           </div>
 
-          <div class="form-group">
-            <label>Teléfono:</label>
-            <input 
-              type="tel" 
-              [(ngModel)]="newUser.telefono" 
-              name="telefono"
-              placeholder="2221234567"
-              pattern="[0-9]{10}"
-              maxlength="10"
-              required>
-            <small class="hint">10 dígitos sin espacios ni guiones</small>
-          </div>
-
-          <div class="form-group">
-            <label>Sexo:</label>
-            <select [(ngModel)]="newUser.sexo" name="sexo" required>
-              <option value="">Seleccione...</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Carrera:</label>
-            <input 
-              type="text" 
-              [(ngModel)]="newUser.carrera" 
-              name="carrera"
-              placeholder="Nombre de la carrera"
-              required>
-          </div>
-          
-          <div class="form-group">
-            <label>Contraseña:</label>
-            <input 
-              type="password" 
-              [(ngModel)]="newUser.password" 
-              name="password"
-              placeholder="Mínimo 8 caracteres"
-              minlength="8"
-              maxlength="15"
-              pattern="[a-zA-Z0-9]+"
-              required>
-            <small class="hint">8-15 caracteres alfanuméricos (letras y números)</small>
-          </div>
-
-          <div class="form-group">
-            <label>Confirmar Contraseña:</label>
-            <input 
-              type="password" 
-              [(ngModel)]="confirmPassword" 
-              name="confirmPassword"
-              placeholder="Repita su contraseña"
-              maxlength="15"
-              required>
-          </div>
-          
-          <div class="message success" *ngIf="successMessage">
-            {{ successMessage }}
-          </div>
-          <div class="message error" *ngIf="errorMessage">
-            {{ errorMessage }}
-          </div>
-          
-          <button type="submit" class="btn-primary">Registrar</button>
           <button type="button" class="btn-secondary" (click)="backToLogin()">
             Volver al inicio de sesión
           </button>
         </form>
 
+        <!-- Formulario de Recuperación de Contraseña -->
         <form (ngSubmit)="forgotPassword()" *ngIf="showForgotPassword && !showVerifyCode && !showResetPassword">
           <p class="forgot-description">Ingresa tu correo electrónico registrado y te enviaremos un código de verificación.</p>
           
@@ -188,7 +218,7 @@ import { AuthService } from './auth.service';
               [(ngModel)]="forgotEmail" 
               name="forgotEmail"
               placeholder="tu_correo@ejemplo.com"
-              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
               required>
           </div>
           
@@ -205,6 +235,7 @@ import { AuthService } from './auth.service';
           </button>
         </form>
 
+        <!-- Formulario de Verificación de Código -->
         <form (ngSubmit)="verifyCode()" *ngIf="showVerifyCode && !showResetPassword">
           <p class="forgot-description">Ingresa el código de 6 dígitos que enviamos a tu correo.</p>
           
@@ -235,6 +266,7 @@ import { AuthService } from './auth.service';
           </button>
         </form>
 
+        <!-- Formulario de Reset de Contraseña -->
         <form (ngSubmit)="resetPassword()" *ngIf="showResetPassword">
           <p class="forgot-description">Ingresa tu nueva contraseña.</p>
           
@@ -372,8 +404,91 @@ import { AuthService } from './auth.service';
     }
 
     h3 {
-      color: #059669;
+      color: #002855;
       text-align: center;
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .user-type-selector {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .user-type-options {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .user-type-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .user-type-option:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+    }
+
+    .user-type-option span {
+      font-size: 16px;
+      font-weight: 600;
+      color: #002855;
+    }
+
+    .radio-circle {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #002855;
+      border-radius: 50%;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .user-type-option:hover .radio-circle {
+      border-color: #004080;
+      background: #e0f2ff;
+    }
+
+    .selected-role-badge {
+      background: linear-gradient(135deg, #002855 0%, #004080 100%);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .selected-role-badge span {
+      font-size: 14px;
+    }
+
+    .btn-change-role {
+      background: white;
+      color: #002855;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-change-role:hover {
+      background: #f0f0f0;
+      transform: scale(1.05);
     }
 
     .form-group {
@@ -532,6 +647,7 @@ import { AuthService } from './auth.service';
 export class LoginComponent {
   id_usuario = '';
   password = '';
+  selectedUserType: 'docente' | 'estudiante' | null = null;
   newUser = {
     id_usuario: '',
     password: '',
@@ -539,7 +655,8 @@ export class LoginComponent {
     correo: '',
     telefono: '',
     sexo: '',
-    carrera: ''
+    carrera: '',
+    rol: ''
   };
   confirmPassword = '';
   errorMessage = '';
@@ -554,6 +671,34 @@ export class LoginComponent {
   confirmNewPassword = '';
 
   constructor(private authService: AuthService) {}
+
+  selectUserType(type: 'docente' | 'estudiante') {
+    this.selectedUserType = type;
+    this.newUser.rol = type;
+    // Docentes no tienen carrera
+    if (type === 'docente') {
+      this.newUser.carrera = 'N/A';
+    } else {
+      this.newUser.carrera = '';
+    }
+  }
+
+  changeUserType() {
+    this.selectedUserType = null;
+    this.newUser = {
+      id_usuario: '',
+      password: '',
+      nombre_completo: '',
+      correo: '',
+      telefono: '',
+      sexo: '',
+      carrera: '',
+      rol: ''
+    };
+    this.confirmPassword = '';
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
 
   onlyNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -685,10 +830,37 @@ export class LoginComponent {
       return;
     }
 
-    const success = await this.authService.login(this.id_usuario, this.password);
+    const result = await this.authService.login(this.id_usuario, this.password);
+    console.log('Login result:', result);
     
-    if (success) {
-      window.location.href = 'pantalla_inicio.html';
+    if (result.success) {
+      // Esperar un poco para asegurar que localStorage se guarde
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      this.successMessage = 'Inicio de sesión exitoso. Redirigiendo...';
+      
+      // Redirigir según el rol del usuario al puerto 3000 donde están los HTML
+      const currentUser = this.authService.getCurrentUser();
+      console.log('Current user after login:', currentUser);
+      
+      if (!currentUser) {
+        console.error('ERROR: No se pudo obtener el usuario del localStorage');
+        this.errorMessage = 'Error al guardar sesión';
+        return;
+      }
+      
+      console.log('User role:', currentUser.rol);
+      console.log('LocalStorage content:', localStorage.getItem('currentUser'));
+      
+      // Esperar un momento para que el mensaje se muestre
+      setTimeout(() => {
+        const dashboardUrl = currentUser.rol === 'docente' 
+          ? 'http://localhost:3000/src/screens/admin-dashboard.html'
+          : 'http://localhost:3000/src/screens/student-dashboard.html';
+        
+        console.log('Redirecting to:', dashboardUrl);
+        window.location.href = dashboardUrl;
+      }, 500);
     } else {
       this.errorMessage = 'Matrícula/Correo o contraseña incorrectos';
     }
@@ -698,17 +870,34 @@ export class LoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    // Validación: todos los campos completos
-    if (!this.newUser.id_usuario || !this.newUser.password || !this.confirmPassword ||
-        !this.newUser.nombre_completo || !this.newUser.correo || !this.newUser.telefono ||
-        !this.newUser.sexo || !this.newUser.carrera) {
-      this.errorMessage = 'Por favor complete todos los campos';
+    if (!this.selectedUserType) {
+      this.errorMessage = 'Por favor seleccione un tipo de usuario';
       return;
     }
 
-    // Validación: matrícula de exactamente 9 dígitos
-    if (!/^\d{9}$/.test(this.newUser.id_usuario)) {
-      this.errorMessage = 'La matrícula debe tener exactamente 9 dígitos';
+    // Validación según el tipo de usuario
+    if (this.selectedUserType === 'estudiante') {
+      // Validación: matrícula de exactamente 9 dígitos para estudiantes
+      if (!/^\d{9}$/.test(this.newUser.id_usuario)) {
+        this.errorMessage = 'La matrícula debe tener exactamente 9 dígitos';
+        return;
+      }
+
+      // Validar que tenga carrera
+      if (!this.newUser.carrera || this.newUser.carrera.trim() === '') {
+        this.errorMessage = 'Por favor ingrese su carrera';
+        return;
+      }
+    } else {
+      // Para docente, generar ID automático basado en el correo
+      this.newUser.id_usuario = this.newUser.correo.split('@')[0] + '_' + Date.now();
+    }
+
+    // Validaciones comunes
+    if (!this.newUser.password || !this.confirmPassword ||
+        !this.newUser.nombre_completo || !this.newUser.correo || 
+        !this.newUser.telefono || !this.newUser.sexo) {
+      this.errorMessage = 'Por favor complete todos los campos';
       return;
     }
 
@@ -772,6 +961,7 @@ export class LoginComponent {
     this.showForgotPassword = false;
     this.showVerifyCode = false;
     this.showResetPassword = false;
+    this.selectedUserType = null;
     this.newUser = {
       id_usuario: '',
       password: '',
@@ -779,7 +969,8 @@ export class LoginComponent {
       correo: '',
       telefono: '',
       sexo: '',
-      carrera: ''
+      carrera: '',
+      rol: ''
     };
     this.confirmPassword = '';
     this.forgotEmail = '';

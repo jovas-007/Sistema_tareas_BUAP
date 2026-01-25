@@ -2,11 +2,12 @@
   {
     "id_usuario": "201912345",
     "password": "$2b$10$9Go2bkjasWPlDaT.e4Xi.OTlU4DIGRsvSLD/iuMdjrPmnDRokh51W",
-    "nombre_completo": "Administrador Sistema",
-    "correo": "admin@buap.mx",
+    "nombre_completo": "Docente Sistema",
+    "correo": "docente@buap.mx",
     "telefono": "2221234567",
     "sexo": "Masculino",
-    "carrera": "Ingeniería en TI"
+    "carrera": "Ingeniería en TI",
+    "rol": "docente"
   },
   {
     "id_usuario": "202268439",
@@ -15,7 +16,8 @@
     "correo": "jovany.solis@alumno.buap.mx",
     "telefono": "2227654321",
     "sexo": "Masculino",
-    "carrera": "Ingeniería en TI"
+    "carrera": "Ingeniería en TI",
+    "rol": "estudiante"
   },
   {
     "id_usuario": "202300001",
@@ -24,7 +26,8 @@
     "correo": "sershdiaz@hotmail.com",
     "telefono": "2221111111",
     "sexo": "Masculino",
-    "carrera": "Ingeniería en TI"
+    "carrera": "Ingeniería en TI",
+    "rol": "estudiante"
   },
   {
     "id_usuario": "200000000",
@@ -33,6 +36,27 @@
     "correo": "hola@correo.com",
     "telefono": "2312132131",
     "sexo": "Otro",
-    "carrera": "Comercio"
+    "carrera": "Comercio",
+    "rol": "estudiante"
+  },
+  {
+    "id_usuario": "202268433",
+    "password": "$2b$10$luIMz5aSMYRD/WJkHUkUmuYXgAvbbYS1vzXhJezLxDzsQkezs1uK2",
+    "nombre_completo": "jovas",
+    "correo": "jovass@gmail.com",
+    "telefono": "7491060027",
+    "sexo": "Masculino",
+    "carrera": "iti",
+    "rol": "estudiante"
+  },
+  {
+    "id_usuario": "jov_1769308842615",
+    "password": "$2b$10$XAyDjclYoGGF0BXMzgyUUeqQCKSUDl/dFtL/p38lATcmwpDqi47Ay",
+    "nombre_completo": "jovcany solis",
+    "correo": "jov@gmail.com",
+    "telefono": "1231245678",
+    "sexo": "Masculino",
+    "carrera": "N/A",
+    "rol": "docente"
   }
 ]

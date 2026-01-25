@@ -10,12 +10,16 @@ interface User {
   telefono: string;
   sexo: string;
   carrera: string;
+  rol: 'docente' | 'estudiante';
 }
 
 interface LoginResponse {
   success: boolean;
   id_usuario?: string;
   nombre_completo?: string;
+  correo?: string;
+  rol?: 'docente' | 'estudiante';
+  carrera?: string;
   message?: string;
 }
 
@@ -41,6 +45,7 @@ export class AuthService {
     telefono: string;
     sexo: string;
     carrera: string;
+    rol: string;
   }): Promise<{ success: boolean; message?: string }> {
     try {
       const response = await firstValueFrom(
@@ -52,44 +57,77 @@ export class AuthService {
     }
   }
 
-  async login(id_usuario: string, password: string): Promise<boolean> {
+  async login(id_usuario: string, password: string): Promise<{ success: boolean; message?: string }> {
     try {
+      // Limpiar localStorage antes del login
+      localStorage.removeItem(this.CURRENT_USER_KEY);
+      
       const response = await firstValueFrom(
         this.http.post<LoginResponse>(`${this.API_URL}/login`, { id_usuario, password })
       );
 
       if (response.success && response.id_usuario) {
-        // Obtener datos completos del usuario
-        const users = await this.getAllUsers();
-        const fullUser = users.find(u => u.id_usuario === response.id_usuario);
-        
-        const userData = JSON.stringify({
+        // Guardar datos del usuario incluyendo el rol que viene del backend
+        const userData = {
           id_usuario: response.id_usuario,
           nombre_completo: response.nombre_completo,
-          correo: fullUser?.correo || ''
-        });
-        localStorage.setItem(this.CURRENT_USER_KEY, userData);
-        return true;
+          correo: response.correo || '',
+          rol: response.rol || 'estudiante',
+          carrera: response.carrera || ''
+        };
+        
+        const userDataString = JSON.stringify(userData);
+        console.log('=== GUARDANDO EN LOCALSTORAGE ===');
+        console.log('User data object:', userData);
+        console.log('User data string:', userDataString);
+        
+        localStorage.setItem(this.CURRENT_USER_KEY, userDataString);
+        // Guardar también en cookie para compartir sesión entre puertos (4200 y 3000)
+        document.cookie = `${this.CURRENT_USER_KEY}=${encodeURIComponent(userDataString)}; path=/; SameSite=Lax`;
+        
+        // Verificar que se guardó correctamente
+        const saved = localStorage.getItem(this.CURRENT_USER_KEY);
+        console.log('Verificación - localStorage guardado:', saved);
+        console.log('Verificación - parseado:', JSON.parse(saved || '{}'));
+        
+        return { success: true };
       }
       
-      return false;
+      return { success: false, message: 'Credenciales incorrectas' };
     } catch (error) {
       console.error('Error de conexión:', error);
-      return false;
+      return { success: false, message: 'Error de conexión con el servidor' };
     }
   }
 
   logout(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
+    document.cookie = `${this.CURRENT_USER_KEY}=; Max-Age=0; path=/; SameSite=Lax`;
   }
 
-  getCurrentUser(): { id_usuario: string; nombre_completo: string; correo?: string } | null {
+  getCurrentUser(): { 
+    id_usuario: string; 
+    nombre_completo: string; 
+    correo?: string; 
+    rol?: 'docente' | 'estudiante';
+    carrera?: string;
+  } | null {
     const userData = localStorage.getItem(this.CURRENT_USER_KEY);
     return userData ? JSON.parse(userData) : null;
   }
 
   isLoggedIn(): boolean {
     return this.getCurrentUser() !== null;
+  }
+
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user?.rol === 'docente';
+  }
+
+  isStudent(): boolean {
+    const user = this.getCurrentUser();
+    return user?.rol === 'estudiante';
   }
 
   async getAllUsers(): Promise<User[]> {
