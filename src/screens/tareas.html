@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Tareas - Sistema de Gestión</title>
     <link rel="stylesheet" href="../assets/diseños.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
     <style>
         .tasks-header {
             background: white;
@@ -202,6 +205,85 @@
             font-size: 18px;
             color: #7f8c8d;
         }
+
+        #calendar {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Encabezado */
+        .fc-toolbar-title {
+            font-size: 22px !important;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Botones calendario */
+        .fc-button {
+            background: #3498db !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 6px 15px !important;
+            font-weight: 500 !important;
+            transition: 0.3s;
+        }
+
+        .fc-button:hover {
+            background: #2980b9 !important;
+            transform: translateY(-1px);
+        }
+
+        .fc-button-active {
+            background: #1f6691 !important;
+        }
+
+        /* Celdas del calendario */
+        .fc-daygrid-day {
+            transition: 0.2s;
+        }
+
+        .fc-daygrid-day:hover {
+            background: #f8f9fa;
+        }
+
+        /* Números del día */
+        .fc-daygrid-day-number {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Eventos */
+        .fc-event {
+            border-radius: 8px !important;
+            padding: 3px 6px !important;
+            font-size: 13px !important;
+            font-weight: 500;
+            border: none !important;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Hover evento */
+        .fc-event:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+
+        /* Día actual */
+        .fc-day-today {
+            background: #ecf6ff !important;
+        }
+
+        /* Líneas */
+        .fc-scrollgrid {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+
     </style>
 </head>
 <body>
@@ -220,6 +302,11 @@
     <div id="tasksContainer" class="tasks-grid">
         <div class="loading">Cargando tareas...</div>
     </div>
+    <div class="info-section">
+    <h3>Calendario de Entregas</h3>
+    <div id="calendar"></div>
+    </div>
+
 
     <div class="info-section">
         <h3>Recordatorios Automáticos</h3>
@@ -235,11 +322,14 @@
 <script>
     let currentUserId = null;
     let currentUserEmail = null;
+    let calendar;
+
 
     // Verificar sesión al cargar
     window.addEventListener('DOMContentLoaded', () => {
         verificarSesion();
         cargarTareas();
+        inicializarCalendario();
     });
 
     function verificarSesion() {
@@ -282,6 +372,7 @@
             tasks.sort((a, b) => new Date(a.fecha_entrega) - new Date(b.fecha_entrega));
 
             container.innerHTML = tasks.map(task => crearTarjetaTarea(task)).join('');
+             sincronizarCalendario(tasks);
         } catch (error) {
             console.error('Error al cargar tareas:', error);
             document.getElementById('tasksContainer').innerHTML = 
@@ -356,6 +447,45 @@
         
         return days <= 1 && diff > 0;
     }
+
+   function inicializarCalendario() {
+    const calendarEl = document.getElementById('calendar');
+
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        height: 600,
+        events: [],
+
+        eventClick: function(info) {
+            alert(
+                "Tarea: " + info.event.title +
+                "\nFecha: " + info.event.start.toLocaleString()
+            );
+        }
+    });
+
+    calendar.render();
+    }
+
+
+    function sincronizarCalendario(tasks) {
+    if (!calendar) return;
+
+    calendar.removeAllEvents();
+
+    tasks.forEach(task => {
+        const urgente = esUrgente(task);
+
+        calendar.addEvent({
+            title: task.nombre_tarea,
+            start: task.fecha_entrega,
+            backgroundColor: urgente ? '#e74c3c' : '#2ecc71',
+            borderColor: urgente ? '#e74c3c' : '#2ecc71'
+        });
+    });
+    }
+
 
     async function probarRecordatorios() {
         mostrarMensaje('Enviando recordatorios...', 'success');

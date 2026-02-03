@@ -58,5 +58,15 @@
     "sexo": "Masculino",
     "carrera": "N/A",
     "rol": "docente"
+  },
+  {
+    "id_usuario": "joedav1116_1770136068877",
+    "password": "$2b$10$KYpZu89G69taHFDj7c4FPe1nzcoPDK4rXVe4GK8548Z.3f1kgUEcK",
+    "nombre_completo": "Joe David Gonzalez Herrera",
+    "correo": "joedav1116@gmail.com",
+    "telefono": "2221011732",
+    "sexo": "Masculino",
+    "carrera": "N/A",
+    "rol": "docente"
   }
 ]
