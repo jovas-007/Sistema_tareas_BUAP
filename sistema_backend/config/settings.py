@@ -105,7 +105,12 @@ else:
             },
         }
     }
-    # PyMySQL se importa en config/__init__.py
+    # Usar PyMySQL solo en desarrollo local
+    try:
+        import pymysql
+        pymysql.install_as_MySQLdb()
+    except ImportError:
+        pass
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
