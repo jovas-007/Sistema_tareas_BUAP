@@ -299,7 +299,7 @@
                 </div>
                 <div class="form-group">
                     <label>Contraseña <span class="required">*</span></label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    <input type="password" id="loginPassword" placeholder="********" required>
                 </div>
                 <button type="submit" class="btn btn-primary" id="btnLogin">Iniciar Sesión</button>
             </form>
@@ -312,11 +312,11 @@
                     <label>Tipo de Usuario <span class="required">*</span></label>
                     <div class="role-selector">
                         <div class="role-option selected" onclick="selectRole('estudiante', this)">
-                            <div class="icon">👨‍</div>
+                            <div class="icon">[E]</div>
                             <div>Estudiante</div>
                         </div>
                         <div class="role-option" onclick="selectRole('docente', this)">
-                            <div class="icon"></div>
+                            <div class="icon">[D]</div>
                             <div>Docente</div>
                         </div>
                     </div>
@@ -584,7 +584,7 @@
                 strengthText.textContent = 'Media - Puedes mejorarla';
             } else {
                 strengthBar.classList.add('strong');
-                strengthText.textContent = 'Fuerte ✓';
+                strengthText.textContent = 'Fuerte';
             }
             
             validatePasswordMatch();
@@ -605,13 +605,13 @@
             }
             
             if (password === confirm) {
-                matchEl.textContent = '✓ Las contraseñas coinciden';
+                matchEl.textContent = 'Las contraseñas coinciden';
                 matchEl.className = 'password-match match';
                 confirmInput.classList.remove('error');
                 confirmInput.classList.add('valid');
                 return true;
             } else {
-                matchEl.textContent = '✗ Las contraseñas no coinciden';
+                matchEl.textContent = 'Las contraseñas no coinciden';
                 matchEl.className = 'password-match no-match';
                 confirmInput.classList.add('error');
                 confirmInput.classList.remove('valid');
@@ -669,7 +669,7 @@
             // Validar confirmación de contraseña
             const confirmPassword = document.getElementById('regPasswordConfirm').value;
             if (password !== confirmPassword) {
-                document.getElementById('passwordMatch').textContent = '✗ Las contraseñas no coinciden';
+                document.getElementById('passwordMatch').textContent = 'Las contraseñas no coinciden';
                 document.getElementById('passwordMatch').className = 'password-match no-match';
                 document.getElementById('regPasswordConfirm').classList.add('error');
                 isValid = false;
