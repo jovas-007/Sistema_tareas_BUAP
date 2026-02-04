@@ -1,7 +1,131 @@
 # Sistema de Gestión de Tareas Escolares
 
-Aplicación Angular 20 + Django REST Framework con MySQL para gestión de tareas con login por rol (docente/estudiante), recuperación de contraseña por correo y recordatorios automáticos.
+Aplicación web para gestión de tareas con login por rol (docente/estudiante), recuperación de contraseña por correo y recordatorios automáticos.
 
+---
+
+## Herramientas y Tecnologías Utilizadas
+
+### Stack Tecnológico
+
+| Componente | Tecnología | Versión | Justificación |
+|------------|------------|---------|---------------|
+| **Backend** | Django + DRF | 4.2 / 3.16 | Framework Python robusto con ORM integrado, ideal para APIs REST |
+| **Frontend** | HTML5 + JavaScript | ES6+ | Simplicidad, sin dependencias pesadas, carga rápida |
+| **Base de Datos** | MySQL / TiDB Cloud | 8.0 | Relacional, escalable, compatible con despliegue en la nube |
+| **Servidor Web (dev)** | http-server | 14.x | Servidor estático ligero para desarrollo |
+| **Autenticación** | bcrypt + JWT-like | 4.2 | Hash seguro de contraseñas |
+| **Email** | Gmail SMTP | - | Envío de códigos de recuperación |
+
+### Arquitectura del Sistema
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         CLIENTE                                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
+│  │   Login     │  │   Admin     │  │  Student    │              │
+│  │   HTML/JS   │  │  Dashboard  │  │  Dashboard  │              │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘              │
+└─────────┼────────────────┼────────────────┼─────────────────────┘
+          │                │                │
+          └────────────────┼────────────────┘
+                           │ HTTP/REST (JSON)
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      SERVIDOR BACKEND                            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                  Django REST Framework                   │    │
+│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐    │    │
+│  │  │  Users  │  │  Tareas │  │  Email  │  │  CORS   │    │    │
+│  │  │   App   │  │   App   │  │ Service │  │ Headers │    │    │
+│  │  └────┬────┘  └────┬────┘  └────┬────┘  └─────────┘    │    │
+│  └───────┼────────────┼────────────┼───────────────────────┘    │
+└──────────┼────────────┼────────────┼────────────────────────────┘
+           │            │            │
+           ▼            ▼            ▼
+┌──────────────────┐  ┌─────────────────┐
+│   MySQL/TiDB     │  │   Gmail SMTP    │
+│   (Puerto 3307)  │  │   (Puerto 587)  │
+└──────────────────┘  └─────────────────┘
+```
+
+### Por qué estas tecnologías
+
+#### Backend: Django + Django REST Framework
+- **ORM potente**: Migraciones automáticas, relaciones entre modelos
+- **Admin integrado**: Panel de administración sin código adicional
+- **Seguridad**: Protección CSRF, XSS, SQL Injection por defecto
+- **Ecosistema**: Miles de paquetes disponibles (django-cors-headers, django-filter)
+- **Escalabilidad**: Usado por Instagram, Pinterest, Mozilla
+
+#### Frontend: HTML + JavaScript Vanilla
+- **Sin build process**: No requiere compilación (a diferencia de Angular/React)
+- **Carga instantánea**: Sin JavaScript bundle pesado
+- **Mantenimiento simple**: Cualquier desarrollador puede entender el código
+- **Compatibilidad**: Funciona en cualquier navegador moderno
+
+#### Base de Datos: MySQL / TiDB Cloud
+- **Desarrollo local**: MySQL en XAMPP (familiar, fácil de instalar)
+- **Producción**: TiDB Cloud (compatible MySQL, escalable, serverless)
+- **Relacional**: Ideal para datos estructurados (usuarios, tareas, entregas)
+- **Transacciones ACID**: Garantía de integridad de datos
+
+#### Servidor de Archivos: http-server
+- **Desarrollo**: `npx http-server` sin instalación global
+- **Producción**: `serve` de npm para Railway/Render
+- **Zero config**: Funciona sin configuración
+
+#### Infraestructura de Despliegue
+- **Backend**: Railway / Render (PaaS con soporte Python)
+- **Frontend**: Railway / Vercel / Netlify (archivos estáticos)
+- **Base de datos**: TiDB Cloud (tier gratuito disponible)
+
+### Estructura del Proyecto
+
+```
+practica_scrum/
+├── package.json              # Configuración npm (servidor estático)
+├── README.md                 # Documentación
+│
+├── src/                      # FRONTEND
+│   ├── index.html            # Redirección inicial
+│   ├── login.html            # Login + Registro + Recuperar contraseña
+│   ├── screens/
+│   │   ├── admin-dashboard.html    # Panel del docente
+│   │   └── student-dashboard.html  # Panel del estudiante
+│   └── assets/
+│       └── disenos.css       # Estilos compartidos
+│
+└── sistema_backend/          # BACKEND
+    ├── config/               # Configuración Django
+    │   ├── settings.py       # BD, CORS, Apps instaladas
+    │   └── urls.py           # Rutas principales
+    │
+    ├── users/                # App de autenticación
+    │   ├── models.py         # User, RecoveryCode
+    │   ├── views.py          # Login, Register, Forgot Password
+    │   ├── serializers.py    # Validación de datos
+    │   └── email_service.py  # Envío de correos
+    │
+    ├── tareas/               # App de gestión de tareas
+    │   ├── models.py         # Task, Submission, SubmissionFile
+    │   ├── views.py          # CRUD tareas, entregas, calificaciones
+    │   └── serializers.py    # Serialización de datos
+    │
+    └── requirements.txt      # Dependencias Python
+```
+
+### Flujo de Datos
+
+1. **Usuario** abre `localhost:4200` → carga `login.html`
+2. **Frontend** envía credenciales a `localhost:8000/api/login`
+3. **Backend** valida con `bcrypt`, retorna datos del usuario
+4. **Frontend** guarda sesión en `localStorage` y `cookie`
+5. **Frontend** redirige al dashboard según el rol
+6. **Dashboard** consulta `/api/tasks/` o `/api/my-tasks/`
+7. **Backend** filtra datos según el usuario autenticado
+
+---
 
 ## Requisitos
 
