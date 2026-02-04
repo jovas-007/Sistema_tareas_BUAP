@@ -621,7 +621,7 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <h1>📚 Sistema de Gestión de Tareas</h1>
+        <h1> Sistema de Gestión de Tareas</h1>
         <div class="user-info">
             <span id="userName">Cargando...</span>
             <span class="badge-docente">DOCENTE</span>
@@ -635,25 +635,25 @@
             <ul class="sidebar-menu">
                 <li>
                     <a href="#" class="active" onclick="showSection('dashboard')">
-                        <span class="icon">📊</span>
+                        <span class="icon"></span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('crear-tarea')">
-                        <span class="icon">➕</span>
+                        <span class="icon"></span>
                         <span>Crear Tarea</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('mis-tareas')">
-                        <span class="icon">📋</span>
+                        <span class="icon"></span>
                         <span>Mis Tareas</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('calificaciones')">
-                        <span class="icon">📊</span>
+                        <span class="icon"></span>
                         <span>Calificaciones</span>
                     </a>
                 </li>
@@ -691,9 +691,9 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📋 Tareas Recientes</h2>
+                        <h2 class="card-title"> Tareas Recientes</h2>
                         <button class="btn btn-primary" onclick="showSection('crear-tarea')">
-                            ➕ Nueva Tarea
+                             Nueva Tarea
                         </button>
                     </div>
                     <div id="tareasRecientes">
@@ -706,7 +706,7 @@
             <section id="section-crear-tarea" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">➕ Crear Nueva Tarea</h2>
+                        <h2 class="card-title"> Crear Nueva Tarea</h2>
                     </div>
                     <form id="formCrearTarea" onsubmit="crearTarea(event)">
                         <div class="form-group">
@@ -765,7 +765,7 @@
 
                         <div style="display: flex; gap: 15px; margin-top: 30px;">
                             <button type="submit" class="btn btn-primary">
-                                💾 Guardar como Borrador
+                                 Guardar como Borrador
                             </button>
                             <button type="button" class="btn btn-success" onclick="crearYActivarTarea()">
                                 🚀 Crear y Activar
@@ -779,9 +779,9 @@
             <section id="section-mis-tareas" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📋 Mis Tareas</h2>
+                        <h2 class="card-title"> Mis Tareas</h2>
                         <button class="btn btn-primary" onclick="showSection('crear-tarea')">
-                            ➕ Nueva Tarea
+                             Nueva Tarea
                         </button>
                     </div>
 
@@ -802,7 +802,7 @@
             <section id="section-calificaciones" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📊 Reporte de Calificaciones</h2>
+                        <h2 class="card-title"> Reporte de Calificaciones</h2>
                         <button class="btn btn-secondary" onclick="exportarCalificaciones()">
                             📥 Exportar
                         </button>
@@ -870,7 +870,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="cerrarModal('modalCalificar')">Cancelar</button>
-                <button class="btn btn-success" onclick="guardarCalificacion()">💾 Guardar</button>
+                <button class="btn btn-success" onclick="guardarCalificacion()"> Guardar</button>
             </div>
         </div>
     </div>
@@ -916,7 +916,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="cerrarModal('modalEditarTarea')">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarEdicionTarea()">💾 Guardar Cambios</button>
+                <button class="btn btn-primary" onclick="guardarEdicionTarea()"> Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -958,7 +958,7 @@
             document.getElementById('archivoAdjunto').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
-                    document.getElementById('nombreArchivo').textContent = `📎 ${file.name}`;
+                    document.getElementById('nombreArchivo').textContent = ` ${file.name}`;
                 }
             });
 
@@ -1081,7 +1081,7 @@
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📋</div>
+                        <div class="icon"></div>
                         <h3>No hay tareas</h3>
                         <p>Crea tu primera tarea para comenzar</p>
                     </div>
@@ -1097,14 +1097,14 @@
                     </div>
                     <div class="task-meta">
                         <span>📅 ${formatDate(tarea.fecha_entrega)}</span>
-                        <span>📊 ${tarea.puntos_maximos} pts</span>
-                        ${tarea.esta_vencida ? '<span style="color: #dc2626;">⏰ Vencida</span>' : ''}
+                        <span> ${tarea.puntos_maximos} pts</span>
+                        ${tarea.esta_vencida ? '<span style="color: #dc2626;"> Vencida</span>' : ''}
                     </div>
                     ${tarea.estado !== 'borrador' ? `
                         <div class="task-stats">
                             <span class="task-stat">👥 <strong>${tarea.total_estudiantes}</strong> asignados</span>
-                            <span class="task-stat">✅ <strong>${tarea.total_entregados}</strong> entregados</span>
-                            <span class="task-stat">📝 <strong>${tarea.total_calificados}</strong> calificados</span>
+                            <span class="task-stat"> <strong>${tarea.total_entregados}</strong> entregados</span>
+                            <span class="task-stat"> <strong>${tarea.total_calificados}</strong> calificados</span>
                         </div>
                     ` : ''}
                 </div>
@@ -1165,10 +1165,10 @@
                         const activarData = await activarRes.json();
                         
                         if (activarData.success) {
-                            showAlert(`✅ ${activarData.message}`);
+                            showAlert(` ${activarData.message}`);
                         }
                     } else {
-                        showAlert('✅ Tarea guardada como borrador');
+                        showAlert(' Tarea guardada como borrador');
                     }
                     
                     // Limpiar formulario
@@ -1178,12 +1178,12 @@
                     // Ir a mis tareas
                     showSection('mis-tareas');
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
 
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('❌ Error al crear la tarea', 'error');
+                showAlert(' Error al crear la tarea', 'error');
             }
         }
 
@@ -1221,7 +1221,7 @@
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📋</div>
+                        <div class="icon"></div>
                         <h3>No hay tareas</h3>
                         <p>No tienes tareas en esta categoría</p>
                     </div>
@@ -1245,10 +1245,10 @@
                                     🚀 Activar
                                 </button>
                                 <button class="btn btn-primary btn-sm" onclick="editarTarea(${tarea.id})">
-                                    ✏️ Editar
+                                     Editar
                                 </button>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${tarea.id})">
-                                    🗑️ Eliminar
+                                     Eliminar
                                 </button>
                             ` : ''}
                             ${tarea.estado === 'activa' ? `
@@ -1256,10 +1256,10 @@
                                     📥 Ver Entregas
                                 </button>
                                 <button class="btn btn-warning btn-sm" onclick="editarTarea(${tarea.id})">
-                                    ✏️ Editar
+                                     Editar
                                 </button>
                                 <button class="btn btn-danger btn-sm" onclick="cerrarTarea(${tarea.id})">
-                                    🔒 Cerrar
+                                     Cerrar
                                 </button>
                             ` : ''}
                             ${tarea.estado === 'cerrada' ? `
@@ -1272,14 +1272,14 @@
                     <p style="color: #64748b; margin: 10px 0;">${tarea.descripcion || 'Sin descripción'}</p>
                     <div class="task-meta">
                         <span>📅 Entrega: ${formatDate(tarea.fecha_entrega)}</span>
-                        <span>📊 ${tarea.puntos_maximos} pts</span>
-                        <span>${tarea.permite_tardias ? '✅ Permite tardías' : '❌ No tardías'}</span>
+                        <span> ${tarea.puntos_maximos} pts</span>
+                        <span>${tarea.permite_tardias ? ' Permite tardías' : ' No tardías'}</span>
                     </div>
                     ${tarea.estado !== 'borrador' ? `
                         <div class="task-stats">
                             <span class="task-stat">👥 <strong>${tarea.total_estudiantes}</strong> asignados</span>
-                            <span class="task-stat">✅ <strong>${tarea.total_entregados}</strong> entregados</span>
-                            <span class="task-stat">📝 <strong>${tarea.total_calificados}</strong> calificados</span>
+                            <span class="task-stat"> <strong>${tarea.total_entregados}</strong> entregados</span>
+                            <span class="task-stat"> <strong>${tarea.total_calificados}</strong> calificados</span>
                         </div>
                     ` : ''}
                 </div>
@@ -1297,13 +1297,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert(`✅ ${data.message}`);
+                    showAlert(` ${data.message}`);
                     cargarTareas();
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error al activar tarea', 'error');
+                showAlert(' Error al activar tarea', 'error');
             }
         }
 
@@ -1318,13 +1318,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('✅ Tarea cerrada');
+                    showAlert(' Tarea cerrada');
                     cargarTareas();
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error al cerrar tarea', 'error');
+                showAlert(' Error al cerrar tarea', 'error');
             }
         }
 
@@ -1339,13 +1339,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('✅ Tarea eliminada');
+                    showAlert(' Tarea eliminada');
                     cargarTareas();
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error al eliminar tarea', 'error');
+                showAlert(' Error al eliminar tarea', 'error');
             }
         }
 
@@ -1386,14 +1386,14 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('✅ Tarea actualizada');
+                    showAlert(' Tarea actualizada');
                     cerrarModal('modalEditarTarea');
                     cargarTareas();
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error al actualizar tarea', 'error');
+                showAlert(' Error al actualizar tarea', 'error');
             }
         }
 
@@ -1413,7 +1413,7 @@
                     document.getElementById('modalEntregas').classList.add('active');
                 }
             } catch (error) {
-                showAlert('❌ Error al cargar entregas', 'error');
+                showAlert(' Error al cargar entregas', 'error');
             }
         }
 
@@ -1448,7 +1448,7 @@
                                         e.archivos.map(a => `
                                             <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank" 
                                                style="display: block; color: #002855; font-size: 13px;">
-                                                📎 ${a.nombre_original}
+                                                 ${a.nombre_original}
                                             </a>
                                         `).join('') : 
                                         '<span style="color: #94a3b8;">Sin archivos</span>'
@@ -1461,7 +1461,7 @@
                                     ${e.estado === 'entregado' || e.estado === 'calificado' ? `
                                         <button class="btn btn-success btn-sm" 
                                                 onclick="abrirCalificar(${e.id}, '${escapeHtml(e.student.nombre_completo)}', ${e.calificacion !== null ? e.calificacion : 'null'}, '${escapeHtml(e.comentario_docente || '')}')">
-                                            📝 Calificar
+                                             Calificar
                                         </button>
                                     ` : '<span style="color: #94a3b8;">Pendiente</span>'}
                                 </td>
@@ -1501,7 +1501,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('✅ Calificación guardada');
+                    showAlert(' Calificación guardada');
                     cerrarModal('modalCalificar');
                     
                     // Recargar entregas
@@ -1520,10 +1520,10 @@
                         }
                     }
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error al guardar calificación', 'error');
+                showAlert(' Error al guardar calificación', 'error');
             }
         }
 
@@ -1549,7 +1549,7 @@
             if (data.tareas_headers.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📊</div>
+                        <div class="icon"></div>
                         <h3>Sin datos</h3>
                         <p>No hay tareas activas o cerradas para mostrar</p>
                     </div>

@@ -643,7 +643,7 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <h1>📚 Sistema de Gestión de Tareas</h1>
+        <h1> Sistema de Gestión de Tareas</h1>
         <div class="user-info">
             <span id="userName">Cargando...</span>
             <span class="badge-estudiante">ESTUDIANTE</span>
@@ -657,25 +657,25 @@
             <ul class="sidebar-menu">
                 <li>
                     <a href="#" class="active" onclick="showSection('dashboard')">
-                        <span class="icon">📊</span>
+                        <span class="icon"></span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('tareas-pendientes')">
-                        <span class="icon">📋</span>
+                        <span class="icon"></span>
                         <span>Tareas Pendientes</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('tareas-entregadas')">
-                        <span class="icon">✅</span>
+                        <span class="icon"></span>
                         <span>Tareas Entregadas</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" onclick="showSection('mis-calificaciones')">
-                        <span class="icon">📊</span>
+                        <span class="icon"></span>
                         <span>Mis Calificaciones</span>
                     </a>
                 </li>
@@ -707,7 +707,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">⚠️ Tareas Próximas a Vencer</h2>
+                        <h2 class="card-title"> Tareas Próximas a Vencer</h2>
                     </div>
                     <div id="tareasProximas">
                         <div class="loading">Cargando tareas</div>
@@ -716,7 +716,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">🎯 Últimas Calificaciones</h2>
+                        <h2 class="card-title"> Últimas Calificaciones</h2>
                     </div>
                     <div id="ultimasCalificaciones">
                         <div class="loading">Cargando</div>
@@ -728,7 +728,7 @@
             <section id="section-tareas-pendientes" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📋 Tareas Pendientes</h2>
+                        <h2 class="card-title"> Tareas Pendientes</h2>
                     </div>
                     <div id="listaTareasPendientes" class="task-grid">
                         <div class="loading">Cargando tareas</div>
@@ -740,7 +740,7 @@
             <section id="section-tareas-entregadas" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">✅ Tareas Entregadas</h2>
+                        <h2 class="card-title"> Tareas Entregadas</h2>
                     </div>
                     <div id="listaTareasEntregadas" class="task-grid">
                         <div class="loading">Cargando tareas</div>
@@ -752,7 +752,7 @@
             <section id="section-mis-calificaciones" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📊 Mis Calificaciones</h2>
+                        <h2 class="card-title"> Mis Calificaciones</h2>
                     </div>
                     <div id="tablaCalificaciones">
                         <div class="loading">Cargando calificaciones</div>
@@ -784,7 +784,7 @@
 
                 <!-- Descripción -->
                 <div class="task-detail-section">
-                    <h4>📝 Descripción</h4>
+                    <h4> Descripción</h4>
                     <div class="task-description" id="tareaDescripcion">
                         Sin descripción
                     </div>
@@ -792,7 +792,7 @@
 
                 <!-- Recursos -->
                 <div class="task-detail-section" id="seccionRecursos" style="display: none;">
-                    <h4>📎 Recursos del Docente</h4>
+                    <h4> Recursos del Docente</h4>
                     <div id="recursosDocente"></div>
                 </div>
 
@@ -806,7 +806,7 @@
 
                 <!-- Área de entrega (solo si puede entregar) -->
                 <div class="task-detail-section" id="seccionEntrega" style="display: none;">
-                    <h4>📤 Entregar Tarea</h4>
+                    <h4> Entregar Tarea</h4>
                     <div class="file-upload-area" id="dropZone" onclick="document.getElementById('inputArchivos').click()">
                         <div class="icon">📁</div>
                         <p><strong>Arrastra archivos aquí</strong></p>
@@ -822,13 +822,13 @@
 
                     <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" 
                             onclick="enviarEntrega()" id="btnEnviar" disabled>
-                        📤 Enviar Entrega
+                         Enviar Entrega
                     </button>
                 </div>
 
                 <!-- Historial de entregas -->
                 <div class="task-detail-section" id="seccionHistorial" style="display: none;">
-                    <h4>📋 Historial de Entregas</h4>
+                    <h4> Historial de Entregas</h4>
                     <div class="submission-history" id="historialEntregas"></div>
                 </div>
             </div>
@@ -999,7 +999,7 @@
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">🎉</div>
+                        <div class="icon"></div>
                         <h3>¡Todo al día!</h3>
                         <p>No tienes tareas pendientes próximas a vencer</p>
                     </div>
@@ -1017,7 +1017,7 @@
                             </div>
                             <div class="task-card-meta">
                                 <span>📅 Entrega: ${formatDate(t.fecha_entrega)}</span>
-                                <span>📊 ${t.puntos_maximos} puntos</span>
+                                <span> ${t.puntos_maximos} puntos</span>
                             </div>
                             <div class="task-card-footer">
                                 <button class="btn btn-primary btn-sm">Ver Tarea</button>
@@ -1087,7 +1087,7 @@
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
-                        <div class="icon">✅</div>
+                        <div class="icon"></div>
                         <h3>¡Sin tareas pendientes!</h3>
                         <p>Has completado todas tus tareas</p>
                     </div>
@@ -1105,14 +1105,14 @@
                     </div>
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
-                        <span>📊 ${t.puntos_maximos} puntos</span>
+                        <span> ${t.puntos_maximos} puntos</span>
                     </div>
                     <p style="color: #64748b; font-size: 13px; margin: 10px 0;">
                         ${t.descripcion || 'Sin descripción'}
                     </p>
                     <div class="task-card-footer">
                         <span style="font-size: 13px; color: ${t.puede_entregar ? '#059669' : '#dc2626'};">
-                            ${t.puede_entregar ? '✅ Puede entregar' : '❌ No acepta entregas'}
+                            ${t.puede_entregar ? ' Puede entregar' : ' No acepta entregas'}
                         </span>
                         <button class="btn btn-primary btn-sm">Ver Tarea</button>
                     </div>
@@ -1143,7 +1143,7 @@
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
-                        <div class="icon">📝</div>
+                        <div class="icon"></div>
                         <h3>Sin entregas aún</h3>
                         <p>Aún no has entregado ninguna tarea</p>
                     </div>
@@ -1160,7 +1160,7 @@
                     </div>
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
-                        ${t.calificacion ? `<span>📊 ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
+                        ${t.calificacion ? `<span> ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
                     </div>
                     <div class="task-card-footer">
                         ${t.calificacion ? 
@@ -1195,7 +1195,7 @@
             if (data.calificaciones.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📊</div>
+                        <div class="icon"></div>
                         <h3>Sin calificaciones</h3>
                         <p>Aún no tienes tareas calificadas</p>
                     </div>
@@ -1259,7 +1259,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('❌ Error al cargar la tarea', 'error');
+                showAlert(' Error al cargar la tarea', 'error');
             }
         }
 
@@ -1278,9 +1278,9 @@
             // Estado
             const estadoEl = document.getElementById('estadoTarea');
             if (submission.tarea_esta_vencida) {
-                estadoEl.innerHTML = '<span style="color: #dc2626;">⏰ Esta tarea ha vencido</span>';
+                estadoEl.innerHTML = '<span style="color: #dc2626;"> Esta tarea ha vencido</span>';
             } else {
-                estadoEl.innerHTML = '<span style="color: #059669;">✅ Tiempo disponible para entregar</span>';
+                estadoEl.innerHTML = '<span style="color: #059669;"> Tiempo disponible para entregar</span>';
             }
 
             // Recursos del docente
@@ -1299,7 +1299,7 @@
                 recursosHtml.push(`
                     <a href="${API_URL.replace('/api', '')}${submission.tarea_archivo_adjunto}" 
                        target="_blank" class="resource-link" style="margin-left: 10px;">
-                        📎 Descargar archivo adjunto
+                         Descargar archivo adjunto
                     </a>
                 `);
             }
@@ -1351,7 +1351,7 @@
                 document.getElementById('historialEntregas').innerHTML = submission.archivos.map(a => `
                     <div class="submission-item">
                         <div class="file-info">
-                            <span>📎</span>
+                            <span></span>
                             <div>
                                 <span class="file-name">${a.nombre_original}</span>
                                 <span class="file-date">${formatDate(a.fecha_subida)}</span>
@@ -1381,12 +1381,12 @@
                 const ext = file.name.split('.').pop().toLowerCase();
                 
                 if (!allowedExt.includes(ext)) {
-                    showAlert(`❌ Extensión no permitida: .${ext}`, 'error');
+                    showAlert(` Extensión no permitida: .${ext}`, 'error');
                     continue;
                 }
 
                 if (file.size > maxSize) {
-                    showAlert(`❌ ${file.name} excede los 20MB`, 'error');
+                    showAlert(` ${file.name} excede los 20MB`, 'error');
                     continue;
                 }
 
@@ -1411,7 +1411,7 @@
             container.innerHTML = archivosParaSubir.map((file, index) => `
                 <div class="uploaded-file">
                     <div class="file-info">
-                        <span>📎</span>
+                        <span></span>
                         <div>
                             <strong>${file.name}</strong>
                             <span style="font-size: 12px; color: #64748b;">
@@ -1419,7 +1419,7 @@
                             </span>
                         </div>
                     </div>
-                    <button class="remove-file" onclick="removerArchivo(${index})">✕</button>
+                    <button class="remove-file" onclick="removerArchivo(${index})"></button>
                 </div>
             `).join('');
 
@@ -1433,7 +1433,7 @@
 
         async function enviarEntrega() {
             if (archivosParaSubir.length === 0) {
-                showAlert('❌ Selecciona al menos un archivo', 'error');
+                showAlert(' Selecciona al menos un archivo', 'error');
                 return;
             }
 
@@ -1454,7 +1454,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert(`✅ ${data.message}`);
+                    showAlert(` ${data.message}`);
                     cerrarModal('modalTarea');
                     
                     // Recargar la vista actual
@@ -1465,14 +1465,14 @@
                         cargarTareasPendientes();
                     }
                 } else {
-                    showAlert(`❌ ${data.message}`, 'error');
+                    showAlert(` ${data.message}`, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('❌ Error al enviar la entrega', 'error');
+                showAlert(' Error al enviar la entrega', 'error');
             } finally {
                 document.getElementById('btnEnviar').disabled = false;
-                document.getElementById('btnEnviar').textContent = '📤 Enviar Entrega';
+                document.getElementById('btnEnviar').textContent = ' Enviar Entrega';
             }
         }
 
