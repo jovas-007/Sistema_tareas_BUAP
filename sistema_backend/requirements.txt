@@ -3,7 +3,7 @@ djangorestframework==3.16.1
 django-filter>=24,<26
 django-cors-headers==4.7.0
 django-tidb>=5.0.0
-mysqlclient>=2.2.0
+PyMySQL>=1.1.0
 python-dateutil==2.9.0.post0
 requests==2.32.3
 cryptography==42.0.8
