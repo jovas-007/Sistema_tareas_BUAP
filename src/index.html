@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=login.html">
+    <title>Redirigiendo...</title>
+    <script>
+        // Verificar si hay sesión activa
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            try {
+                const user = JSON.parse(currentUser);
+                if (user.rol === 'docente') {
+                    window.location.href = 'screens/admin-dashboard.html';
+                } else {
+                    window.location.href = 'screens/student-dashboard.html';
+                }
+            } catch (e) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        } else {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <p>Redirigiendo al login...</p>
+</body>
+</html>

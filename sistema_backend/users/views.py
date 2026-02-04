@@ -79,11 +79,13 @@ def login(request):
         user = serializer.validated_data['user']
         return Response({
             'success': True,
-            'id_usuario': user.id_usuario,
-            'nombre_completo': user.nombre_completo,
-            'correo': user.correo,
-            'rol': user.rol,
-            'carrera': user.carrera,
+            'user': {
+                'id_usuario': user.id_usuario,
+                'nombre_completo': user.nombre_completo,
+                'correo': user.correo,
+                'rol': user.rol,
+                'carrera': user.carrera,
+            }
         })
     
     return Response({

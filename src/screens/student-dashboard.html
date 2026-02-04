@@ -3,302 +3,1485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Estudiante - Sistema de Gestión</title>
+    <title>Dashboard Estudiante - Sistema de Gestión de Tareas</title>
     <link rel="stylesheet" href="../assets/diseños.css">
     <style>
-        .student-badge {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .tasks-container {
-            margin-top: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .task-item {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .task-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .task-header {
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .task-title {
-            font-size: 18px;
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            font-size: 14px;
+        }
+
+        .badge-estudiante {
+            background: #002855;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
             font-weight: 600;
-            color: #002855;
         }
 
-        .task-status {
-            padding: 4px 12px;
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #0f172a;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-left-color: #10b981;
+        }
+
+        .sidebar-menu .icon {
+            font-size: 20px;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card.warning { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .stat-card.success { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .stat-card.info { background: linear-gradient(135deg, #002855 0%, #004080 100%); }
+        .stat-card.danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
         }
 
-        .status-pendiente {
-            background: #fef3c7;
-            color: #92400e;
+        .badge-pendiente { background: #fef3c7; color: #92400e; }
+        .badge-entregado { background: #dbeafe; color: #1e40af; }
+        .badge-calificado { background: #d1fae5; color: #065f46; }
+        .badge-vencida { background: #fee2e2; color: #991b1b; }
+        .badge-tardia { background: #fef3c7; color: #92400e; }
+
+        /* Task Cards */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
         }
 
-        .status-completada {
-            background: #d1fae5;
-            color: #065f46;
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #059669;
+            transition: all 0.3s;
         }
 
-        .status-urgente {
-            background: #fee2e2;
-            color: #991b1b;
+        .task-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .task-description {
+        .task-card.vencida {
+            border-left-color: #dc2626;
+        }
+
+        .task-card.entregada {
+            border-left-color: #3b82f6;
+        }
+
+        .task-card.calificada {
+            border-left-color: #059669;
+        }
+
+        .task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .task-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .task-card-meta {
+            font-size: 13px;
             color: #64748b;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 15px;
         }
 
-        .task-footer {
+        .task-card-meta span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .task-card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f1f5f9;
-            font-size: 13px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: #1e293b;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
             color: #64748b;
         }
 
-        .empty-state {
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Task Detail */
+        .task-detail-section {
+            margin-bottom: 25px;
+        }
+
+        .task-detail-section h4 {
+            color: #374151;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-description {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .resource-link:hover {
+            background: #bfdbfe;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed #e2e8f0;
+            border-radius: 10px;
+            padding: 30px;
             text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8fafc;
         }
 
-        .empty-state-icon {
-            font-size: 64px;
+        .file-upload-area:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .file-upload-area input {
+            display: none;
+        }
+
+        .file-upload-area .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .uploaded-files {
+            margin-top: 20px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .uploaded-file .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .uploaded-file .remove-file {
+            background: #fee2e2;
+            border: none;
+            color: #dc2626;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Calificación Display */
+        .grade-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        button {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .grade-display .grade-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #059669;
         }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            filter: brightness(1.1);
+
+        .grade-display.low .grade-value {
+            color: #dc2626;
         }
-        
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+        .grade-display.medium .grade-value {
+            color: #d97706;
+        }
+
+        .grade-display .grade-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .feedback-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #059669;
+        }
+
+        .feedback-box h5 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        /* Previous Submissions */
+        .submission-history {
+            margin-top: 20px;
+        }
+
+        .submission-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .submission-item .file-name {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .submission-item .file-date {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-error { background: #fee2e2; color: #991b1b; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
+        .alert-info { background: #dbeafe; color: #1e40af; }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Calificaciones Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .grade-cell {
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .grade-cell.high { color: #059669; }
+        .grade-cell.medium { color: #d97706; }
+        .grade-cell.low { color: #dc2626; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1 id="userName">Bienvenido</h1>
-        <div class="student-badge">👨‍🎓 Estudiante</div>
-        <p><strong>Sistema de Gestión de Tareas Escolares</strong></p>
-        <button onclick="cerrarSesion()" style="margin-top: 10px; background: #e74c3c; color: white;">Cerrar Sesión</button>
+    <!-- Header -->
+    <header class="header">
+        <h1>📚 Sistema de Gestión de Tareas</h1>
+        <div class="user-info">
+            <span id="userName">Cargando...</span>
+            <span class="badge-estudiante">ESTUDIANTE</span>
+            <button class="btn-logout" onclick="logout()">🚪 Cerrar Sesión</button>
+        </div>
     </header>
 
-    <div class="section-title">Mis Tareas Pendientes</div>
-    
-    <!-- Contenedor de tareas - AQUÍ SE CARGARÁN LAS TAREAS -->
-    <div class="tasks-container" id="tasksContainer">
-        <!-- Estado vacío inicial -->
-        <div class="empty-state" id="emptyState">
-            <div class="empty-state-icon">📚</div>
-            <h3>Cargando tus tareas...</h3>
-            <p>Por favor espera mientras cargamos tu información</p>
-        </div>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="active" onclick="showSection('dashboard')">
+                        <span class="icon">📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('tareas-pendientes')">
+                        <span class="icon">📋</span>
+                        <span>Tareas Pendientes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('tareas-entregadas')">
+                        <span class="icon">✅</span>
+                        <span>Tareas Entregadas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('mis-calificaciones')">
+                        <span class="icon">📊</span>
+                        <span>Mis Calificaciones</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <!-- AQUÍ SE RENDERIZARÁN LAS TAREAS DINÁMICAMENTE -->
-        <div id="tasksList" style="display: none;">
-            <!-- Ejemplo de estructura de tarea (para referencia al implementar):
-            <div class="task-item">
-                <div class="task-header">
-                    <div class="task-title">Título de la tarea</div>
-                    <span class="task-status status-pendiente">Pendiente</span>
+        <!-- Content -->
+        <main class="content">
+            <!-- Dashboard Section -->
+            <section id="section-dashboard" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card warning">
+                        <div class="stat-value" id="totalPendientes">0</div>
+                        <div class="stat-label">Pendientes</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-value" id="totalEntregadas">0</div>
+                        <div class="stat-label">Entregadas</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value" id="totalCalificadas">0</div>
+                        <div class="stat-label">Calificadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="promedioGeneral">-</div>
+                        <div class="stat-label">Promedio</div>
+                    </div>
                 </div>
-                <div class="task-description">Descripción de la tarea...</div>
-                <div class="task-footer">
-                    <span>📅 Fecha de entrega: DD/MM/YYYY</span>
-                    <span>⏰ Tiempo restante: X días</span>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">⚠️ Tareas Próximas a Vencer</h2>
+                    </div>
+                    <div id="tareasProximas">
+                        <div class="loading">Cargando tareas</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🎯 Últimas Calificaciones</h2>
+                    </div>
+                    <div id="ultimasCalificaciones">
+                        <div class="loading">Cargando</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tareas Pendientes Section -->
+            <section id="section-tareas-pendientes" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📋 Tareas Pendientes</h2>
+                    </div>
+                    <div id="listaTareasPendientes" class="task-grid">
+                        <div class="loading">Cargando tareas</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tareas Entregadas Section -->
+            <section id="section-tareas-entregadas" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">✅ Tareas Entregadas</h2>
+                    </div>
+                    <div id="listaTareasEntregadas" class="task-grid">
+                        <div class="loading">Cargando tareas</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mis Calificaciones Section -->
+            <section id="section-mis-calificaciones" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📊 Mis Calificaciones</h2>
+                    </div>
+                    <div id="tablaCalificaciones">
+                        <div class="loading">Cargando calificaciones</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Ver/Entregar Tarea -->
+    <div id="modalTarea" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTareaTitulo">Detalle de Tarea</h3>
+                <button class="modal-close" onclick="cerrarModal('modalTarea')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Info de calificación (si existe) -->
+                <div id="seccionCalificacion" style="display: none;">
+                    <div class="grade-display" id="gradeDisplay">
+                        <div class="grade-value" id="gradeValue">-</div>
+                        <div class="grade-label">de <span id="gradeMax">10</span> puntos</div>
+                    </div>
+                    <div class="feedback-box" id="feedbackBox" style="display: none;">
+                        <h5>💬 Comentario del docente:</h5>
+                        <p id="feedbackText"></p>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="task-detail-section">
+                    <h4>📝 Descripción</h4>
+                    <div class="task-description" id="tareaDescripcion">
+                        Sin descripción
+                    </div>
+                </div>
+
+                <!-- Recursos -->
+                <div class="task-detail-section" id="seccionRecursos" style="display: none;">
+                    <h4>📎 Recursos del Docente</h4>
+                    <div id="recursosDocente"></div>
+                </div>
+
+                <!-- Info de entrega -->
+                <div class="task-detail-section">
+                    <h4>📅 Información de Entrega</h4>
+                    <p><strong>Fecha límite:</strong> <span id="fechaLimite">-</span></p>
+                    <p><strong>Puntos máximos:</strong> <span id="puntosMax">10</span></p>
+                    <p id="estadoTarea"></p>
+                </div>
+
+                <!-- Área de entrega (solo si puede entregar) -->
+                <div class="task-detail-section" id="seccionEntrega" style="display: none;">
+                    <h4>📤 Entregar Tarea</h4>
+                    <div class="file-upload-area" id="dropZone" onclick="document.getElementById('inputArchivos').click()">
+                        <div class="icon">📁</div>
+                        <p><strong>Arrastra archivos aquí</strong></p>
+                        <p style="font-size: 13px; color: #64748b;">o haz clic para seleccionar</p>
+                        <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">
+                            PDF, DOC, PPT, imágenes, código (máx. 20MB por archivo)
+                        </p>
+                        <input type="file" id="inputArchivos" multiple 
+                               accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.zip,.rar,.txt,.py,.js,.html,.css,.java,.cpp,.c">
+                    </div>
+
+                    <div class="uploaded-files" id="archivosSeleccionados"></div>
+
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" 
+                            onclick="enviarEntrega()" id="btnEnviar" disabled>
+                        📤 Enviar Entrega
+                    </button>
+                </div>
+
+                <!-- Historial de entregas -->
+                <div class="task-detail-section" id="seccionHistorial" style="display: none;">
+                    <h4>📋 Historial de Entregas</h4>
+                    <div class="submission-history" id="historialEntregas"></div>
                 </div>
             </div>
-            -->
         </div>
     </div>
 
-    <div class="section-title">Información Académica</div>
-    <div class="data-list">
-        <div class="data-item"><span class="label">🏛️ Institución:</span> <span class="value">BUAP</span></div>
-        <div class="data-item"><span class="label">🎓 Carrera:</span> <span class="value" id="userCarrera">Cargando...</span></div>
-        <div class="data-item"><span class="label">🆔 Matrícula:</span> <span class="value" id="userMatricula">Cargando...</span></div>
-    </div>
+    <script>
+        // ==================== CONFIGURACIÓN ====================
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let currentUser = null;
+        let tareaActual = null;
+        let archivosParaSubir = [];
 
-    <footer>
-        Benemérita Universidad Autónoma de Puebla | 2026
-    </footer>
-</div>
+        // ==================== INICIALIZACIÓN ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar sesión
+            const userCookie = getCookie('currentUser');
+            const userLocal = localStorage.getItem('currentUser');
+            
+            if (userCookie) {
+                currentUser = JSON.parse(decodeURIComponent(userCookie));
+            } else if (userLocal) {
+                currentUser = JSON.parse(userLocal);
+            }
 
-<script>
-function getCookie(name) {
-    return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
-}
+            if (!currentUser || currentUser.rol !== 'estudiante') {
+                alert('Acceso denegado. Solo estudiantes pueden acceder.');
+                window.location.href = '../login.html';
+                return;
+            }
 
-function getStoredUser() {
-    const savedLocal = localStorage.getItem('currentUser');
-    if (savedLocal) return savedLocal;
-    const savedCookie = getCookie('currentUser');
-    return savedCookie ? decodeURIComponent(savedCookie) : null;
-}
+            document.getElementById('userName').textContent = currentUser.nombre_completo;
+            
+            // Configurar drag and drop
+            const dropZone = document.getElementById('dropZone');
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
 
-function clearSession() {
-    localStorage.removeItem('currentUser');
-    document.cookie = 'currentUser=; Max-Age=0; path=/; SameSite=Lax';
-}
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
 
-// Verificar autenticación al cargar la página
-window.addEventListener('DOMContentLoaded', () => {
-    verificarSesion();
-    // TODO: Llamar función para cargar tareas
-    // cargarTareasPendientes();
-});
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
 
-function verificarSesion() {
-    const currentUserString = getStoredUser();
-    console.log('verificarSesion - currentUser:', currentUserString);
-    
-    if (!currentUserString) {
-        console.log('No hay usuario, redirigiendo a login');
-        window.location.href = 'http://localhost:4200';
-        return;
-    }
-    
-    try {
-        const user = JSON.parse(currentUserString);
-        console.log('Usuario parseado:', user);
-        
-        // Verificar que sea estudiante
-        if (user.rol !== 'estudiante') {
-            console.log('Usuario no es estudiante, redirigiendo');
-            window.location.href = 'http://localhost:4200';
-            return;
-        }
-        
-        const userNameElement = document.getElementById('userName');
-        if (userNameElement) {
-            userNameElement.textContent = `Bienvenido, ${user.nombre_completo}`;
-        }
-        
-        const userCarreraElement = document.getElementById('userCarrera');
-        if (userCarreraElement && user.carrera) {
-            userCarreraElement.textContent = user.carrera;
+            document.getElementById('inputArchivos').addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            // Cargar datos
+            cargarDashboard();
+        });
+
+        // ==================== UTILIDADES ====================
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
         }
 
-        const userMatriculaElement = document.getElementById('userMatricula');
-        if (userMatriculaElement && user.id_usuario) {
-            userMatriculaElement.textContent = user.id_usuario;
+        function getHeaders() {
+            return {
+                'X-User-Id': currentUser.id_usuario
+            };
         }
-    } catch (error) {
-        console.error('Error al cargar usuario:', error);
-        window.location.href = 'http://localhost:4200';
-    }
-}
 
-// TODO: FUNCIÓN PARA CARGAR TAREAS PENDIENTES DEL ESTUDIANTE
-// async function cargarTareasPendientes() {
-//     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-//     const userId = currentUser.id_usuario;
-//     
-//     try {
-//         const response = await fetch(`http://localhost:3000/api/tasks/user/${userId}`);
-//         const tareas = await response.json();
-//         
-//         const emptyState = document.getElementById('emptyState');
-//         const tasksList = document.getElementById('tasksList');
-//         
-//         if (tareas.length === 0) {
-//             emptyState.innerHTML = `
-//                 <div class="empty-state-icon">✅</div>
-//                 <h3>¡No tienes tareas pendientes!</h3>
-//                 <p>Estás al día con todas tus asignaciones</p>
-//             `;
-//         } else {
-//             emptyState.style.display = 'none';
-//             tasksList.style.display = 'block';
-//             
-//             // Renderizar cada tarea
-//             tasksList.innerHTML = tareas.map(tarea => `
-//                 <div class="task-item">
-//                     <div class="task-header">
-//                         <div class="task-title">${tarea.titulo}</div>
-//                         <span class="task-status status-${tarea.estado}">${tarea.estado}</span>
-//                     </div>
-//                     <div class="task-description">${tarea.descripcion}</div>
-//                     <div class="task-footer">
-//                         <span>📅 Fecha: ${new Date(tarea.fecha_entrega).toLocaleDateString('es-MX')}</span>
-//                         <span>⏰ ${calcularTiempoRestante(tarea.fecha_entrega)}</span>
-//                     </div>
-//                 </div>
-//             `).join('');
-//         }
-//     } catch (error) {
-//         console.error('Error al cargar tareas:', error);
-//         document.getElementById('emptyState').innerHTML = `
-//             <div class="empty-state-icon">⚠️</div>
-//             <h3>Error al cargar tareas</h3>
-//             <p>Intenta recargar la página</p>
-//         `;
-//     }
-// }
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('es-MX', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
 
-// TODO: FUNCIÓN AUXILIAR PARA CALCULAR TIEMPO RESTANTE
-// function calcularTiempoRestante(fechaEntrega) {
-//     const now = new Date();
-//     const deadline = new Date(fechaEntrega);
-//     const diff = deadline.getTime() - now.getTime();
-//     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-//     
-//     if (days < 0) return '¡Vencida!';
-//     if (days === 0) return '¡Hoy!';
-//     if (days === 1) return 'Mañana';
-//     return `${days} días restantes`;
-// }
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
 
-function cerrarSesion() {
-    clearSession();
-    window.location.href = 'http://localhost:4200';
-}
-</script>
+            document.getElementById(`section-${section}`).classList.add('active');
+            event.target.closest('a')?.classList.add('active');
 
+            switch(section) {
+                case 'dashboard':
+                    cargarDashboard();
+                    break;
+                case 'tareas-pendientes':
+                    cargarTareasPendientes();
+                    break;
+                case 'tareas-entregadas':
+                    cargarTareasEntregadas();
+                    break;
+                case 'mis-calificaciones':
+                    cargarMisCalificaciones();
+                    break;
+            }
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            archivosParaSubir = [];
+            tareaActual = null;
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = message;
+            
+            const content = document.querySelector('.content');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // ==================== DASHBOARD ====================
+        async function cargarDashboard() {
+            try {
+                const response = await fetch(`${API_URL}/my-tasks/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalPendientes').textContent = data.pendientes.length;
+                    document.getElementById('totalEntregadas').textContent = data.entregadas.length;
+                    document.getElementById('totalCalificadas').textContent = data.calificadas.length;
+
+                    // Mostrar tareas próximas a vencer
+                    const proximas = data.pendientes
+                        .filter(t => !t.esta_vencida)
+                        .sort((a, b) => new Date(a.fecha_entrega) - new Date(b.fecha_entrega))
+                        .slice(0, 3);
+                    
+                    renderTareasProximas(proximas);
+                }
+
+                // Cargar calificaciones para el promedio
+                const calResponse = await fetch(`${API_URL}/my-submissions/`, {
+                    headers: getHeaders()
+                });
+                const calData = await calResponse.json();
+
+                if (calData.success) {
+                    document.getElementById('promedioGeneral').textContent = 
+                        calData.promedio ? calData.promedio.toFixed(1) : '-';
+                    
+                    renderUltimasCalificaciones(calData.calificaciones.slice(0, 5));
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderTareasProximas(tareas) {
+            const container = document.getElementById('tareasProximas');
+
+            if (tareas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🎉</div>
+                        <h3>¡Todo al día!</h3>
+                        <p>No tienes tareas pendientes próximas a vencer</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="task-grid">
+                    ${tareas.map(t => `
+                        <div class="task-card" onclick="verTarea(${t.task_id})">
+                            <div class="task-card-header">
+                                <span class="task-card-title">${t.titulo}</span>
+                                <span class="badge badge-pendiente">PENDIENTE</span>
+                            </div>
+                            <div class="task-card-meta">
+                                <span>📅 Entrega: ${formatDate(t.fecha_entrega)}</span>
+                                <span>📊 ${t.puntos_maximos} puntos</span>
+                            </div>
+                            <div class="task-card-footer">
+                                <button class="btn btn-primary btn-sm">Ver Tarea</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderUltimasCalificaciones(calificaciones) {
+            const container = document.getElementById('ultimasCalificaciones');
+
+            if (calificaciones.length === 0) {
+                container.innerHTML = `
+                    <p style="color: #64748b; text-align: center; padding: 20px;">
+                        Aún no tienes calificaciones
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tarea</th>
+                            <th style="text-align: center;">Calificación</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${calificaciones.map(c => `
+                            <tr>
+                                <td>${c.tarea}</td>
+                                <td class="grade-cell ${c.calificacion >= 8 ? 'high' : c.calificacion >= 6 ? 'medium' : 'low'}">
+                                    ${c.calificacion}/${c.puntos_maximos}
+                                    ${c.es_tardia ? '<br><small style="color: #d97706;">(Tardía)</small>' : ''}
+                                </td>
+                                <td style="font-size: 13px; color: #64748b;">${formatDate(c.fecha_calificacion)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // ==================== TAREAS PENDIENTES ====================
+        async function cargarTareasPendientes() {
+            try {
+                const response = await fetch(`${API_URL}/my-tasks/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    renderTareasPendientes(data.pendientes);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderTareasPendientes(tareas) {
+            const container = document.getElementById('listaTareasPendientes');
+
+            if (tareas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="icon">✅</div>
+                        <h3>¡Sin tareas pendientes!</h3>
+                        <p>Has completado todas tus tareas</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tareas.map(t => `
+                <div class="task-card ${t.esta_vencida ? 'vencida' : ''}" onclick="verTarea(${t.task_id})">
+                    <div class="task-card-header">
+                        <span class="task-card-title">${t.titulo}</span>
+                        ${t.esta_vencida ? 
+                            '<span class="badge badge-vencida">VENCIDA</span>' : 
+                            '<span class="badge badge-pendiente">PENDIENTE</span>'}
+                    </div>
+                    <div class="task-card-meta">
+                        <span>📅 ${formatDate(t.fecha_entrega)}</span>
+                        <span>📊 ${t.puntos_maximos} puntos</span>
+                    </div>
+                    <p style="color: #64748b; font-size: 13px; margin: 10px 0;">
+                        ${t.descripcion || 'Sin descripción'}
+                    </p>
+                    <div class="task-card-footer">
+                        <span style="font-size: 13px; color: ${t.puede_entregar ? '#059669' : '#dc2626'};">
+                            ${t.puede_entregar ? '✅ Puede entregar' : '❌ No acepta entregas'}
+                        </span>
+                        <button class="btn btn-primary btn-sm">Ver Tarea</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== TAREAS ENTREGADAS ====================
+        async function cargarTareasEntregadas() {
+            try {
+                const response = await fetch(`${API_URL}/my-tasks/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const entregadas = [...data.entregadas, ...data.calificadas];
+                    renderTareasEntregadas(entregadas);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderTareasEntregadas(tareas) {
+            const container = document.getElementById('listaTareasEntregadas');
+
+            if (tareas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="icon">📝</div>
+                        <h3>Sin entregas aún</h3>
+                        <p>Aún no has entregado ninguna tarea</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tareas.map(t => `
+                <div class="task-card ${t.estado === 'calificado' ? 'calificada' : 'entregada'}" 
+                     onclick="verTarea(${t.task_id})">
+                    <div class="task-card-header">
+                        <span class="task-card-title">${t.titulo}</span>
+                        <span class="badge badge-${t.estado}">${t.estado.toUpperCase()}</span>
+                    </div>
+                    <div class="task-card-meta">
+                        <span>📅 ${formatDate(t.fecha_entrega)}</span>
+                        ${t.calificacion ? `<span>📊 ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
+                    </div>
+                    <div class="task-card-footer">
+                        ${t.calificacion ? 
+                            `<span class="grade-cell ${t.calificacion >= 8 ? 'high' : t.calificacion >= 6 ? 'medium' : 'low'}" 
+                                   style="font-size: 24px;">${t.calificacion}</span>` :
+                            '<span style="color: #64748b;">Esperando calificación</span>'}
+                        <button class="btn btn-secondary btn-sm">Ver Detalles</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== MIS CALIFICACIONES ====================
+        async function cargarMisCalificaciones() {
+            try {
+                const response = await fetch(`${API_URL}/my-submissions/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    renderMisCalificaciones(data);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderMisCalificaciones(data) {
+            const container = document.getElementById('tablaCalificaciones');
+
+            if (data.calificaciones.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <h3>Sin calificaciones</h3>
+                        <p>Aún no tienes tareas calificadas</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px;">
+                    <h2 style="color: #065f46; margin: 0;">Promedio General</h2>
+                    <div style="font-size: 48px; font-weight: 700; color: ${data.promedio >= 8 ? '#059669' : data.promedio >= 6 ? '#d97706' : '#dc2626'};">
+                        ${data.promedio ? data.promedio.toFixed(1) : '-'}
+                    </div>
+                    <p style="color: #64748b;">${data.total_calificadas} tareas calificadas</p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tarea</th>
+                            <th style="text-align: center;">Calificación</th>
+                            <th>Comentario</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.calificaciones.map(c => `
+                            <tr>
+                                <td>
+                                    <strong>${c.tarea}</strong>
+                                    ${c.es_tardia ? '<br><span class="badge badge-tardia">TARDÍA</span>' : ''}
+                                </td>
+                                <td class="grade-cell ${c.calificacion >= 8 ? 'high' : c.calificacion >= 6 ? 'medium' : 'low'}" 
+                                    style="font-size: 20px;">
+                                    ${c.calificacion}/${c.puntos_maximos}
+                                </td>
+                                <td style="max-width: 300px; font-size: 13px; color: #64748b;">
+                                    ${c.comentario || '-'}
+                                </td>
+                                <td style="font-size: 13px; color: #64748b; white-space: nowrap;">
+                                    ${formatDate(c.fecha_calificacion)}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // ==================== VER TAREA DETALLE ====================
+        async function verTarea(taskId) {
+            try {
+                const response = await fetch(`${API_URL}/my-tasks/${taskId}/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    tareaActual = data.submission;
+                    mostrarModalTarea(data.submission);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error al cargar la tarea', 'error');
+            }
+        }
+
+        function mostrarModalTarea(submission) {
+            // Título
+            document.getElementById('modalTareaTitulo').textContent = submission.tarea_titulo;
+            
+            // Descripción
+            document.getElementById('tareaDescripcion').textContent = 
+                submission.tarea_descripcion || 'Sin descripción';
+            
+            // Fecha límite
+            document.getElementById('fechaLimite').textContent = formatDate(submission.tarea_fecha_entrega);
+            document.getElementById('puntosMax').textContent = submission.tarea_puntos_maximos;
+            
+            // Estado
+            const estadoEl = document.getElementById('estadoTarea');
+            if (submission.tarea_esta_vencida) {
+                estadoEl.innerHTML = '<span style="color: #dc2626;">⏰ Esta tarea ha vencido</span>';
+            } else {
+                estadoEl.innerHTML = '<span style="color: #059669;">✅ Tiempo disponible para entregar</span>';
+            }
+
+            // Recursos del docente
+            const seccionRecursos = document.getElementById('seccionRecursos');
+            const recursosHtml = [];
+            
+            if (submission.tarea_url_recurso) {
+                recursosHtml.push(`
+                    <a href="${submission.tarea_url_recurso}" target="_blank" class="resource-link">
+                        🔗 Ver recurso externo
+                    </a>
+                `);
+            }
+            
+            if (submission.tarea_archivo_adjunto) {
+                recursosHtml.push(`
+                    <a href="${API_URL.replace('/api', '')}${submission.tarea_archivo_adjunto}" 
+                       target="_blank" class="resource-link" style="margin-left: 10px;">
+                        📎 Descargar archivo adjunto
+                    </a>
+                `);
+            }
+
+            if (recursosHtml.length > 0) {
+                document.getElementById('recursosDocente').innerHTML = recursosHtml.join('');
+                seccionRecursos.style.display = 'block';
+            } else {
+                seccionRecursos.style.display = 'none';
+            }
+
+            // Sección de calificación
+            const seccionCalificacion = document.getElementById('seccionCalificacion');
+            if (submission.calificacion) {
+                const gradeDisplay = document.getElementById('gradeDisplay');
+                gradeDisplay.className = 'grade-display';
+                if (submission.calificacion < 6) gradeDisplay.classList.add('low');
+                else if (submission.calificacion < 8) gradeDisplay.classList.add('medium');
+                
+                document.getElementById('gradeValue').textContent = submission.calificacion;
+                document.getElementById('gradeMax').textContent = submission.tarea_puntos_maximos;
+                
+                if (submission.comentario_docente) {
+                    document.getElementById('feedbackText').textContent = submission.comentario_docente;
+                    document.getElementById('feedbackBox').style.display = 'block';
+                } else {
+                    document.getElementById('feedbackBox').style.display = 'none';
+                }
+                
+                seccionCalificacion.style.display = 'block';
+            } else {
+                seccionCalificacion.style.display = 'none';
+            }
+
+            // Sección de entrega
+            const seccionEntrega = document.getElementById('seccionEntrega');
+            if (submission.puede_entregar) {
+                seccionEntrega.style.display = 'block';
+                archivosParaSubir = [];
+                document.getElementById('archivosSeleccionados').innerHTML = '';
+                document.getElementById('btnEnviar').disabled = true;
+            } else {
+                seccionEntrega.style.display = 'none';
+            }
+
+            // Historial de entregas
+            const seccionHistorial = document.getElementById('seccionHistorial');
+            if (submission.archivos && submission.archivos.length > 0) {
+                document.getElementById('historialEntregas').innerHTML = submission.archivos.map(a => `
+                    <div class="submission-item">
+                        <div class="file-info">
+                            <span>📎</span>
+                            <div>
+                                <span class="file-name">${a.nombre_original}</span>
+                                <span class="file-date">${formatDate(a.fecha_subida)}</span>
+                                ${a.es_entrega_tardia ? '<span class="badge badge-tardia" style="margin-left: 5px;">TARDÍA</span>' : ''}
+                            </div>
+                        </div>
+                        <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank" 
+                           class="btn btn-sm btn-secondary">Descargar</a>
+                    </div>
+                `).join('');
+                seccionHistorial.style.display = 'block';
+            } else {
+                seccionHistorial.style.display = 'none';
+            }
+
+            document.getElementById('modalTarea').classList.add('active');
+        }
+
+        // ==================== SUBIR ARCHIVOS ====================
+        function handleFiles(files) {
+            const maxSize = 20 * 1024 * 1024; // 20MB
+            const allowedExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 
+                               'jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'txt',
+                               'py', 'js', 'html', 'css', 'java', 'cpp', 'c'];
+
+            for (const file of files) {
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                if (!allowedExt.includes(ext)) {
+                    showAlert(`❌ Extensión no permitida: .${ext}`, 'error');
+                    continue;
+                }
+
+                if (file.size > maxSize) {
+                    showAlert(`❌ ${file.name} excede los 20MB`, 'error');
+                    continue;
+                }
+
+                // Evitar duplicados
+                if (!archivosParaSubir.find(f => f.name === file.name)) {
+                    archivosParaSubir.push(file);
+                }
+            }
+
+            renderArchivosSeleccionados();
+        }
+
+        function renderArchivosSeleccionados() {
+            const container = document.getElementById('archivosSeleccionados');
+            
+            if (archivosParaSubir.length === 0) {
+                container.innerHTML = '';
+                document.getElementById('btnEnviar').disabled = true;
+                return;
+            }
+
+            container.innerHTML = archivosParaSubir.map((file, index) => `
+                <div class="uploaded-file">
+                    <div class="file-info">
+                        <span>📎</span>
+                        <div>
+                            <strong>${file.name}</strong>
+                            <span style="font-size: 12px; color: #64748b;">
+                                (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                            </span>
+                        </div>
+                    </div>
+                    <button class="remove-file" onclick="removerArchivo(${index})">✕</button>
+                </div>
+            `).join('');
+
+            document.getElementById('btnEnviar').disabled = false;
+        }
+
+        function removerArchivo(index) {
+            archivosParaSubir.splice(index, 1);
+            renderArchivosSeleccionados();
+        }
+
+        async function enviarEntrega() {
+            if (archivosParaSubir.length === 0) {
+                showAlert('❌ Selecciona al menos un archivo', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            archivosParaSubir.forEach(file => {
+                formData.append('archivos', file);
+            });
+
+            try {
+                document.getElementById('btnEnviar').disabled = true;
+                document.getElementById('btnEnviar').textContent = '⏳ Enviando...';
+
+                const response = await fetch(`${API_URL}/my-tasks/${tareaActual.id}/submit/?student_id=${currentUser.id_usuario}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✅ ${data.message}`);
+                    cerrarModal('modalTarea');
+                    
+                    // Recargar la vista actual
+                    const activeSection = document.querySelector('.section.active');
+                    if (activeSection.id === 'section-dashboard') {
+                        cargarDashboard();
+                    } else if (activeSection.id === 'section-tareas-pendientes') {
+                        cargarTareasPendientes();
+                    }
+                } else {
+                    showAlert(`❌ ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error al enviar la entrega', 'error');
+            } finally {
+                document.getElementById('btnEnviar').disabled = false;
+                document.getElementById('btnEnviar').textContent = '📤 Enviar Entrega';
+            }
+        }
+
+        // ==================== LOGOUT ====================
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = '../login.html';
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Gestión de Tareas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo .emoji {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            color: #002855;
+            font-size: 24px;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #002855;
+            box-shadow: 0 0 0 3px rgba(0, 40, 85, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .form-group input.valid {
+            border-color: #059669;
+            background: #f0fdf4;
+        }
+
+        .form-group .hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .form-group .error-msg {
+            font-size: 12px;
+            color: #dc2626;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-group .error-msg.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #002855 0%, #004080 100%);
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 40, 85, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Tabs para Login/Registro */
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            color: #64748b;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            color: #002855;
+            border-bottom-color: #002855;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Selector de rol */
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-option:hover {
+            border-color: #002855;
+        }
+
+        .role-option.selected {
+            border-color: #002855;
+            background: #f0f7ff;
+        }
+
+        .role-option .icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        /* Password strength */
+        .password-strength {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .password-strength .bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+
+        .password-strength .bar.weak { width: 33%; background: #dc2626; }
+        .password-strength .bar.medium { width: 66%; background: #f59e0b; }
+        .password-strength .bar.strong { width: 100%; background: #059669; }
+
+        .password-match {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .password-match.match { color: #059669; }
+        .password-match.no-match { color: #dc2626; }
+
+        .loading .btn-primary::after {
+            content: ' ⏳';
+        }
+
+        /* Validación visual */
+        .validation-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            padding-right: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="emoji">🎓</div>
+            <h1>BUAP</h1>
+            <p>Sistema de Gestión de Tareas</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('login')">Iniciar Sesión</div>
+            <div class="tab" onclick="showTab('register')">Registrarse</div>
+        </div>
+
+        <div id="alertBox"></div>
+
+        <!-- Login Form -->
+        <div id="tab-login" class="tab-content active">
+            <form onsubmit="handleLogin(event)" id="loginForm">
+                <div class="form-group">
+                    <label>Matrícula o Correo <span class="required">*</span></label>
+                    <input type="text" id="loginId" placeholder="202268430 o correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña <span class="required">*</span></label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnLogin">Iniciar Sesión</button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="tab-register" class="tab-content">
+            <form onsubmit="handleRegister(event)" id="registerForm">
+                <div class="form-group">
+                    <label>Tipo de Usuario <span class="required">*</span></label>
+                    <div class="role-selector">
+                        <div class="role-option selected" onclick="selectRole('estudiante', this)">
+                            <div class="icon">👨‍🎓</div>
+                            <div>Estudiante</div>
+                        </div>
+                        <div class="role-option" onclick="selectRole('docente', this)">
+                            <div class="icon">👨‍🏫</div>
+                            <div>Docente</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="matriculaGroup">
+                    <label>Matrícula <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="regMatricula" placeholder="9 dígitos (ej: 202268430)" 
+                               maxlength="9" pattern="[0-9]{9}" 
+                               oninput="validateMatricula(this)"
+                               onkeypress="return onlyNumbers(event)">
+                    </div>
+                    <p class="hint">Solo números, exactamente 9 dígitos</p>
+                    <p class="error-msg" id="matriculaError">La matrícula debe tener exactamente 9 dígitos</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre Completo <span class="required">*</span></label>
+                    <input type="text" id="regNombre" placeholder="Tu nombre completo" 
+                           required minlength="3"
+                           oninput="validateNombre(this)">
+                    <p class="error-msg" id="nombreError">El nombre debe tener al menos 3 caracteres</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico <span class="required">*</span></label>
+                    <input type="email" id="regCorreo" placeholder="correo@ejemplo.com" 
+                           required
+                           oninput="validateEmail(this)">
+                    <p class="hint">Formato válido: usuario@dominio.com</p>
+                    <p class="error-msg" id="correoError">Ingresa un correo electrónico válido</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono <span class="required">*</span></label>
+                    <input type="tel" id="regTelefono" placeholder="10 dígitos (ej: 2221234567)" 
+                           required maxlength="10" pattern="[0-9]{10}"
+                           oninput="validateTelefono(this)"
+                           onkeypress="return onlyNumbers(event)">
+                    <p class="hint">10 dígitos sin espacios ni guiones</p>
+                    <p class="error-msg" id="telefonoError">El teléfono debe tener exactamente 10 dígitos</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña <span class="required">*</span></label>
+                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" 
+                           required minlength="6"
+                           oninput="validatePassword()">
+                    <div class="password-strength">
+                        <div class="bar" id="strengthBar"></div>
+                    </div>
+                    <p class="hint" id="strengthText">Mínimo 6 caracteres</p>
+                    <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Contraseña <span class="required">*</span></label>
+                    <input type="password" id="regPasswordConfirm" placeholder="Repite tu contraseña" 
+                           required
+                           oninput="validatePasswordMatch()">
+                    <p class="password-match" id="passwordMatch"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Sexo <span class="required">*</span></label>
+                    <select id="regSexo" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Carrera <span class="required">*</span></label>
+                    <input type="text" id="regCarrera" placeholder="Ej: Ingeniería en TI" 
+                           required minlength="3">
+                </div>
+
+                <input type="hidden" id="regRol" value="estudiante">
+                <button type="submit" class="btn btn-primary" id="btnRegister">Crear Cuenta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector(`.tab:nth-child(${tab === 'login' ? 1 : 2})`).classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            clearAlert();
+        }
+
+        function selectRole(role, element) {
+            document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('regRol').value = role;
+            
+            const matriculaGroup = document.getElementById('matriculaGroup');
+            const matriculaInput = document.getElementById('regMatricula');
+            if (role === 'docente') {
+                matriculaGroup.style.display = 'none';
+                matriculaInput.removeAttribute('required');
+            } else {
+                matriculaGroup.style.display = 'block';
+                matriculaInput.setAttribute('required', '');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+
+        function clearAlert() {
+            document.getElementById('alertBox').innerHTML = '';
+        }
+
+        // =============== VALIDACIONES ===============
+        function onlyNumbers(e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char)) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        }
+
+        function validateMatricula(input) {
+            const value = input.value.replace(/\D/g, '');
+            input.value = value;
+            
+            const errorEl = document.getElementById('matriculaError');
+            if (value.length === 9) {
+                input.classList.remove('error');
+                input.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else if (value.length > 0) {
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            } else {
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateNombre(input) {
+            const value = input.value.trim();
+            const errorEl = document.getElementById('nombreError');
+            
+            if (value.length >= 3) {
+                input.classList.remove('error');
+                input.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else if (value.length > 0) {
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            } else {
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateEmail(input) {
+            const value = input.value.trim();
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const errorEl = document.getElementById('correoError');
+            
+            if (emailRegex.test(value)) {
+                input.classList.remove('error');
+                input.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else if (value.length > 0) {
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            } else {
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validateTelefono(input) {
+            const value = input.value.replace(/\D/g, '');
+            input.value = value;
+            
+            const errorEl = document.getElementById('telefonoError');
+            if (value.length === 10) {
+                input.classList.remove('error');
+                input.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else if (value.length > 0) {
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            } else {
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                return false;
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('regPassword').value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const errorEl = document.getElementById('passwordError');
+            const input = document.getElementById('regPassword');
+            
+            // Remover clases previas
+            strengthBar.className = 'bar';
+            
+            if (password.length === 0) {
+                strengthText.textContent = 'Mínimo 6 caracteres';
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                validatePasswordMatch();
+                return false;
+            }
+            
+            if (password.length < 6) {
+                strengthBar.classList.add('weak');
+                strengthText.textContent = 'Muy corta';
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                validatePasswordMatch();
+                return false;
+            }
+            
+            errorEl.classList.remove('show');
+            input.classList.remove('error');
+            input.classList.add('valid');
+            
+            // Evaluar fortaleza
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength <= 1) {
+                strengthBar.classList.add('weak');
+                strengthText.textContent = 'Débil - Agrega mayúsculas, números o símbolos';
+            } else if (strength <= 2) {
+                strengthBar.classList.add('medium');
+                strengthText.textContent = 'Media - Puedes mejorarla';
+            } else {
+                strengthBar.classList.add('strong');
+                strengthText.textContent = 'Fuerte ✓';
+            }
+            
+            validatePasswordMatch();
+            return true;
+        }
+
+        function validatePasswordMatch() {
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regPasswordConfirm').value;
+            const matchEl = document.getElementById('passwordMatch');
+            const confirmInput = document.getElementById('regPasswordConfirm');
+            
+            if (confirm.length === 0) {
+                matchEl.textContent = '';
+                matchEl.className = 'password-match';
+                confirmInput.classList.remove('error', 'valid');
+                return false;
+            }
+            
+            if (password === confirm) {
+                matchEl.textContent = '✓ Las contraseñas coinciden';
+                matchEl.className = 'password-match match';
+                confirmInput.classList.remove('error');
+                confirmInput.classList.add('valid');
+                return true;
+            } else {
+                matchEl.textContent = '✗ Las contraseñas no coinciden';
+                matchEl.className = 'password-match no-match';
+                confirmInput.classList.add('error');
+                confirmInput.classList.remove('valid');
+                return false;
+            }
+        }
+
+        function validateRegisterForm() {
+            const rol = document.getElementById('regRol').value;
+            let isValid = true;
+            
+            // Validar matrícula (solo estudiantes)
+            if (rol === 'estudiante') {
+                const matricula = document.getElementById('regMatricula').value;
+                if (matricula.length !== 9) {
+                    document.getElementById('matriculaError').classList.add('show');
+                    document.getElementById('regMatricula').classList.add('error');
+                    isValid = false;
+                }
+            }
+            
+            // Validar nombre
+            const nombre = document.getElementById('regNombre').value.trim();
+            if (nombre.length < 3) {
+                document.getElementById('nombreError').classList.add('show');
+                document.getElementById('regNombre').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar email
+            const email = document.getElementById('regCorreo').value.trim();
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('correoError').classList.add('show');
+                document.getElementById('regCorreo').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar teléfono
+            const telefono = document.getElementById('regTelefono').value;
+            if (telefono.length !== 10) {
+                document.getElementById('telefonoError').classList.add('show');
+                document.getElementById('regTelefono').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar contraseña
+            const password = document.getElementById('regPassword').value;
+            if (password.length < 6) {
+                document.getElementById('passwordError').classList.add('show');
+                document.getElementById('regPassword').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar confirmación de contraseña
+            const confirmPassword = document.getElementById('regPasswordConfirm').value;
+            if (password !== confirmPassword) {
+                document.getElementById('passwordMatch').textContent = '✗ Las contraseñas no coinciden';
+                document.getElementById('passwordMatch').className = 'password-match no-match';
+                document.getElementById('regPasswordConfirm').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar sexo
+            const sexo = document.getElementById('regSexo').value;
+            if (!sexo) {
+                isValid = false;
+                showAlert('Selecciona tu sexo', 'error');
+            }
+            
+            // Validar carrera
+            const carrera = document.getElementById('regCarrera').value.trim();
+            if (carrera.length < 3) {
+                isValid = false;
+                showAlert('La carrera debe tener al menos 3 caracteres', 'error');
+            }
+            
+            return isValid;
+        }
+
+        // =============== LOGIN ===============
+        async function handleLogin(e) {
+            e.preventDefault();
+            clearAlert();
+            
+            const id_usuario = document.getElementById('loginId').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btnLogin = document.getElementById('btnLogin');
+
+            if (!id_usuario || !password) {
+                showAlert('Completa todos los campos', 'error');
+                return;
+            }
+
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Iniciando sesión...';
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_usuario, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Guardar usuario en localStorage y cookie
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(data.user))}; path=/`;
+                    
+                    showAlert('¡Bienvenido! Redirigiendo...', 'success');
+                    
+                    // Redirigir según rol
+                    if (data.user.rol === 'docente') {
+                        window.location.href = 'screens/admin-dashboard.html';
+                    } else {
+                        window.location.href = 'screens/student-dashboard.html';
+                    }
+                } else {
+                    showAlert(data.message || 'Credenciales inválidas', 'error');
+                    btnLogin.disabled = false;
+                    btnLogin.textContent = 'Iniciar Sesión';
+                }
+            } catch (error) {
+                console.error('Error completo:', error);
+                console.error('Error name:', error.name);
+                console.error('Error message:', error.message);
+                showAlert(`Error: ${error.name} - ${error.message}`, 'error');
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Iniciar Sesión';
+            }
+        }
+
+        // =============== REGISTRO ===============
+        async function handleRegister(e) {
+            e.preventDefault();
+            clearAlert();
+
+            // Validar todo el formulario
+            if (!validateRegisterForm()) {
+                showAlert('Por favor corrige los errores en el formulario', 'error');
+                return;
+            }
+
+            const rol = document.getElementById('regRol').value;
+            const nombre_completo = document.getElementById('regNombre').value.trim();
+            const correo = document.getElementById('regCorreo').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const carrera = document.getElementById('regCarrera').value.trim();
+            const telefono = document.getElementById('regTelefono').value.trim();
+            const sexo = document.getElementById('regSexo').value;
+            
+            let id_usuario;
+            if (rol === 'estudiante') {
+                id_usuario = document.getElementById('regMatricula').value.trim();
+            } else {
+                // Para docentes, generar ID único
+                id_usuario = `${nombre_completo.split(' ')[0].toLowerCase()}_${Date.now()}`;
+            }
+
+            const btnRegister = document.getElementById('btnRegister');
+            btnRegister.disabled = true;
+            btnRegister.textContent = 'Creando cuenta...';
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario,
+                        nombre_completo,
+                        correo,
+                        password,
+                        carrera,
+                        telefono,
+                        sexo,
+                        rol
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión', 'success');
+                    
+                    // Limpiar formulario
+                    document.getElementById('registerForm').reset();
+                    document.querySelectorAll('#tab-register input').forEach(i => {
+                        i.classList.remove('valid', 'error');
+                    });
+                    document.getElementById('strengthBar').className = 'bar';
+                    document.getElementById('strengthText').textContent = 'Mínimo 6 caracteres';
+                    document.getElementById('passwordMatch').textContent = '';
+                    
+                    setTimeout(() => showTab('login'), 1500);
+                } else {
+                    showAlert(data.message || 'Error al crear cuenta', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error de conexión con el servidor', 'error');
+            } finally {
+                btnRegister.disabled = false;
+                btnRegister.textContent = 'Crear Cuenta';
+            }
+        }
+
+        // =============== VERIFICAR SESIÓN EXISTENTE ===============
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                try {
+                    const user = JSON.parse(currentUser);
+                    if (user.rol === 'docente') {
+                        window.location.href = 'screens/admin-dashboard.html';
+                    } else {
+                        window.location.href = 'screens/student-dashboard.html';
+                    }
+                } catch (e) {
+                    localStorage.removeItem('currentUser');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

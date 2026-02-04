@@ -4,6 +4,7 @@ URL configuration for Sistema de Gestión de Tareas
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
+from django.conf.urls.static import static
 from django.views.static import serve
 from django.http import FileResponse
 import os
@@ -22,7 +23,12 @@ def serve_src_file(request, path):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
+    path('api/', include('tareas.urls')),
     
     # Servir archivos estáticos desde /src (compatibilidad con frontend)
     re_path(r'^src/(?P<path>.*)$', serve_src_file),
 ]
+
+# Servir archivos media en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

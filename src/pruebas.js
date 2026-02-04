@@ -9,7 +9,7 @@ function verificarSesion() {
     
     if (!currentUser) {
         console.log('No hay usuario, redirigiendo a login');
-        window.location.href = 'index-angular.html';
+        window.location.href = 'login.html';
         return;
     }
     
@@ -29,7 +29,7 @@ function verificarSesion() {
         cargarCarreraUsuario(user.id_usuario);
     } catch (error) {
         console.error('Error al cargar usuario:', error);
-        window.location.href = 'index-angular.html';
+        window.location.href = 'login.html';
     }
 }
 
@@ -45,8 +45,9 @@ function cerrarSesion() {
 
 async function cargarCarreraUsuario(id_usuario) {
     try {
-        const response = await fetch(`http://localhost:3000/api/users`);
-        const users = await response.json();
+        const response = await fetch(`http://127.0.0.1:8000/api/users`);
+        const data = await response.json();
+        const users = data.users || data;
         const usuario = users.find(u => u.id_usuario === id_usuario);
         
         const carreraElement = document.getElementById('userCarrera');

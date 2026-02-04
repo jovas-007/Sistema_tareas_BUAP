@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django_filters',
     # Local apps
     'users',
+    'tareas',
 ]
 
 MIDDLEWARE = [
@@ -110,6 +111,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 
+# Media files (uploads de usuarios)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Límite de archivos: 20MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20MB
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -124,12 +133,7 @@ REST_FRAMEWORK = {
 }
 
 # CORS - Permitir conexiones desde el frontend Angular
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
-    'http://127.0.0.1:4200',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-]
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -152,4 +156,5 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'x-user-id',
 ]
