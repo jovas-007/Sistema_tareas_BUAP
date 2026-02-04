@@ -65,23 +65,49 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database - TiDB Cloud
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_tidb',
-        'NAME': 'sistema_tareas',
-        'USER': '37QFcSa1HSQDHNE.root',
-        'PASSWORD': 'bOvay0l4SI0w3lZA',
-        'HOST': 'gateway01.us-east-1.prod.aws.tidbcloud.com',
-        'PORT': 4000,
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'ssl': {
-                'ssl_mode': 'VERIFY_IDENTITY',
-            }
-        },
+# Database - TiDB Cloud (Producción)
+import os
+
+# Detectar si estamos en producción o desarrollo
+IS_PRODUCTION = os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RENDER') or os.environ.get('TIDB_HOST')
+
+if IS_PRODUCTION:
+    # TiDB Cloud - Producción
+    import ssl
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django_tidb',
+            'NAME': os.environ.get('TIDB_DATABASE', 'sistema_tareas'),
+            'USER': os.environ.get('TIDB_USER', '37QFcSa1HSQDHNE.root'),
+            'PASSWORD': os.environ.get('TIDB_PASSWORD', 'bOvay0l4SI0w3lZA'),
+            'HOST': os.environ.get('TIDB_HOST', 'gateway01.us-east-1.prod.aws.tidbcloud.com'),
+            'PORT': int(os.environ.get('TIDB_PORT', 4000)),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'ssl': {
+                    'ssl_mode': ssl.CERT_REQUIRED,
+                },
+            },
+        }
     }
-}
+else:
+    # MySQL Local - Desarrollo (XAMPP)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'sistema_tareas',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '3307',
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
+        }
+    }
+    # Usar PyMySQL como conector local
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
