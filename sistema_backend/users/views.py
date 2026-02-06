@@ -26,11 +26,25 @@ def register(request):
     POST /api/register
     Registrar un nuevo usuario
     """
+    from .email_service import send_welcome_email
+    
     print(f"[DEBUG] Datos recibidos: {request.data}")
     serializer = RegisterSerializer(data=request.data)
     
     if serializer.is_valid():
         user = serializer.save()
+        
+        # Enviar email de bienvenida
+        try:
+            send_welcome_email(
+                nombre_completo=user.nombre_completo,
+                correo=user.correo,
+                rol=user.rol
+            )
+            print(f"[DEBUG] Email de bienvenida enviado a {user.correo}")
+        except Exception as e:
+            print(f"[ERROR] No se pudo enviar email de bienvenida: {e}")
+        
         return Response({
             'success': True,
             'message': 'Usuario registrado exitosamente',

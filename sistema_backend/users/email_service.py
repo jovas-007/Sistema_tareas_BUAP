@@ -393,3 +393,96 @@ def send_task_reminder_email(nombre_completo: str, correo: str,
     """
     
     return send_email(correo, subject, html_content)
+
+
+def send_welcome_email(nombre_completo: str, correo: str, rol: str) -> bool:
+    """
+    Enviar email de bienvenida cuando un usuario crea su cuenta
+    
+    Args:
+        nombre_completo: Nombre del usuario
+        correo: Email del usuario
+        rol: Rol del usuario (estudiante/docente/admin)
+    
+    Returns:
+        bool: True si se envió correctamente
+    """
+    # Personalizar mensaje según el rol
+    rol_emoji = {
+        'estudiante': '🎓',
+        'docente': '👨\u200d🏫',
+        'admin': '👑',
+    }.get(rol, '👤')
+    
+    rol_texto = {
+        'estudiante': 'estudiante',
+        'docente': 'docente',
+        'admin': 'administrador',
+    }.get(rol, 'usuario')
+    
+    subject = f'{rol_emoji} ¡Bienvenido al Sistema de Gestión de Tareas!'
+    
+    html_content = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0; font-size: 32px;">{rol_emoji} ¡Bienvenido!</h1>
+        </div>
+        
+        <div style="padding: 30px; background-color: #ffffff;">
+            <p style="font-size: 16px;">Hola <strong>{nombre_completo}</strong>,</p>
+            
+            <p>Tu cuenta de <strong>{rol_texto}</strong> ha sido creada exitosamente en el Sistema de Gestión de Tareas Escolares de la BUAP.</p>
+            
+            <div style="background-color: #f0f4ff; padding: 20px; border-left: 4px solid #667eea; margin: 25px 0;">
+                <p style="margin: 0;"><strong>📧 Tu correo registrado:</strong></p>
+                <p style="margin: 5px 0 0 0; color: #667eea; font-size: 18px;">{correo}</p>
+            </div>
+            
+            <h3 style="color: #2c3e50; margin-top: 30px;">¿Qué puedes hacer?</h3>
+            
+            <ul style="line-height: 1.8; color: #34495e;">
+                {_get_features_by_role(rol)}
+            </ul>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="color: #7f8c8d;">¡Estamos aquí para ayudarte en tu proceso educativo!</p>
+            </div>
+        </div>
+        
+        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
+            <p style="color: #7f8c8d; font-size: 12px; margin: 0;">
+                Sistema de Gestión de Tareas Escolares - BUAP
+                <br>Este es un mensaje automático, por favor no respondas a este correo.
+            </p>
+        </div>
+    </div>
+    """
+    
+    return send_email(correo, subject, html_content)
+
+
+def _get_features_by_role(rol: str) -> str:
+    """
+    Obtener lista de características según el rol del usuario
+    """
+    features = {
+        'estudiante': """
+                <li>📝 Ver y entregar tus tareas asignadas</li>
+                <li>📊 Consultar tus calificaciones</li>
+                <li>⏰ Recibir recordatorios antes de las fechas de entrega</li>
+                <li>📬 Recibir notificaciones de nuevas tareas y calificaciones</li>
+        """,
+        'docente': """
+                <li>➕ Crear y asignar tareas a tus estudiantes</li>
+                <li>✅ Revisar y calificar entregas</li>
+                <li>📊 Ver el progreso de tus grupos</li>
+                <li>📬 Recibir notificaciones de entregas</li>
+        """,
+        'admin': """
+                <li>👥 Gestionar usuarios del sistema</li>
+                <li>📋 Supervisar todas las tareas y entregas</li>
+                <li>📊 Acceder a estadísticas completas</li>
+                <li>⚙️ Configurar el sistema</li>
+        """
+    }
+    return features.get(rol, '<li>📱 Acceder al sistema</li>')
