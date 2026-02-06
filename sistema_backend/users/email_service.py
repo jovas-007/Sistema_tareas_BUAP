@@ -31,6 +31,10 @@ def send_email(to_email: str, subject: str, html_content: str) -> bool:
         bool: True si se envió correctamente, False en caso de error
     """
     try:
+        print(f"[EMAIL DEBUG] Intentando enviar a: {to_email}")
+        print(f"[EMAIL DEBUG] Usando servidor: {EMAIL_CONFIG['host']}:{EMAIL_CONFIG['port']}")
+        print(f"[EMAIL DEBUG] Usuario SMTP: {EMAIL_CONFIG['user']}")
+        
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
         msg['From'] = EMAIL_CONFIG['user']
@@ -41,16 +45,27 @@ def send_email(to_email: str, subject: str, html_content: str) -> bool:
         msg.attach(html_part)
         
         # Conectar y enviar
-        with smtplib.SMTP(EMAIL_CONFIG['host'], EMAIL_CONFIG['port']) as server:
+        print(f"[EMAIL DEBUG] Conectando al servidor SMTP...")
+        with smtplib.SMTP(EMAIL_CONFIG['host'], EMAIL_CONFIG['port'], timeout=30) as server:
+            print(f"[EMAIL DEBUG] Iniciando TLS...")
             server.starttls()
+            print(f"[EMAIL DEBUG] Autenticando...")
             server.login(EMAIL_CONFIG['user'], EMAIL_CONFIG['password'])
+            print(f"[EMAIL DEBUG] Enviando mensaje...")
             server.sendmail(EMAIL_CONFIG['user'], to_email, msg.as_string())
         
-        print(f"✅ Email enviado a {to_email}")
+        print(f"✅ Email enviado exitosamente a {to_email}")
         return True
         
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"❌ Error de autenticación SMTP: {str(e)}")
+        print(f"   Verifica las credenciales de Gmail y contraseña de aplicación")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"❌ Error SMTP al enviar email a {to_email}: {str(e)}")
+        return False
     except Exception as e:
-        print(f"❌ Error al enviar email a {to_email}: {str(e)}")
+        print(f"❌ Error general al enviar email a {to_email}: {type(e).__name__} - {str(e)}")
         return False
 
 
