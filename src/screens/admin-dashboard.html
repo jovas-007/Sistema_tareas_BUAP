@@ -21,7 +21,7 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #002855 0%, #004080 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
             color: white;
             padding: 15px 30px;
             display: flex;
@@ -31,7 +31,9 @@
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -170,16 +172,26 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #002855 0%, #004080 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             color: white;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        .stat-card.success { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-        .stat-card.warning { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
-        .stat-card.danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+        .stat-card.success { 
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .stat-card.warning { 
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .stat-card.danger { 
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
 
         .stat-value {
             font-size: 36px;

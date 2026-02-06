@@ -20,7 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     """Serializador para registro de usuarios"""
     
-    password = serializers.CharField(write_only=True, min_length=8, max_length=15)
+    password = serializers.CharField(write_only=True, min_length=8, max_length=20)
+    nombre_completo = serializers.CharField(max_length=50, min_length=3)
+    correo = serializers.EmailField(max_length=50)
     
     class Meta:
         model = User
@@ -28,8 +30,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     def validate_password(self, value):
         """Validar que la contraseña tenga letra, número y símbolo"""
-        if len(value) < 8 or len(value) > 15:
-            raise serializers.ValidationError('La contraseña debe tener entre 8 y 15 caracteres')
+        if len(value) < 8 or len(value) > 20:
+            raise serializers.ValidationError('La contraseña debe tener entre 8 y 20 caracteres')
         
         if not re.search(r'[a-zA-Z]', value):
             raise serializers.ValidationError('La contraseña debe contener al menos una letra')
@@ -54,6 +56,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         if value not in ['docente', 'estudiante']:
             raise serializers.ValidationError('El rol debe ser "docente" o "estudiante"')
         return value
+    
+    def validate(self, data):
+        """Validaciones adicionales a nivel de objeto"""
+        # Para docentes, carrera es opcional (puede ser vacía)
+        # Para estudiantes, carrera es requerida
+        if data.get('rol') == 'estudiante' and not data.get('carrera', '').strip():
+            raise serializers.ValidationError({'carrera': 'La carrera es requerida para estudiantes'})
+        return data
     
     def create(self, validated_data):
         """Crear usuario con contraseña hasheada"""
@@ -143,7 +153,7 @@ class ResetPasswordSerializer(serializers.Serializer):
     
     correo = serializers.EmailField()
     code = serializers.CharField(max_length=6, min_length=6)
-    newPassword = serializers.CharField(min_length=8, max_length=15)
+    newPassword = serializers.CharField(min_length=8, max_length=20)
     
     def validate_newPassword(self, value):
         """Validar que la nueva contraseña tenga letra, número y símbolo"""

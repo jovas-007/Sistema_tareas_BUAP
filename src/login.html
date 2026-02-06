@@ -401,7 +401,7 @@
                 <div class="form-group">
                     <label>Nombre Completo <span class="required">*</span></label>
                     <input type="text" id="regNombre" placeholder="Tu nombre completo" 
-                           required minlength="3"
+                           required minlength="3" maxlength="50"
                            oninput="validateNombre(this)">
                     <p class="error-msg" id="nombreError">El nombre debe tener al menos 3 caracteres</p>
                 </div>
@@ -409,7 +409,7 @@
                 <div class="form-group">
                     <label>Correo Electrónico <span class="required">*</span></label>
                     <input type="email" id="regCorreo" placeholder="correo@ejemplo.com" 
-                           required
+                           required maxlength="50"
                            oninput="validateEmail(this)">
                     <p class="hint">Formato válido: usuario@dominio.com</p>
                     <p class="error-msg" id="correoError">Ingresa un correo electrónico válido</p>
@@ -427,38 +427,41 @@
 
                 <div class="form-group">
                     <label>Contraseña <span class="required">*</span></label>
-                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" 
-                           required minlength="6"
+                    <input type="password" id="regPassword" placeholder="8-20 caracteres" 
+                           required minlength="8" maxlength="20"
                            oninput="validatePassword()">
                     <div class="password-strength">
                         <div class="bar" id="strengthBar"></div>
                     </div>
-                    <p class="hint" id="strengthText">Mínimo 6 caracteres</p>
-                    <p class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres</p>
+                    <p class="hint" id="strengthText">8-20 caracteres</p>
+                    <p class="error-msg" id="passwordError">La contraseña debe tener entre 8 y 20 caracteres</p>
                 </div>
 
                 <div class="form-group">
                     <label>Confirmar Contraseña <span class="required">*</span></label>
                     <input type="password" id="regPasswordConfirm" placeholder="Repite tu contraseña" 
-                           required
+                           required maxlength="20"
                            oninput="validatePasswordMatch()">
                     <p class="password-match" id="passwordMatch"></p>
                 </div>
 
                 <div class="form-group">
                     <label>Sexo <span class="required">*</span></label>
-                    <select id="regSexo" required>
+                    <select id="regSexo" required onchange="validateSexo(this)">
                         <option value="">Selecciona...</option>
                         <option value="Masculino">Masculino</option>
                         <option value="Femenino">Femenino</option>
                         <option value="Otro">Otro</option>
                     </select>
+                    <p class="error-msg" id="sexoError">Selecciona tu sexo</p>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="carreraGroup">
                     <label>Carrera <span class="required">*</span></label>
                     <input type="text" id="regCarrera" placeholder="Ej: Ingeniería en TI" 
-                           required minlength="3">
+                           required minlength="3"
+                           oninput="validateCarrera(this)">
+                    <p class="error-msg" id="carreraError">La carrera debe tener al menos 3 caracteres</p>
                 </div>
 
                 <input type="hidden" id="regRol" value="estudiante">
@@ -492,6 +495,17 @@
             targetTab.style.display = 'block';
             
             clearAlert();
+            
+            // Limpiar todos los estados de error de ambos formularios
+            document.querySelectorAll('input, select').forEach(field => {
+                field.classList.remove('valid', 'error');
+            });
+            document.querySelectorAll('.error-msg, .password-match').forEach(msg => {
+                msg.classList.remove('show');
+                if (msg.classList.contains('password-match')) {
+                    msg.textContent = '';
+                }
+            });
         }
 
         function selectRole(role, element) {
@@ -501,12 +515,19 @@
             
             const matriculaGroup = document.getElementById('matriculaGroup');
             const matriculaInput = document.getElementById('regMatricula');
+            const carreraGroup = document.getElementById('carreraGroup');
+            const carreraInput = document.getElementById('regCarrera');
+            
             if (role === 'docente') {
                 matriculaGroup.style.display = 'none';
                 matriculaInput.removeAttribute('required');
+                carreraGroup.style.display = 'none';
+                carreraInput.removeAttribute('required');
             } else {
                 matriculaGroup.style.display = 'block';
                 matriculaInput.setAttribute('required', '');
+                carreraGroup.style.display = 'block';
+                carreraInput.setAttribute('required', '');
             }
         }
 
@@ -616,6 +637,43 @@
             }
         }
 
+        function validateSexo(select) {
+            const errorEl = document.getElementById('sexoError');
+            
+            if (select.value) {
+                select.classList.remove('error');
+                select.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else {
+                select.classList.add('error');
+                select.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            }
+        }
+
+        function validateCarrera(input) {
+            const value = input.value.trim();
+            const errorEl = document.getElementById('carreraError');
+            
+            if (value.length >= 3) {
+                input.classList.remove('error');
+                input.classList.add('valid');
+                errorEl.classList.remove('show');
+                return true;
+            } else if (value.length > 0) {
+                input.classList.add('error');
+                input.classList.remove('valid');
+                errorEl.classList.add('show');
+                return false;
+            } else {
+                input.classList.remove('error', 'valid');
+                errorEl.classList.remove('show');
+                return false;
+            }
+        }
+
         function validatePassword() {
             const password = document.getElementById('regPassword').value;
             const strengthBar = document.getElementById('strengthBar');
@@ -627,16 +685,16 @@
             strengthBar.className = 'bar';
             
             if (password.length === 0) {
-                strengthText.textContent = 'Mínimo 6 caracteres';
+                strengthText.textContent = '8-20 caracteres';
                 input.classList.remove('error', 'valid');
                 errorEl.classList.remove('show');
                 validatePasswordMatch();
                 return false;
             }
             
-            if (password.length < 6) {
+            if (password.length < 8 || password.length > 20) {
                 strengthBar.classList.add('weak');
-                strengthText.textContent = 'Muy corta';
+                strengthText.textContent = password.length < 8 ? 'Muy corta (mínimo 8)' : 'Muy larga (máximo 20)';
                 input.classList.add('error');
                 input.classList.remove('valid');
                 errorEl.classList.add('show');
@@ -739,7 +797,7 @@
             
             // Validar contraseña
             const password = document.getElementById('regPassword').value;
-            if (password.length < 6) {
+            if (password.length < 8 || password.length > 20) {
                 document.getElementById('passwordError').classList.add('show');
                 document.getElementById('regPassword').classList.add('error');
                 isValid = false;
@@ -757,15 +815,19 @@
             // Validar sexo
             const sexo = document.getElementById('regSexo').value;
             if (!sexo) {
+                document.getElementById('sexoError').classList.add('show');
+                document.getElementById('regSexo').classList.add('error');
                 isValid = false;
-                showAlert('Selecciona tu sexo', 'error');
             }
             
-            // Validar carrera
-            const carrera = document.getElementById('regCarrera').value.trim();
-            if (carrera.length < 3) {
-                isValid = false;
-                showAlert('La carrera debe tener al menos 3 caracteres', 'error');
+            // Validar carrera (solo para estudiantes)
+            if (rol === 'estudiante') {
+                const carrera = document.getElementById('regCarrera').value.trim();
+                if (carrera.length < 3) {
+                    document.getElementById('carreraError').classList.add('show');
+                    document.getElementById('regCarrera').classList.add('error');
+                    isValid = false;
+                }
             }
             
             return isValid;
@@ -832,7 +894,6 @@
 
             // Validar todo el formulario
             if (!validateRegisterForm()) {
-                showAlert('Por favor corrige los errores en el formulario', 'error');
                 return;
             }
 
@@ -840,7 +901,7 @@
             const nombre_completo = document.getElementById('regNombre').value.trim();
             const correo = document.getElementById('regCorreo').value.trim();
             const password = document.getElementById('regPassword').value;
-            const carrera = document.getElementById('regCarrera').value.trim();
+            const carrera = rol === 'estudiante' ? document.getElementById('regCarrera').value.trim() : '';
             const telefono = document.getElementById('regTelefono').value.trim();
             const sexo = document.getElementById('regSexo').value;
             
