@@ -30,43 +30,57 @@ def send_email(to_email: str, subject: str, html_content: str) -> bool:
     Returns:
         bool: True si se envió correctamente, False en caso de error
     """
+    print(f"[EMAIL DEBUG] Intentando enviar a: {to_email}")
+    print(f"[EMAIL DEBUG] Usuario SMTP: {EMAIL_CONFIG['user']}")
+    
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_CONFIG['user']
+    msg['To'] = to_email
+    
+    # Adjuntar contenido HTML
+    html_part = MIMEText(html_content, 'html')
+    msg.attach(html_part)
+    
+    # Intentar primero con puerto 465 (SSL) - más confiable en hosting
     try:
-        print(f"[EMAIL DEBUG] Intentando enviar a: {to_email}")
-        print(f"[EMAIL DEBUG] Usando servidor: {EMAIL_CONFIG['host']}:{EMAIL_CONFIG['port']}")
-        print(f"[EMAIL DEBUG] Usuario SMTP: {EMAIL_CONFIG['user']}")
-        
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = EMAIL_CONFIG['user']
-        msg['To'] = to_email
-        
-        # Adjuntar contenido HTML
-        html_part = MIMEText(html_content, 'html')
-        msg.attach(html_part)
-        
-        # Conectar y enviar
-        print(f"[EMAIL DEBUG] Conectando al servidor SMTP...")
-        with smtplib.SMTP(EMAIL_CONFIG['host'], EMAIL_CONFIG['port'], timeout=30) as server:
-            print(f"[EMAIL DEBUG] Iniciando TLS...")
-            server.starttls()
-            print(f"[EMAIL DEBUG] Autenticando...")
+        print(f"[EMAIL DEBUG] Intentando conexión SSL en puerto 465...")
+        with smtplib.SMTP_SSL(EMAIL_CONFIG['host'], 465, timeout=15) as server:
+            print(f"[EMAIL DEBUG] Autenticando (SSL)...")
             server.login(EMAIL_CONFIG['user'], EMAIL_CONFIG['password'])
             print(f"[EMAIL DEBUG] Enviando mensaje...")
             server.sendmail(EMAIL_CONFIG['user'], to_email, msg.as_string())
         
-        print(f"✅ Email enviado exitosamente a {to_email}")
+        print(f"✅ Email enviado exitosamente a {to_email} (SSL)")
         return True
         
-    except smtplib.SMTPAuthenticationError as e:
-        print(f"❌ Error de autenticación SMTP: {str(e)}")
-        print(f"   Verifica las credenciales de Gmail y contraseña de aplicación")
-        return False
-    except smtplib.SMTPException as e:
-        print(f"❌ Error SMTP al enviar email a {to_email}: {str(e)}")
-        return False
-    except Exception as e:
-        print(f"❌ Error general al enviar email a {to_email}: {type(e).__name__} - {str(e)}")
-        return False
+    except Exception as ssl_error:
+        print(f"[EMAIL DEBUG] Falló SSL (465): {type(ssl_error).__name__} - {str(ssl_error)}")
+        print(f"[EMAIL DEBUG] Intentando con TLS en puerto {EMAIL_CONFIG['port']}...")
+        
+        # Si SSL falla, intentar con TLS tradicional
+        try:
+            with smtplib.SMTP(EMAIL_CONFIG['host'], EMAIL_CONFIG['port'], timeout=15) as server:
+                print(f"[EMAIL DEBUG] Iniciando TLS...")
+                server.starttls()
+                print(f"[EMAIL DEBUG] Autenticando (TLS)...")
+                server.login(EMAIL_CONFIG['user'], EMAIL_CONFIG['password'])
+                print(f"[EMAIL DEBUG] Enviando mensaje...")
+                server.sendmail(EMAIL_CONFIG['user'], to_email, msg.as_string())
+            
+            print(f"✅ Email enviado exitosamente a {to_email} (TLS)")
+            return True
+            
+        except smtplib.SMTPAuthenticationError as e:
+            print(f"❌ Error de autenticación SMTP: {str(e)}")
+            print(f"   Verifica las credenciales de Gmail y contraseña de aplicación")
+            return False
+        except smtplib.SMTPException as e:
+            print(f"❌ Error SMTP al enviar email a {to_email}: {str(e)}")
+            return False
+        except Exception as e:
+            print(f"❌ Error general al enviar email a {to_email}: {type(e).__name__} - {str(e)}")
+            return False
 
 
 def send_recovery_code_email(nombre_completo: str, correo: str, code: str) -> bool:
