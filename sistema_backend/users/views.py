@@ -195,6 +195,7 @@ def reset_password(request):
     POST /api/reset-password
     Restablecer contraseña con código verificado
     """
+    print(f"[DEBUG] reset_password recibió: {request.data}")
     serializer = ResetPasswordSerializer(data=request.data)
     
     if serializer.is_valid():
@@ -202,14 +203,26 @@ def reset_password(request):
         code = serializer.validated_data['code']
         new_password = serializer.validated_data['newPassword']
         
+        print(f"[DEBUG] Buscando código para: correo={correo}, code={code}")
+        
         try:
             user = User.objects.get(correo__iexact=correo)
+            print(f"[DEBUG] Usuario encontrado: {user.correo}")
+            
+            # Buscar códigos disponibles para debug
+            all_codes = RecoveryCode.objects.filter(user=user).order_by('-created_at')
+            print(f"[DEBUG] Códigos existentes para {correo}:")
+            for rc in all_codes[:3]:
+                print(f"  - code={rc.code}, used={rc.used}, expires={rc.expires_at}, now={timezone.now()}")
+            
             recovery = RecoveryCode.objects.filter(
                 user=user,
                 code=code,
                 used=False,
                 expires_at__gt=timezone.now()
             ).latest('created_at')
+            
+            print(f"[DEBUG] Código válido encontrado: {recovery.code}")
             
             # Cambiar contraseña
             user.set_password(new_password)
@@ -219,12 +232,19 @@ def reset_password(request):
             recovery.used = True
             recovery.save()
             
+            print(f"[DEBUG] Contraseña actualizada exitosamente para {correo}")
             return Response({
                 'success': True,
                 'message': 'Contraseña actualizada exitosamente'
             })
-        except (User.DoesNotExist, RecoveryCode.DoesNotExist):
-            pass
+        except User.DoesNotExist:
+            print(f"[DEBUG] Usuario no encontrado: {correo}")
+        except RecoveryCode.DoesNotExist:
+            print(f"[DEBUG] Código no encontrado o inválido para {correo}")
+        except Exception as e:
+            print(f"[DEBUG] Error inesperado: {type(e).__name__}: {e}")
+    else:
+        print(f"[DEBUG] Errores de validación: {serializer.errors}")
     
     return Response({
         'success': False,
