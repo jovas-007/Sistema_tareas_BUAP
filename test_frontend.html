@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Sistema de Materias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #002855;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #002855;
+            margin-bottom: 15px;
+        }
+
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .info {
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        button {
+            background: linear-gradient(135deg, #002855 0%, #004080 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 40, 85, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        pre {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #002855;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test del Sistema de Materias</h1>
+        <p class="subtitle">Pruebas del backend Django con el nuevo sistema de carreras y materias</p>
+
+        <!-- Test 1: Conexión con la API -->
+        <div class="section">
+            <h2>1. Verificar Conexión con API</h2>
+            <button onclick="testConnection()">Probar Conexión</button>
+            <div id="connection-result"></div>
+        </div>
+
+        <!-- Test 2: Obtener Materias -->
+        <div class="section">
+            <h2>2. Obtener Materias por Carrera</h2>
+            <button onclick="getMaterias('ITI')">Materias ITI</button>
+            <button onclick="getMaterias('LCC')">Materias LCC</button>
+            <button onclick="getMaterias('ICC')">Materias ICC</button>
+            <button onclick="getMaterias('')">Todas las Materias</button>
+            <div id="materias-result"></div>
+        </div>
+
+        <!-- Test 3: Registro de Estudiante ITI -->
+        <div class="section">
+            <h2>3. Registro de Estudiante ITI con MDW</h2>
+            <button onclick="testRegistroEstudianteITI()">Probar Registro ITI</button>
+            <div id="registro-iti-result"></div>
+        </div>
+
+        <!-- Test 4: Registro de Estudiante LCC -->
+        <div class="section">
+            <h2>4. Registro de Estudiante LCC con Múltiples Materias</h2>
+            <button onclick="testRegistroEstudianteLCC()">Probar Registro LCC</button>
+            <div id="registro-lcc-result"></div>
+        </div>
+
+        <!-- Test 5: Registro de Docente -->
+        <div class="section">
+            <h2>5. Registro de Docente LCC con Múltiples Materias</h2>
+            <button onclick="testRegistroDocente()">Probar Registro Docente</button>
+            <div id="registro-docente-result"></div>
+        </div>
+
+        <!-- Test 6: Validación ITI con Materia Incorrecta -->
+        <div class="section">
+            <h2>6. Validación: ITI con Materia de LCC (debe fallar)</h2>
+            <button onclick="testValidacionITI()">Probar Validación</button>
+            <div id="validacion-iti-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Usar servidor local - asegúrate de que Django esté corriendo en puerto 3000
+        const API_URL = 'http://127.0.0.1:3000/api';
+        
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '<span class="loading"></span> Ejecutando...';
+        }
+
+        async function testConnection() {
+            showLoading('connection-result');
+            try {
+                const response = await fetch(`${API_URL}/materias`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('connection-result', 
+                        `✅ Conexión exitosa con el servidor Django\nMaterias encontradas: ${data.materias.length}`, 
+                        'success');
+                } else {
+                    showResult('connection-result', 
+                        `⚠️ Respuesta del servidor: ${JSON.stringify(data)}`, 
+                        'info');
+                }
+            } catch (error) {
+                showResult('connection-result', 
+                    `❌ Error de conexión: ${error.message}\n\nAsegúrate de que el servidor Django esté ejecutándose en http://127.0.0.1:3000`, 
+                    'error');
+            }
+        }
+
+        async function getMaterias(carrera) {
+            showLoading('materias-result');
+            try {
+                const url = carrera ? `${API_URL}/materias?carrera=${carrera}` : `${API_URL}/materias`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const titulo = carrera ? `Materias para ${carrera}` : 'Todas las materias';
+                    let html = `<div class="test-result success">
+                        <strong>✅ ${titulo}:</strong>
+                        <pre>${JSON.stringify(data.materias, null, 2)}</pre>
+                    </div>`;
+                    document.getElementById('materias-result').innerHTML = html;
+                } else {
+                    showResult('materias-result', `⚠️ ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('materias-result', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistroEstudianteITI() {
+            showLoading('registro-iti-result');
+            
+            // Primero obtener materias de ITI
+            try {
+                const materiasResponse = await fetch(`${API_URL}/materias?carrera=ITI`);
+                const materiasData = await materiasResponse.json();
+                
+                if (!materiasData.success || materiasData.materias.length === 0) {
+                    showResult('registro-iti-result', 
+                        '❌ No se encontraron materias para ITI. ¿Ejecutaste las migraciones?', 
+                        'error');
+                    return;
+                }
+                
+                const materiaMDW = materiasData.materias[0].id;
+                const timestamp = Date.now();
+                
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: `${timestamp}`,
+                        password: 'Test123!@',
+                        nombre_completo: 'Test Estudiante ITI',
+                        correo: `test.iti.${timestamp}@test.com`,
+                        telefono: '2221234567',
+                        sexo: 'Otro',
+                        carrera: 'ITI',
+                        rol: 'estudiante',
+                        materias: [materiaMDW]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('registro-iti-result', 
+                        `✅ Registro exitoso\n\nRespuesta del servidor:\n${JSON.stringify(data, null, 2)}`, 
+                        'success');
+                } else {
+                    showResult('registro-iti-result', 
+                        `❌ Error en registro: ${data.message}\n\nDetalles:\n${JSON.stringify(data, null, 2)}`, 
+                        'error');
+                }
+            } catch (error) {
+                showResult('registro-iti-result', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistroEstudianteLCC() {
+            showLoading('registro-lcc-result');
+            
+            try {
+                const materiasResponse = await fetch(`${API_URL}/materias?carrera=LCC`);
+                const materiasData = await materiasResponse.json();
+                
+                if (!materiasData.success || materiasData.materias.length === 0) {
+                    showResult('registro-lcc-result', 
+                        '❌ No se encontraron materias para LCC', 
+                        'error');
+                    return;
+                }
+                
+                // Seleccionar las primeras 2 materias
+                const materias = materiasData.materias.slice(0, 2).map(m => m.id);
+                const timestamp = Date.now();
+                
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: `${timestamp}`,
+                        password: 'Test123!@',
+                        nombre_completo: 'Test Estudiante LCC',
+                        correo: `test.lcc.${timestamp}@test.com`,
+                        telefono: '2221234567',
+                        sexo: 'Otro',
+                        carrera: 'LCC',
+                        rol: 'estudiante',
+                        materias: materias
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('registro-lcc-result', 
+                        `✅ Registro exitoso con ${materias.length} materias\n\nRespuesta:\n${JSON.stringify(data, null, 2)}`, 
+                        'success');
+                } else {
+                    showResult('registro-lcc-result', 
+                        `❌ Error: ${data.message}\n\n${JSON.stringify(data, null, 2)}`, 
+                        'error');
+                }
+            } catch (error) {
+                showResult('registro-lcc-result', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistroDocente() {
+            showLoading('registro-docente-result');
+            
+            try {
+                const materiasResponse = await fetch(`${API_URL}/materias?carrera=LCC`);
+                const materiasData = await materiasResponse.json();
+                
+                if (!materiasData.success || materiasData.materias.length === 0) {
+                    showResult('registro-docente-result', 
+                        '❌ No se encontraron materias para LCC', 
+                        'error');
+                    return;
+                }
+                
+                const materias = materiasData.materias.map(m => m.id);
+                const timestamp = Date.now();
+                
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: `DOC${timestamp}`,
+                        password: 'Test123!@',
+                        nombre_completo: 'Prof. Test Docente',
+                        correo: `docente.${timestamp}@test.com`,
+                        telefono: '2221234567',
+                        sexo: 'Otro',
+                        carrera: 'LCC',
+                        rol: 'docente',
+                        materias: materias
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('registro-docente-result', 
+                        `✅ Docente registrado con ${materias.length} materias\n\nRespuesta:\n${JSON.stringify(data, null, 2)}`, 
+                        'success');
+                } else {
+                    showResult('registro-docente-result', 
+                        `❌ Error: ${data.message}\n\n${JSON.stringify(data, null, 2)}`, 
+                        'error');
+                }
+            } catch (error) {
+                showResult('registro-docente-result', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testValidacionITI() {
+            showLoading('validacion-iti-result');
+            
+            try {
+                const materiasResponse = await fetch(`${API_URL}/materias?carrera=LCC`);
+                const materiasData = await materiasResponse.json();
+                
+                if (!materiasData.success || materiasData.materias.length === 0) {
+                    showResult('validacion-iti-result', 
+                        '❌ No se encontraron materias para LCC', 
+                        'error');
+                    return;
+                }
+                
+                // Intentar registrar ITI con materia de LCC (debe fallar)
+                const materiaLCC = materiasData.materias[0].id;
+                const timestamp = Date.now();
+                
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: `${timestamp}`,
+                        password: 'Test123!@',
+                        nombre_completo: 'Test ITI Inválido',
+                        correo: `test.invalid.${timestamp}@test.com`,
+                        telefono: '2221234567',
+                        sexo: 'Otro',
+                        carrera: 'ITI',
+                        rol: 'estudiante',
+                        materias: [materiaLCC]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    showResult('validacion-iti-result', 
+                        `✅ Validación correcta - Registro rechazado como se esperaba\n\nMensaje: ${data.message}\n\nDetalles:\n${JSON.stringify(data, null, 2)}`, 
+                        'success');
+                } else {
+                    showResult('validacion-iti-result', 
+                        `❌ FALLO: El registro NO debería haber sido aceptado\n\n${JSON.stringify(data, null, 2)}`, 
+                        'error');
+                }
+            } catch (error) {
+                showResult('validacion-iti-result', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Ejecutar test de conexión al cargar
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Sistema de pruebas cargado');
+            console.log('📡 API URL:', API_URL);
+        });
+    </script>
+</body>
+</html>

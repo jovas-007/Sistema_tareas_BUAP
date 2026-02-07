@@ -273,6 +273,20 @@
         .input-wrapper input {
             padding-right: 40px;
         }
+
+        /* Estilos para materias */
+        #materiasList > div:hover {
+            border-color: #002855 !important;
+        }
+
+        #materiasList label {
+            margin: 0;
+        }
+
+        #materiasList input[type="checkbox"],
+        #materiasList input[type="radio"] {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -458,10 +472,20 @@
 
                 <div class="form-group" id="carreraGroup">
                     <label>Carrera <span class="required">*</span></label>
-                    <input type="text" id="regCarrera" placeholder="Ej: Ingeniería en TI" 
-                           required minlength="3"
-                           oninput="validateCarrera(this)">
-                    <p class="error-msg" id="carreraError">La carrera debe tener al menos 3 caracteres</p>
+                    <select id="regCarrera" required onchange="loadMaterias(this.value)">
+                        <option value="">Selecciona tu carrera...</option>
+                        <option value="ICC">Ingeniería en Cs. de la Computación</option>
+                        <option value="LCC">Licenciatura en Cs. de la Computación</option>
+                        <option value="ITI">Ingeniería en Tecnologías de la Información</option>
+                    </select>
+                    <p class="error-msg" id="carreraError">Selecciona tu carrera</p>
+                </div>
+
+                <div class="form-group" id="materiasGroup" style="display: none;">
+                    <label>Materias <span class="required">*</span></label>
+                    <div id="materiasList" style="margin-top: 10px;"></div>
+                    <p class="hint" id="materiasHint"></p>
+                    <p class="error-msg" id="materiasError">Selecciona al menos una materia</p>
                 </div>
 
                 <input type="hidden" id="regRol" value="estudiante">
@@ -517,17 +541,26 @@
             const matriculaInput = document.getElementById('regMatricula');
             const carreraGroup = document.getElementById('carreraGroup');
             const carreraInput = document.getElementById('regCarrera');
+            const materiasGroup = document.getElementById('materiasGroup');
             
             if (role === 'docente') {
                 matriculaGroup.style.display = 'none';
                 matriculaInput.removeAttribute('required');
-                carreraGroup.style.display = 'none';
-                carreraInput.removeAttribute('required');
+                carreraGroup.style.display = 'block';
+                carreraInput.setAttribute('required', '');
+                materiasGroup.style.display = 'none';
+                // Resetear selección de carrera y materias
+                carreraInput.value = '';
+                document.getElementById('materiasList').innerHTML = '';
             } else {
                 matriculaGroup.style.display = 'block';
                 matriculaInput.setAttribute('required', '');
                 carreraGroup.style.display = 'block';
                 carreraInput.setAttribute('required', '');
+                materiasGroup.style.display = 'none';
+                // Resetear selección
+                carreraInput.value = '';
+                document.getElementById('materiasList').innerHTML = '';
             }
         }
 
@@ -657,20 +690,121 @@
             const value = input.value.trim();
             const errorEl = document.getElementById('carreraError');
             
-            if (value.length >= 3) {
+            if (value) {
                 input.classList.remove('error');
                 input.classList.add('valid');
                 errorEl.classList.remove('show');
                 return true;
-            } else if (value.length > 0) {
+            } else {
                 input.classList.add('error');
                 input.classList.remove('valid');
                 errorEl.classList.add('show');
                 return false;
-            } else {
-                input.classList.remove('error', 'valid');
-                errorEl.classList.remove('show');
-                return false;
+            }
+        }
+
+        // =============== CARGA DE MATERIAS DINÁMICAS ===============
+        let materiasDisponibles = [];
+
+        async function loadMaterias(carrera) {
+            const materiasGroup = document.getElementById('materiasGroup');
+            const materiasList = document.getElementById('materiasList');
+            const materiasHint = document.getElementById('materiasHint');
+            const carreraSelect = document.getElementById('regCarrera');
+            
+            // Limpiar selección previa
+            materiasList.innerHTML = '';
+            
+            if (!carrera) {
+                materiasGroup.style.display = 'none';
+                return;
+            }
+            
+            carreraSelect.classList.add('valid');
+            carreraSelect.classList.remove('error');
+            
+            try {
+                const response = await fetch(`${API_URL}/materias?carrera=${carrera}`);
+                const data = await response.json();
+                
+                if (data.success && data.materias) {
+                    materiasDisponibles = data.materias;
+                    
+                    if (carrera === 'ITI') {
+                        // ITI: solo una materia (radio buttons o select simple)
+                        materiasHint.textContent = 'Selecciona la materia (solo puedes elegir una)';
+                        
+                        data.materias.forEach(materia => {
+                            const div = document.createElement('div');
+                            div.style.cssText = 'padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s;';
+                            div.innerHTML = `
+                                <label style="cursor: pointer; display: flex; align-items: center; width: 100%;">
+                                    <input type="radio" name="materia" value="${materia.id}" style="margin-right: 10px;" required>
+                                    <div>
+                                        <strong>${materia.nombre}</strong><br>
+                                        <small style="color: #64748b;">NRC: ${materia.nrc}</small>
+                                    </div>
+                                </label>
+                            `;
+                            
+                            div.addEventListener('click', function() {
+                                const radio = this.querySelector('input[type="radio"]');
+                                radio.checked = true;
+                                // Resaltar selección
+                                document.querySelectorAll('#materiasList > div').forEach(d => {
+                                    d.style.borderColor = '#e2e8f0';
+                                    d.style.background = 'white';
+                                });
+                                this.style.borderColor = '#002855';
+                                this.style.background = '#f0f7ff';
+                            });
+                            
+                            materiasList.appendChild(div);
+                        });
+                    } else {
+                        // LCC/ICC: múltiples materias (checkboxes)
+                        materiasHint.textContent = 'Selecciona una o más materias';
+                        
+                        data.materias.forEach(materia => {
+                            const div = document.createElement('div');
+                            div.style.cssText = 'padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s;';
+                            div.innerHTML = `
+                                <label style="cursor: pointer; display: flex; align-items: center; width: 100%;">
+                                    <input type="checkbox" name="materia" value="${materia.id}" style="margin-right: 10px;">
+                                    <div>
+                                        <strong>${materia.nombre}</strong><br>
+                                        <small style="color: #64748b;">NRC: ${materia.nrc}</small>
+                                    </div>
+                                </label>
+                            `;
+                            
+                            div.addEventListener('click', function(e) {
+                                if (e.target.tagName !== 'INPUT') {
+                                    const checkbox = this.querySelector('input[type="checkbox"]');
+                                    checkbox.checked = !checkbox.checked;
+                                }
+                                // Resaltar selección
+                                const checkbox = this.querySelector('input[type="checkbox"]');
+                                if (checkbox.checked) {
+                                    this.style.borderColor = '#002855';
+                                    this.style.background = '#f0f7ff';
+                                } else {
+                                    this.style.borderColor = '#e2e8f0';
+                                    this.style.background = 'white';
+                                }
+                            });
+                            
+                            materiasList.appendChild(div);
+                        });
+                    }
+                    
+                    materiasGroup.style.display = 'block';
+                } else {
+                    showAlert('Error al cargar materias', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error al cargar materias', 'error');
             }
         }
 
@@ -820,14 +954,21 @@
                 isValid = false;
             }
             
-            // Validar carrera (solo para estudiantes)
-            if (rol === 'estudiante') {
-                const carrera = document.getElementById('regCarrera').value.trim();
-                if (carrera.length < 3) {
-                    document.getElementById('carreraError').classList.add('show');
-                    document.getElementById('regCarrera').classList.add('error');
-                    isValid = false;
-                }
+            // Validar carrera (requerida para ambos roles)
+            const carrera = document.getElementById('regCarrera').value;
+            if (!carrera) {
+                document.getElementById('carreraError').classList.add('show');
+                document.getElementById('regCarrera').classList.add('error');
+                isValid = false;
+            }
+            
+            // Validar materias (requerida para ambos roles)
+            const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
+            if (carrera && materiasInputs.length === 0) {
+                document.getElementById('materiasError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('materiasError').classList.remove('show');
             }
             
             return isValid;
@@ -901,9 +1042,13 @@
             const nombre_completo = document.getElementById('regNombre').value.trim();
             const correo = document.getElementById('regCorreo').value.trim();
             const password = document.getElementById('regPassword').value;
-            const carrera = rol === 'estudiante' ? document.getElementById('regCarrera').value.trim() : '';
+            const carrera = document.getElementById('regCarrera').value;
             const telefono = document.getElementById('regTelefono').value.trim();
             const sexo = document.getElementById('regSexo').value;
+            
+            // Obtener materias seleccionadas
+            const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
+            const materias = Array.from(materiasInputs).map(input => parseInt(input.value));
             
             let id_usuario;
             if (rol === 'estudiante') {
@@ -929,7 +1074,8 @@
                         carrera,
                         telefono,
                         sexo,
-                        rol
+                        rol,
+                        materias
                     })
                 });
 
