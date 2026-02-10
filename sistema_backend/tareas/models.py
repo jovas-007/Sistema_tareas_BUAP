@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from django.utils import timezone
-from users.models import User
+from users.models import User, Materia
 
 
 def task_attachment_path(instance, filename):
@@ -25,6 +25,16 @@ class Task(models.Model):
     
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, default='')
+    
+    
+    materia = models.ForeignKey(
+        Materia,
+        on_delete=models.PROTECT,  # No permitir eliminar materia si tiene tareas
+        related_name='tareas',
+        verbose_name='Materia',
+        help_text='Materia a la que pertenece esta tarea'
+    )
+    
     archivo_adjunto = models.FileField(
         upload_to=task_attachment_path,
         blank=True,
@@ -61,9 +71,13 @@ class Task(models.Model):
         ordering = ['-fecha_creacion']
         verbose_name = 'Tarea'
         verbose_name_plural = 'Tareas'
+        indexes = [
+            models.Index(fields=['materia', 'estado']),
+            models.Index(fields=['docente', 'estado']),
+        ]
     
     def __str__(self):
-        return f"{self.titulo} ({self.get_estado_display()})"
+        return f"{self.titulo} - {self.materia.nombre} ({self.get_estado_display()})"
     
     @property
     def esta_vencida(self):

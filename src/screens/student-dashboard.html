@@ -722,14 +722,9 @@
                         <span>Mis Calificaciones</span>
                     </a>
                 </li>
-                <li>
-                    <a href="./graficas.html">
-                        <span class="icon"></span>
-                        <span>Gráficas</span>
-                    </a>
-                </li>
             </ul>
         </nav>
+
         <!-- Content -->
         <main class="content">
             <!-- Dashboard Section -->
@@ -1160,6 +1155,11 @@
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
                         <span> ${t.puntos_maximos} puntos</span>
                     </div>
+                    <div style="margin: 8px 0;">
+                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                            📚 ${t.materia_nombre || 'Sin materia'}
+                        </span>
+                    </div>
                     <p style="color: #64748b; font-size: 13px; margin: 10px 0;">
                         ${t.descripcion || 'Sin descripción'}
                     </p>
@@ -1214,6 +1214,11 @@
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
                         ${t.calificacion ? `<span> ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
+                    </div>
+                    <div style="margin: 8px 0;">
+                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                            📚 ${t.materia_nombre || 'Sin materia'}
+                        </span>
                     </div>
                     <div class="task-card-footer">
                         ${t.calificacion ? 
@@ -1327,6 +1332,15 @@
                         <span class="label" style="font-weight: 600; color: #64748b;">👨‍🏫 Profesor:</span>
                         <span class="value" style="color: #1e293b; font-weight: 500;">${submission.docente_nombre || 'No asignado'}</span>
                     </div>
+                        <div class="info-item">
+                            <span class="label">📚 Materia:</span>
+                            <span class="value">${submission.materia_nombre || 'Sin materia'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">🔢 NRC:</span>
+                            <span class="value">${submission.materia_nrc || 'N/A'}</span>
+                        </div>
+                    </div>
                 </div>
                 <p>${submission.tarea_descripcion || 'Sin descripción'}</p>
             `;
@@ -1421,13 +1435,11 @@
             // Sección de entrega - SOLO MOSTRAR SI ESTÁ PENDIENTE
             const seccionEntrega = document.getElementById('seccionEntrega');
             if (submission.estado === 'pendiente' && submission.puede_entregar) {
-                // Solo mostrar si está pendiente Y puede entregar
                 seccionEntrega.style.display = 'block';
                 archivosParaSubir = [];
                 document.getElementById('archivosSeleccionados').innerHTML = '';
                 document.getElementById('btnEnviar').disabled = true;
-            } else {
-                // Ocultar si ya está entregada o calificada
+            } else {    
                 seccionEntrega.style.display = 'none';
             }
 
@@ -1569,5 +1581,8 @@
             window.location.href = '../login.html';
         }
     </script>
+    <div class="footer-bottom" role="contentinfo">
+        <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
+    </div>
 </body>
 </html>
