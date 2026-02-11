@@ -99,7 +99,7 @@ else:
             'USER': 'root',
             'PASSWORD': '',
             'HOST': 'localhost',
-            'PORT': '3306',
+            'PORT': '3309',
             'OPTIONS': {
                 'charset': 'utf8mb4',
             },
