@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Sistema de Gestión de Tareas - Frontend",
   "scripts": {
-    "start": "serve src -l ${PORT:-4201}",
-    "dev": "serve src -l 4201"
+    "start": "serve src -l ${PORT:-4200}",
+    "dev": "serve src -l 4200"
   },
   "dependencies": {
     "serve": "^14.2.0"
