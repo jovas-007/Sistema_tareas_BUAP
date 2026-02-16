@@ -19,6 +19,8 @@ from .serializers import (
     ResetPasswordSerializer,
     MateriaSerializer,
     UpdateMateriasSerializer,
+    UserSerializer,
+    ProfileUpdateSerializer,
 )
 
 
@@ -403,3 +405,67 @@ def update_materias(request):
         'success': False,
         'message': error_message
     }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PATCH'])
+def my_profile(request):
+    user_id = request.headers.get('X-User-Id')
+
+    if not user_id:
+        return Response(
+            {'success': False, 'message': 'Falta header X-User-Id'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    try:
+        user = User.objects.get(id_usuario=user_id)
+    except User.DoesNotExist:
+        return Response(
+            {'success': False, 'message': 'Usuario no encontrado'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    if request.method == 'GET':
+        return Response({'success': True, 'user': UserSerializer(user).data})
+
+    # PATCH
+    serializer = ProfileUpdateSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "success": True,
+            "message": "Perfil actualizado",
+            "user": UserSerializer(user).data
+        })
+
+    return Response(
+        {"success": False, "errors": serializer.errors},
+        status=status.HTTP_400_BAD_REQUEST
+    )
+
+@api_view(['GET', 'PATCH'])
+def user_me(request):
+    user_id = request.headers.get('X-User-Id')
+    if not user_id:
+        return Response(
+            {'success': False, 'message': 'Falta header X-User-Id'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    try:
+        user = User.objects.get(id_usuario=user_id)
+    except User.DoesNotExist:
+        return Response(
+            {'success': False, 'message': 'Usuario no encontrado'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    if request.method == 'GET':
+        return Response({'success': True, 'user': UserSerializer(user).data})
+
+    # PATCH
+    ser = ProfileUpdateSerializer(user, data=request.data, partial=True)
+    if ser.is_valid():
+        ser.save()
+        return Response({'success': True, 'user': UserSerializer(user).data})
+
+    return Response({'success': False, 'errors': ser.errors}, status=status.HTTP_400_BAD_REQUEST)
