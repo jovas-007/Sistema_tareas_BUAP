@@ -1,4 +1,6 @@
 import threading
+from users.models import Materia
+from .serializers import MateriaSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -661,6 +663,36 @@ def my_submissions(request):
 
 
 # ==================== ENDPOINTS PÚBLICOS ====================
+@api_view(['GET'])
+def docente_materias(request):
+    """
+    GET: Obtener las materias que imparte el docente autenticado
+    """
+    docente_id = request.headers.get('X-User-Id') or request.query_params.get('docente_id')
+    
+    if not docente_id:
+        return Response({
+            'success': False,
+            'message': 'Se requiere ID del docente'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        docente = User.objects.get(id_usuario=docente_id, rol='docente')
+    except User.DoesNotExist:
+        return Response({
+            'success': False,
+            'message': 'Docente no encontrado'
+        }, status=status.HTTP_404_NOT_FOUND)
+    
+    # Obtener materias del docente
+    materias = docente.materias_docente.all().order_by('nombre')
+    serializer = MateriaSerializer(materias, many=True)
+    
+    return Response({
+        'success': True,
+        'materias': serializer.data,
+        'total': materias.count()
+    })
 
 @api_view(['GET'])
 def students_list(request):
@@ -675,3 +707,4 @@ def students_list(request):
         'estudiantes': serializer.data,
         'total': estudiantes.count()
     })
+

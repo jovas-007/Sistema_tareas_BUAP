@@ -820,7 +820,18 @@
                             <input type="text" id="titulo" class="form-control" required 
                                    placeholder="Ej: Ensayo sobre cambio climático">
                         </div>
-
+                        <!--SELECTOR DE MATERIA -->
+                        <div class="form-group">
+                            <label for="selectMateria">
+                                📚 Materia *
+                                <span style="font-size: 12px; color: #64748b; font-weight: normal;">
+                                    (Selecciona la materia para esta tarea)
+                                </span>
+                            </label>
+                            <select id="selectMateria" class="form-control" required>
+                                <option value="">Cargando materias...</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
                             <textarea id="descripcion" class="form-control" 
@@ -1050,6 +1061,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="selectMateria">📚 Materia *</label>
+                        <select id="selectMateria" required>
+                            <option value="">Cargando materias...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="editDescripcion">Descripción</label>
                         <textarea id="editDescripcion" class="form-control"></textarea>
                     </div>
@@ -1084,6 +1102,7 @@
         const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';        let currentUser = null;
         let todasLasTareas = [];
         let submissionIdActual = null;
+        let materiasDocente = [];
 
         // ==================== UTILIDADES ====================
         function escapeHtml(text) {
@@ -1092,7 +1111,7 @@
         }
 
         // ==================== INICIALIZACIÓN ====================
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async  () => {
             // Verificar sesión
             const userCookie = getCookie('currentUser');
             const userLocal = localStorage.getItem('currentUser');
@@ -1124,6 +1143,7 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('fechaEntrega').min = now.toISOString().slice(0, 16);
 
+            await cargarMateriasDocente();
             // Cargar datos
             cargarDashboard();
         });
@@ -1167,6 +1187,9 @@
             switch(section) {
                 case 'dashboard':
                     cargarDashboard();
+                    break;
+                case 'crear-tarea': 
+                    renderSelectorMaterias(); // Re-renderizar cuando abra la sección
                     break;
                 case 'mis-tareas':
                     cargarTareas();
@@ -1282,37 +1305,64 @@
         }
 
         async function enviarTarea(activar) {
+            const materiaId = document.getElementById('selectMateria')?.value;
+
+            if (!materiaId) {
+                showAlert('⚠️ Debes seleccionar una materia', 'error');
+                return;
+            }
+
             const formData = new FormData();
             formData.append('titulo', document.getElementById('titulo').value);
             formData.append('descripcion', document.getElementById('descripcion').value);
+            formData.append('materia', String(parseInt(materiaId, 10))); // ✅ enviar materia
             formData.append('url_recurso', document.getElementById('urlRecurso').value);
             formData.append('fecha_entrega', document.getElementById('fechaEntrega').value);
             formData.append('puntos_maximos', document.getElementById('puntosMaximos').value);
-            formData.append('permite_tardias', document.getElementById('permiteTardias').checked ? 'true' : 'false');
+            formData.append(
+                'permite_tardias',
+                document.getElementById('permiteTardias').checked ? 'true' : 'false'
+            );
 
-            const archivo = document.getElementById('archivoAdjunto').files[0];
+            const archivoInput = document.getElementById('archivoAdjunto');
+            const archivo = archivoInput?.files?.[0];
             if (archivo) formData.append('archivo_adjunto', archivo);
 
             try {
+                // ✅ Solo 1 fetch, solo FormData, sin Content-Type
                 const response = await fetch(`${API_URL}/tasks/`, {
                 method: 'POST',
                 headers: {
                     'X-User-Id': currentUser.id_usuario
-                    // OJO: no pongas Content-Type aquí
                 },
                 body: formData
                 });
 
-                const data = await response.json();
+                // ✅ Por si el backend devuelve HTML/error no JSON
+                const contentType = response.headers.get('content-type') || '';
+                const data = contentType.includes('application/json')
+                ? await response.json()
+                : { success: false, message: await response.text() };
 
                 if (data.success) {
-                if (activar) {
-                    const activarRes = await fetch(`${API_URL}/tasks/${data.tarea.id}/activate/`, {
+                // 🔥 según tu backend puede venir data.tarea.id o data.id
+                const tareaId = data.tarea?.id ?? data.id ?? null;
+
+                if (activar && tareaId) {
+                    const activarRes = await fetch(`${API_URL}/tasks/${tareaId}/activate/`, {
                     method: 'POST',
-                    headers: getHeaders()
+                    headers: {
+                        'X-User-Id': currentUser.id_usuario
+                    }
                     });
-                    const activarData = await activarRes.json();
+
+                    const activarType = activarRes.headers.get('content-type') || '';
+                    const activarData = activarType.includes('application/json')
+                    ? await activarRes.json()
+                    : { success: false, message: await activarRes.text() };
+
                     if (activarData.success) showAlert(`✅ ${activarData.message}`);
+                    else showAlert(`❌ ${activarData.message || 'No se pudo activar'}`, 'error');
                 } else {
                     showAlert('✅ Tarea guardada como borrador');
                 }
@@ -1321,13 +1371,14 @@
                 document.getElementById('nombreArchivo').textContent = '';
                 showSection('mis-tareas');
                 } else {
-                showAlert(`❌ ${data.message}`, 'error');
+                showAlert(`❌ ${data.message || 'Error al crear tarea'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
                 showAlert('❌ Error al crear la tarea', 'error');
             }
             }
+
 
 
         // ==================== MIS TAREAS ====================
@@ -1414,6 +1465,7 @@
                     </div>
                     <p style="color: #64748b; margin: 10px 0;">${tarea.descripcion || 'Sin descripción'}</p>
                     <div class="task-meta">
+                        <span>📚 ${tarea.materia_info ? tarea.materia_info.nombre : 'Sin materia'}</span>
                         <span>📅 Entrega: ${formatDate(tarea.fecha_entrega)}</span>
                         <span> ${tarea.puntos_maximos} pts</span>
                         <span>${tarea.permite_tardias ? ' Permite tardías' : ' No tardías'}</span>
@@ -1783,6 +1835,80 @@
             `;
         }
 
+       async function cargarMateriasDocente() {
+            try {
+                console.log('🔍 Cargando materias del docente...');
+                console.log('👤 Docente ID:', currentUser.id_usuario);
+
+                const response = await fetch(`${API_URL}/docente/materias/`, {
+                    headers: getHeaders()
+                });
+
+                console.log('📡 Response status:', response.status);
+
+                const data = await response.json();
+                console.log('📦 Data recibida:', data);
+
+                if (data.success) {
+                    materiasDocente = data.materias;
+                    console.log(`✅ Cargadas ${materiasDocente.length} materias del docente`);
+                    console.log('📚 Materias:', materiasDocente);
+                    renderSelectorMaterias(); // ✅ Renderizar inmediatamente
+                } else {
+                    console.error('❌ Error en la respuesta:', data.message);
+                    showAlert('⚠️ ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('❌ Error cargando materias:', error);
+                materiasDocente = [];
+
+                // Mostrar mensaje en el selector
+                const select = document.getElementById('selectMateria');
+                if (select) {
+                    select.innerHTML = '<option value="">Error cargando materias</option>';
+                }
+            }
+        }
+
+        function renderSelectorMaterias() {
+            const select = document.getElementById('selectMateria');
+                
+            if (!select) {
+                console.error('❌ No se encontró el elemento selectMateria');
+                return;
+            }
+            
+            console.log('🎨 Renderizando selector con', materiasDocente.length, 'materias');
+            
+            // Limpiar opciones
+            select.innerHTML = '';
+            
+            if (materiasDocente.length === 0) {
+                select.innerHTML = '<option value="">No tienes materias asignadas</option>';
+                select.disabled = true;
+                console.warn('⚠️ El docente no tiene materias asignadas');
+                return;
+            }
+            
+            // Agregar opción por defecto
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selecciona una materia...';
+            select.appendChild(defaultOption);
+            
+            // Agregar materias
+            materiasDocente.forEach(m => {
+                console.log('➕ Agregando materia:', m.nombre);
+                const option = document.createElement('option');
+                option.value = m.id;
+                option.textContent = `${m.nombre} - NRC: ${m.nrc}`;
+                select.appendChild(option);
+            });
+            
+            select.disabled = false;
+            console.log('✅ Selector renderizado correctamente');
+        }
+
         // ==================== LOGOUT ====================
         function logout() {
             localStorage.removeItem('currentUser');
@@ -1900,5 +2026,8 @@
             };
             }
     </script>
+    <div class="footer-bottom" role="contentinfo">
+        <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
+    </div>
 </body>
 </html>
