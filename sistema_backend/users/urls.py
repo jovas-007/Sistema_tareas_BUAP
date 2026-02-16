@@ -26,4 +26,8 @@ urlpatterns = [
     path('test-reminders/', views.test_reminders),
     path('test-smtp', views.test_smtp, name='test-smtp'),
     path('test-smtp/', views.test_smtp),
+
+    #editar perfil
+    path('users/me/', views.my_profile, name='my-profile'),
+    path('users/me', views.my_profile), 
 ]

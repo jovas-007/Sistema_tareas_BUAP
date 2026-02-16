@@ -904,6 +904,85 @@
                 height: 4px;
             }
         }
+        .form-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            }
+
+            .form-group label{
+            display:block;
+            font-size: 13px;
+            color:#475569;
+            margin-bottom:6px;
+            font-weight:600;
+            }
+
+            .form-group input, .form-group select{
+            width:100%;
+            padding:10px 12px;
+            border:1px solid #e2e8f0;
+            border-radius:10px;
+            outline:none;
+            font-size:14px;
+            }
+
+            .form-group input:focus, .form-group select:focus{
+            border-color:#10b981;
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+            }
+
+            .materias-box{
+            margin-top: 18px;
+            padding: 15px;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            background:#f8fafc;
+            }
+
+            .materias-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:12px;
+            }
+
+            .materias-header .hint{
+            font-size: 12px;
+            color:#64748b;
+            }
+
+            .materias-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap:10px;
+            }
+
+            .materia-item{
+            background:white;
+            border:1px solid #e2e8f0;
+            border-radius:10px;
+            padding:10px 12px;
+            display:flex;
+            gap:10px;
+            align-items:flex-start;
+            }
+
+            .materia-item input{
+            margin-top: 3px;
+            }
+
+            .materia-title{
+            font-weight:700;
+            color:#1e293b;
+            font-size: 13px;
+            }
+
+            .materia-sub{
+            font-size:12px;
+            color:#64748b;
+            margin-top:2px;
+            }
     </style>
 </head>
 <body>
@@ -949,6 +1028,18 @@
                     <a href="#" onclick="showSection('mis-calificaciones')">
                         <span class="icon"></span>
                         <span>Mis Calificaciones</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('mi-perfil')">
+                        <span class="icon"></span>
+                        <span>Mi Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./graficas.html">
+                        <span class="icon"></span>
+                        <span>Gráficas</span>
                     </a>
                 </li>
             </ul>
@@ -1059,6 +1150,59 @@
                     </div>
                 </div>
             </section>
+            <!-- Mi Perfil Section -->
+            <section id="section-mi-perfil" class="section">
+            <div class="card">
+                <div class="card-header">
+                <h2 class="card-title">Mi Perfil</h2>
+                <button class="btn btn-secondary btn-sm" onclick="cargarPerfil(true)">Recargar</button>
+                </div>
+
+                <div id="perfilMsg"></div>
+
+                <form id="perfilForm" onsubmit="guardarPerfil(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                    <label>Matrícula</label>
+                    <input id="perfil_id" type="text" disabled>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Rol</label>
+                    <input id="perfil_rol" type="text" disabled>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input id="perfil_nombre" type="text" required>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Correo</label>
+                    <input id="perfil_correo" type="email" disabled>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Teléfono</label>
+                    <input id="perfil_telefono" type="text" placeholder="Opcional">
+                    </div>
+
+                    <div class="form-group">
+                    <label>Sexo</label>
+                    <select id="perfil_sexo">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top: 18px;">
+                    <button type="button" class="btn btn-secondary" onclick="cargarPerfil(true)">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardarPerfil">Guardar cambios</button>
+                </div>
+                </form>
+            </div>
+            </section>
         </main>
     </div>
 
@@ -1140,8 +1284,7 @@
 
     <script>
         // ==================== CONFIGURACIÓN ====================
-        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';
-        let currentUser = null;
+        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';        let currentUser = null;
         let tareaActual = null;
         let archivosParaSubir = [];
 
@@ -1244,6 +1387,9 @@
                     break;
                 case 'mis-calificaciones':
                     cargarMisCalificaciones();
+                    break;
+                case 'mi-perfil':
+                    cargarPerfil();
                     break;
             }
         }
@@ -2049,6 +2195,118 @@
             document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             window.location.href = '../login.html';
         }
+
+        // ==================== PERFIL ====================
+        async function cargarPerfil(esManual = false) {
+            if (esManual) perfilMensaje('⌛ Cargando datos...', 'info');
+
+            try {
+                const res = await fetch(`${API_URL}/users/me/`, { headers: getHeaders() });
+                const data = await safeJson(res);
+
+                if (!res.ok || !data.success) {
+                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
+                perfilMensaje(`No se pudo cargar el perfil (HTTP ${res.status}). ${data.message || ''}${extra}`, 'error');
+                return;
+                }
+
+                const u = data.user;
+                document.getElementById('perfil_id').value = u.id_usuario || '';
+                document.getElementById('perfil_rol').value = (u.rol || '').toUpperCase();
+                document.getElementById('perfil_nombre').value = u.nombre_completo || '';
+                document.getElementById('perfil_correo').value = u.correo || '';
+                document.getElementById('perfil_telefono').value = u.telefono || '';
+                document.getElementById('perfil_sexo').value = u.sexo || 'Otro';
+
+                if (esManual) document.getElementById('perfilMsg').innerHTML = '';
+            } catch (e) {
+                console.error(e);
+                perfilMensaje(' Error de conexión al cargar perfil', 'error');
+            }
+            }
+
+
+        async function guardarPerfil(ev) {
+            ev.preventDefault();
+
+            const btn = document.getElementById('btnGuardarPerfil');
+            btn.disabled = true;
+            const oldText = btn.textContent;
+            btn.textContent = 'Guardando...';
+
+            const payload = {
+                nombre_completo: document.getElementById('perfil_nombre').value.trim(),
+                telefono: document.getElementById('perfil_telefono').value.trim(),
+                sexo: document.getElementById('perfil_sexo').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/users/me/`, {
+                method: 'PATCH',
+                headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+                });
+
+                const data = await safeJson(res);
+
+                if (!res.ok || !data.success) {
+                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
+                perfilMensaje(`No se pudo guardar (HTTP ${res.status}). ${JSON.stringify(data.errors || data.message || data)}${extra}`, 'error');
+                return;
+                }
+
+                if (data.user) {
+                currentUser.nombre_completo = data.user.nombre_completo;
+                currentUser.telefono = data.user.telefono;
+                currentUser.sexo = data.user.sexo;
+
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(currentUser))}; path=/; max-age=${60 * 60 * 24 * 7}`;
+                document.getElementById('userName').textContent = currentUser.nombre_completo;
+                }
+
+                perfilMensaje('Perfil actualizado correctamente', 'success');
+
+                await cargarPerfil(false);
+
+            } catch (e) {
+                console.error(e);
+                perfilMensaje('error de red al guardar', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = oldText;
+            }
+            }
+
+        async function safeJson(res) {
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch {
+                return { success: false, message: text, _raw: true };
+            }
+        }
+
+        function perfilMensaje(html, type = 'info') {
+        const msg = document.getElementById('perfilMsg');
+        msg.innerHTML = `<div class="alert alert-${type}">${html}</div>`;
+        }
+    
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '../login.html';
+        }
+
+        function getHeaders() {
+            console.log("currentUser =", currentUser);
+            console.log("X-User-Id enviado =", currentUser?.id_usuario);
+            return {
+                "X-User-Id": currentUser?.id_usuario || ""
+            };
+            }
+
+
     </script>
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
