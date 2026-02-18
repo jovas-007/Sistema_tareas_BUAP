@@ -14,6 +14,10 @@ urlpatterns = [
     path('verify-recovery-code', views.verify_code, name='verify-recovery-code'),
     path('reset-password', views.reset_password, name='reset-password'),
     
+    #Edicion
+    path('users/me/', views.my_profile, name='my-profile'),
+    path('users/me', views.my_profile), 
+
     # Usuarios
     path('users', views.get_users, name='get-users'),
     path('users/materias', views.update_materias, name='update-materias'),
@@ -27,7 +31,5 @@ urlpatterns = [
     path('test-smtp', views.test_smtp, name='test-smtp'),
     path('test-smtp/', views.test_smtp),
 
-    #editar perfil
-    path('users/me/', views.my_profile, name='my-profile'),
-    path('users/me', views.my_profile), 
+   
 ]
