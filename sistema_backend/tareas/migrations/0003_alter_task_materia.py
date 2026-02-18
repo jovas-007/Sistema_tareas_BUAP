@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('users', '0005_rename_email_logs_fecha_e_idx_email_logs_fecha_e_dcc5da_idx_and_more'),
-        ('tareas', '0002_task_materia_task_tareas_materia_21acec_idx_and_more'),
+        ('tareas', '0002b_fix_null_materias'),
     ]
 
     operations = [
