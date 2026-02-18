@@ -88,12 +88,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         carrera = data.get('carrera', '').strip()
         materias = data.get('materias', [])
         
-        # Validar que la carrera sea requerida para estudiantes y docentes
-        if not carrera:
-            raise serializers.ValidationError({'carrera': 'La carrera es requerida'})
-        
-        # Validar que las materias correspondan a la carrera
-        if materias:
+        # Para ESTUDIANTES: carrera y materias son REQUERIDAS
+        if rol == 'estudiante':
+            if not carrera:
+                raise serializers.ValidationError({'carrera': 'La carrera es requerida para estudiantes'})
+            
+            if not materias:
+                raise serializers.ValidationError({'materias': 'Debe seleccionar al menos una materia'})
+            
+            # Validar que las materias correspondan a la carrera
             materias_permitidas = Materia.get_materias_por_carrera(carrera)
             # Convertir a lista si es queryset
             if hasattr(materias_permitidas, 'values_list'):
@@ -115,6 +118,9 @@ class RegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'materias': 'Para la carrera ITI solo puede seleccionar una materia'
                 })
+        
+        # Para DOCENTES: carrera y materias NO son requeridas
+        # Se pueden registrar sin carrera ni materias
         
         return data
     
