@@ -266,6 +266,83 @@
             content: ' ⏳';
         }
 
+        /* Spinner de carga animado */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .btn-loading::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 20px;
+            margin-top: -8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Estados de feedback del botón */
+        .btn-success-feedback {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+            position: relative;
+        }
+
+        .btn-success-feedback::before {
+            content: '✓';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-error-feedback {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+            position: relative;
+        }
+
+        .btn-error-feedback::before {
+            content: '✗';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Mensaje debajo del botón */
+        .feedback-message {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feedback-message.show {
+            opacity: 1;
+        }
+
+        .feedback-message.success {
+            color: #059669;
+        }
+
+        .feedback-message.error {
+            color: #dc2626;
+        }
+
         /* Validación visual */
         .validation-icon {
             position: absolute;
@@ -534,6 +611,7 @@
 
                 <input type="hidden" id="regRol" value="estudiante">
                 <button type="submit" class="btn btn-primary" id="btnRegister">Crear Cuenta</button>
+                <div class="feedback-message" id="registerFeedback"></div>
             </form>
         </div>
     </div>
@@ -588,15 +666,17 @@
             const materiasGroup = document.getElementById('materiasGroup');
             
             if (role === 'docente') {
+                // Docentes NO necesitan matrícula, carrera ni materias
                 matriculaGroup.style.display = 'none';
                 matriculaInput.removeAttribute('required');
-                carreraGroup.style.display = 'block';
-                carreraInput.setAttribute('required', '');
+                carreraGroup.style.display = 'none';
+                carreraInput.removeAttribute('required');
                 materiasGroup.style.display = 'none';
-                // Resetear selección de carrera y materias
+                // Resetear campos
                 carreraInput.value = '';
                 document.getElementById('materiasList').innerHTML = '';
             } else {
+                // Estudiantes SÍ necesitan matrícula, carrera y materias
                 matriculaGroup.style.display = 'block';
                 matriculaInput.setAttribute('required', '');
                 carreraGroup.style.display = 'block';
@@ -998,21 +1078,23 @@
                 isValid = false;
             }
             
-            // Validar carrera (requerida para ambos roles)
-            const carrera = document.getElementById('regCarrera').value;
-            if (!carrera) {
-                document.getElementById('carreraError').classList.add('show');
-                document.getElementById('regCarrera').classList.add('error');
-                isValid = false;
-            }
-            
-            // Validar materias (requerida para ambos roles)
-            const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
-            if (carrera && materiasInputs.length === 0) {
-                document.getElementById('materiasError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('materiasError').classList.remove('show');
+            // Validar carrera y materias (SOLO para estudiantes)
+            if (rol === 'estudiante') {
+                const carrera = document.getElementById('regCarrera').value;
+                if (!carrera) {
+                    document.getElementById('carreraError').classList.add('show');
+                    document.getElementById('regCarrera').classList.add('error');
+                    isValid = false;
+                }
+                
+                // Validar materias (requerida para estudiantes)
+                const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
+                if (carrera && materiasInputs.length === 0) {
+                    document.getElementById('materiasError').classList.add('show');
+                    isValid = false;
+                } else {
+                    document.getElementById('materiasError').classList.remove('show');
+                }
             }
             
             return isValid;
@@ -1086,67 +1168,113 @@
             const nombre_completo = document.getElementById('regNombre').value.trim();
             const correo = document.getElementById('regCorreo').value.trim();
             const password = document.getElementById('regPassword').value;
-            const carrera = document.getElementById('regCarrera').value;
             const telefono = document.getElementById('regTelefono').value.trim();
             const sexo = document.getElementById('regSexo').value;
             
-            // Obtener materias seleccionadas
-            const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
-            const materias = Array.from(materiasInputs).map(input => parseInt(input.value));
-            
-            let id_usuario;
-            if (rol === 'estudiante') {
-                id_usuario = document.getElementById('regMatricula').value.trim();
-            } else {
-                // Para docentes, generar ID único
-                id_usuario = `${nombre_completo.split(' ')[0].toLowerCase()}_${Date.now()}`;
-            }
-
             const btnRegister = document.getElementById('btnRegister');
+            const feedbackMessage = document.getElementById('registerFeedback');
+            
+            // Mostrar estado de carga
             btnRegister.disabled = true;
+            btnRegister.classList.add('btn-loading');
             btnRegister.textContent = 'Creando cuenta...';
+            feedbackMessage.classList.remove('show', 'success', 'error');
+            feedbackMessage.textContent = '';
+            
+            // Preparar datos según el rol
+            let requestData = {
+                nombre_completo,
+                correo,
+                password,
+                telefono,
+                sexo,
+                rol
+            };
+            
+            if (rol === 'estudiante') {
+                // Estudiantes: enviar matrícula, carrera y materias
+                requestData.id_usuario = document.getElementById('regMatricula').value.trim();
+                requestData.carrera = document.getElementById('regCarrera').value;
+                const materiasInputs = document.querySelectorAll('input[name="materia"]:checked');
+                requestData.materias = Array.from(materiasInputs).map(input => parseInt(input.value));
+            } else {
+                // Docentes: generar ID único, NO enviar carrera ni materias
+                requestData.id_usuario = `${nombre_completo.split(' ')[0].toLowerCase()}_${Date.now()}`;
+                requestData.carrera = '';
+                requestData.materias = [];
+            }
 
             try {
                 const response = await fetch(`${API_URL}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id_usuario,
-                        nombre_completo,
-                        correo,
-                        password,
-                        carrera,
-                        telefono,
-                        sexo,
-                        rol,
-                        materias
-                    })
+                    body: JSON.stringify(requestData)
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión', 'success');
+                    // Mostrar feedback de éxito
+                    btnRegister.classList.remove('btn-loading');
+                    btnRegister.classList.add('btn-success-feedback');
+                    btnRegister.textContent = 'Cuenta creada';
+                    feedbackMessage.textContent = '¡Registro exitoso!';
+                    feedbackMessage.classList.add('show', 'success');
                     
                     // Limpiar formulario
-                    document.getElementById('registerForm').reset();
-                    document.querySelectorAll('#tab-register input').forEach(i => {
-                        i.classList.remove('valid', 'error');
-                    });
-                    document.getElementById('strengthBar').className = 'bar';
-                    document.getElementById('strengthText').textContent = 'Mínimo 6 caracteres';
-                    document.getElementById('passwordMatch').textContent = '';
-                    
-                    setTimeout(() => showTab('login'), 1500);
+                    setTimeout(() => {
+                        document.getElementById('registerForm').reset();
+                        document.querySelectorAll('#tab-register input').forEach(i => {
+                            i.classList.remove('valid', 'error');
+                        });
+                        document.getElementById('strengthBar').className = 'bar';
+                        document.getElementById('strengthText').textContent = '8-20 caracteres';
+                        document.getElementById('passwordMatch').textContent = '';
+                        document.getElementById('materiasList').innerHTML = '';
+                        
+                        // Cambiar a tab de login
+                        showTab('login');
+                        
+                        // Resetear botón
+                        btnRegister.classList.remove('btn-success-feedback');
+                        btnRegister.disabled = false;
+                        btnRegister.textContent = 'Crear Cuenta';
+                        feedbackMessage.classList.remove('show', 'success');
+                        feedbackMessage.textContent = '';
+                    }, 2000);
                 } else {
-                    showAlert(data.message || 'Error al crear cuenta', 'error');
+                    // Mostrar feedback de error
+                    btnRegister.classList.remove('btn-loading');
+                    btnRegister.classList.add('btn-error-feedback');
+                    btnRegister.textContent = 'Error al registrar';
+                    feedbackMessage.textContent = data.message || 'Error al crear cuenta';
+                    feedbackMessage.classList.add('show', 'error');
+                    
+                    // Resetear botón después de 3 segundos
+                    setTimeout(() => {
+                        btnRegister.classList.remove('btn-error-feedback');
+                        btnRegister.disabled = false;
+                        btnRegister.textContent = 'Crear Cuenta';
+                        feedbackMessage.classList.remove('show', 'error');
+                    }, 3000);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Error de conexión con el servidor', 'error');
-            } finally {
-                btnRegister.disabled = false;
-                btnRegister.textContent = 'Crear Cuenta';
+                
+                // Mostrar feedback de error de conexión
+                btnRegister.classList.remove('btn-loading');
+                btnRegister.classList.add('btn-error-feedback');
+                btnRegister.textContent = 'Error de conexión';
+                feedbackMessage.textContent = 'Error de conexión con el servidor';
+                feedbackMessage.classList.add('show', 'error');
+                
+                // Resetear botón después de 3 segundos
+                setTimeout(() => {
+                    btnRegister.classList.remove('btn-error-feedback');
+                    btnRegister.disabled = false;
+                    btnRegister.textContent = 'Crear Cuenta';
+                    feedbackMessage.classList.remove('show', 'error');
+                }, 3000);
             }
         }
 
