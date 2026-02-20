@@ -220,6 +220,46 @@
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
+        /* Estilo para el botón de descarga de material del profesor */
+        .resource-download-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #059669;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
+        }
+
+        .resource-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+            border-color: #4ade80;
+        }
+
+        .resource-download-btn .icon {
+            font-size: 32px;
+        }
+
+        .resource-download-btn .info {
+            flex: 1;
+        }
+
+        .resource-download-btn .info strong {
+            display: block;
+            color: #065f46;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .resource-download-btn .info span {
+            font-size: 12px;
+            color: #059669;
+        }
         .btn-success {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
@@ -627,6 +667,212 @@
         .grade-cell.medium { color: #d97706; }
         .grade-cell.low { color: #dc2626; }
 
+        /* =============== ESTILOS DEL CALENDARIO =============== */
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .calendar-title {
+            font-size: 20px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+
+        .nav-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .current-month {
+            font-weight: 600;
+            font-size: 16px;
+            min-width: 150px;
+            text-align: center;
+            color: #1e293b;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background: white;
+        }
+
+        .calendar-day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .calendar-day.other-month:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .calendar-day.today {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+
+        .calendar-day.other-month .day-number {
+            color: #cbd5e1;
+        }
+
+        .task-indicators {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .task-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .task-dot.proxima {
+            background: #10b981;
+        }
+
+        .task-dot.urgente {
+            background: #f59e0b;
+        }
+
+        .task-dot.vencida {
+            background: #ef4444;
+        }
+
+        .calendar-legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .task-tooltip {
+            position: absolute;
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1000;
+            min-width: 200px;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            display: none;
+        }
+
+        .task-tooltip.show {
+            display: block;
+        }
+
+        .tooltip-task {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tooltip-task:last-child {
+            border-bottom: none;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .tooltip-subject {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -639,6 +885,23 @@
             
             .task-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                gap: 4px;
+            }
+
+            .calendar-day {
+                padding: 4px;
+            }
+
+            .day-number {
+                font-size: 12px;
+            }
+
+            .task-dot {
+                width: 4px;
+                height: 4px;
             }
         }
     </style>
@@ -662,6 +925,12 @@
                     <a href="#" class="active" onclick="showSection('dashboard')">
                         <span class="icon"></span>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('calendario')">
+                        <span class="icon"></span>
+                        <span>Calendario</span>
                     </a>
                 </li>
                 <li>
@@ -719,6 +988,42 @@
                 </div>
             </section>
 
+            <!-- Sección Calendario -->
+            <section id="section-calendario" class="section">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h2 class="calendar-title">
+                            <span></span>
+                            <span>Calendario de Tareas</span>
+                        </h2>
+                        <div class="calendar-nav">
+                            <button class="nav-btn" onclick="cambiarMes(-1)">◀</button>
+                            <span class="current-month" id="currentMonth"></span>
+                            <button class="nav-btn" onclick="cambiarMes(1)">▶</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendario generado dinámicamente -->
+                    </div>
+
+                    <div class="calendar-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot proxima"></div>
+                            <span>Tareas próximas (más de 1 día)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot urgente"></div>
+                            <span>Tareas urgentes (24 horas o menos)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot vencida"></div>
+                            <span>Tareas vencidas</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Tareas Pendientes Section -->
             <section id="section-tareas-pendientes" class="section">
                 <div class="card">
@@ -756,6 +1061,9 @@
             </section>
         </main>
     </div>
+
+    <!-- Tooltip para mostrar tareas del día -->
+    <div class="task-tooltip" id="taskTooltip"></div>
 
     <!-- Modal Ver/Entregar Tarea -->
     <div id="modalTarea" class="modal">
@@ -836,6 +1144,12 @@
         let currentUser = null;
         let tareaActual = null;
         let archivosParaSubir = [];
+
+        // Variables del calendario
+        let mesActual = new Date().getMonth();
+        let anioActual = new Date().getFullYear();
+        let tareasPorFecha = {};
+        let todasLasTareas = [];
 
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -918,6 +1232,9 @@
             switch(section) {
                 case 'dashboard':
                     cargarDashboard();
+                    break;
+                case 'calendario':
+                    cargarCalendario();
                     break;
                 case 'tareas-pendientes':
                     cargarTareasPendientes();
@@ -1115,6 +1432,11 @@
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
                         <span> ${t.puntos_maximos} puntos</span>
                     </div>
+                    <div style="margin: 8px 0;">
+                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                            📚 ${t.materia_nombre || 'Sin materia'}
+                        </span>
+                    </div>
                     <p style="color: #64748b; font-size: 13px; margin: 10px 0;">
                         ${t.descripcion || 'Sin descripción'}
                     </p>
@@ -1169,6 +1491,11 @@
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
                         ${t.calificacion ? `<span> ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
+                    </div>
+                    <div style="margin: 8px 0;">
+                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                            📚 ${t.materia_nombre || 'Sin materia'}
+                        </span>
                     </div>
                     <div class="task-card-footer">
                         ${t.calificacion ? 
@@ -1274,10 +1601,26 @@
         function mostrarModalTarea(submission) {
             // Título
             document.getElementById('modalTareaTitulo').textContent = submission.tarea_titulo;
-            
-            // Descripción
-            document.getElementById('tareaDescripcion').textContent = 
-                submission.tarea_descripcion || 'Sin descripción';
+
+            // Descripción con nombre del profesor
+            document.getElementById('tareaDescripcion').innerHTML = `
+                <div class="task-info-grid" style="margin-bottom: 15px;">
+                    <div class="info-item">
+                        <span class="label" style="font-weight: 600; color: #64748b;">👨‍🏫 Profesor:</span>
+                        <span class="value" style="color: #1e293b; font-weight: 500;">${submission.docente_nombre || 'No asignado'}</span>
+                    </div>
+                        <div class="info-item">
+                            <span class="label">📚 Materia:</span>
+                            <span class="value">${submission.materia_nombre || 'Sin materia'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">🔢 NRC:</span>
+                            <span class="value">${submission.materia_nrc || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+                <p>${submission.tarea_descripcion || 'Sin descripción'}</p>
+            `;
             
             // Fecha límite
             document.getElementById('fechaLimite').textContent = formatDate(submission.tarea_fecha_entrega);
@@ -1286,15 +1629,15 @@
             // Estado
             const estadoEl = document.getElementById('estadoTarea');
             if (submission.tarea_esta_vencida) {
-                estadoEl.innerHTML = '<span style="color: #dc2626;"> Esta tarea ha vencido</span>';
+                estadoEl.innerHTML = '<span style="color: #dc2626;">⚠️ Esta tarea ha vencido</span>';
             } else {
-                estadoEl.innerHTML = '<span style="color: #059669;"> Tiempo disponible para entregar</span>';
+                estadoEl.innerHTML = '<span style="color: #059669;">✅ Tiempo disponible para entregar</span>';
             }
-
+        
             // Recursos del docente
             const seccionRecursos = document.getElementById('seccionRecursos');
             const recursosHtml = [];
-            
+
             if (submission.tarea_url_recurso) {
                 recursosHtml.push(`
                     <a href="${submission.tarea_url_recurso}" target="_blank" class="resource-link">
@@ -1302,14 +1645,38 @@
                     </a>
                 `);
             }
-            
+
+            // AGREGAR ARCHIVO ADJUNTO DEL PROFESOR SI EXISTE
             if (submission.tarea_archivo_adjunto) {
+                console.log('📎 Archivo adjunto encontrado:', submission.tarea_archivo_adjunto);
+                console.log('📄 Nombre del archivo:', submission.tarea_archivo_nombre);
+            
+                const fileUrl = submission.tarea_archivo_adjunto;
+                const fileName = submission.tarea_archivo_nombre || "Material del profesor";
+            
                 recursosHtml.push(`
-                    <a href="${API_URL.replace('/api', '')}${submission.tarea_archivo_adjunto}" 
-                       target="_blank" class="resource-link" style="margin-left: 10px;">
-                         Descargar archivo adjunto
-                    </a>
+                    <div style="margin-top: 10px;">
+                        <h5 style="color: #059669; margin-bottom: 10px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                            <span>📎</span>
+                            <span>Material de Apoyo del Profesor</span>
+                        </h5>
+                        <a href="${fileUrl}" 
+                           target="_blank" 
+                           download 
+                           style="display: flex; align-items: center; gap: 12px; padding: 15px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; border-radius: 10px; text-decoration: none; color: #059669; transition: all 0.3s; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);"
+                           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.2)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(5, 150, 105, 0.1)'">
+                            <span style="font-size: 32px;">📁</span>
+                            <div style="flex: 1;">
+                                <strong style="display: block; color: #065f46; font-size: 14px; margin-bottom: 4px;">${fileName}</strong>
+                                <span style="font-size: 12px; color: #059669;">Click para abrir o descargar</span>
+                            </div>
+                            <span style="color: #059669; font-size: 20px;">⬇️</span>
+                        </a>
+                    </div>
                 `);
+            } else {
+                console.log('⚠️ No hay archivo adjunto en esta tarea');
             }
 
             if (recursosHtml.length > 0) {
@@ -1342,14 +1709,14 @@
                 seccionCalificacion.style.display = 'none';
             }
 
-            // Sección de entrega
+            // Sección de entrega - SOLO MOSTRAR SI ESTÁ PENDIENTE
             const seccionEntrega = document.getElementById('seccionEntrega');
-            if (submission.puede_entregar) {
+            if (submission.estado === 'pendiente' && submission.puede_entregar) {
                 seccionEntrega.style.display = 'block';
                 archivosParaSubir = [];
                 document.getElementById('archivosSeleccionados').innerHTML = '';
                 document.getElementById('btnEnviar').disabled = true;
-            } else {
+            } else {    
                 seccionEntrega.style.display = 'none';
             }
 
@@ -1484,6 +1851,198 @@
             }
         }
 
+        // ==================== CALENDARIO ====================
+        async function cargarCalendario() {
+            try {
+                const response = await fetch(`${API_URL}/my-tasks/`, {
+                    headers: getHeaders()
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Combinar todas las tareas (pendientes, entregadas, calificadas)
+                    todasLasTareas = [
+                        ...(data.pendientes || []),
+                        ...(data.entregadas || []),
+                        ...(data.calificadas || [])
+                    ];
+                    organizarTareasPorFecha();
+                    renderizarCalendario();
+                }
+            } catch (error) {
+                console.error('Error al cargar calendario:', error);
+            }
+        }
+
+        function organizarTareasPorFecha() {
+            tareasPorFecha = {};
+            
+            todasLasTareas.forEach(tarea => {
+                // Usar fecha_entrega en lugar de tarea_fecha_entrega
+                const fechaEntrega = new Date(tarea.fecha_entrega);
+                const fechaKey = `${fechaEntrega.getFullYear()}-${fechaEntrega.getMonth()}-${fechaEntrega.getDate()}`;
+                
+                if (!tareasPorFecha[fechaKey]) {
+                    tareasPorFecha[fechaKey] = [];
+                }
+                
+                tareasPorFecha[fechaKey].push(tarea);
+            });
+        }
+
+        function renderizarCalendario() {
+            const grid = document.getElementById('calendarGrid');
+            const monthSpan = document.getElementById('currentMonth');
+            
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            monthSpan.textContent = `${meses[mesActual]} ${anioActual}`;
+            
+            grid.innerHTML = '';
+            
+            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            dias.forEach(dia => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = dia;
+                grid.appendChild(header);
+            });
+            
+            const primerDia = new Date(anioActual, mesActual, 1);
+            const ultimoDia = new Date(anioActual, mesActual + 1, 0);
+            const diasEnMes = ultimoDia.getDate();
+            const primerDiaSemana = primerDia.getDay();
+            
+            const mesAnterior = new Date(anioActual, mesActual, 0);
+            const diasMesAnterior = mesAnterior.getDate();
+            
+            for (let i = primerDiaSemana - 1; i >= 0; i--) {
+                const dia = diasMesAnterior - i;
+                const cell = crearCeldaDia(dia, true);
+                grid.appendChild(cell);
+            }
+            
+            const hoy = new Date();
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const esHoy = dia === hoy.getDate() && 
+                             mesActual === hoy.getMonth() && 
+                             anioActual === hoy.getFullYear();
+                
+                const cell = crearCeldaDia(dia, false, esHoy);
+                grid.appendChild(cell);
+            }
+            
+            const celdasRestantes = 42 - grid.children.length + 7;
+            for (let dia = 1; dia < celdasRestantes; dia++) {
+                const cell = crearCeldaDia(dia, true);
+                grid.appendChild(cell);
+            }
+        }
+
+        function crearCeldaDia(numeroDia, otroMes, esHoy = false) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day';
+            if (otroMes) cell.classList.add('other-month');
+            if (esHoy) cell.classList.add('today');
+            
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = numeroDia;
+            cell.appendChild(dayNumber);
+            
+            if (!otroMes) {
+                const fecha = new Date(anioActual, mesActual, numeroDia);
+                const fechaKey = `${fecha.getFullYear()}-${fecha.getMonth()}-${fecha.getDate()}`;
+                const tareasDelDia = tareasPorFecha[fechaKey] || [];
+                
+                if (tareasDelDia.length > 0) {
+                    const indicators = document.createElement('div');
+                    indicators.className = 'task-indicators';
+                    
+                    tareasDelDia.forEach(tarea => {
+                        const dot = document.createElement('div');
+                        dot.className = 'task-dot';
+                        
+                        const ahora = new Date();
+                        const fechaEntrega = new Date(tarea.fecha_entrega);
+                        const horasRestantes = (fechaEntrega - ahora) / (1000 * 60 * 60);
+                        
+                        if (horasRestantes < 0) {
+                            dot.classList.add('vencida');
+                        } else if (horasRestantes <= 24) {
+                            dot.classList.add('urgente');
+                        } else {
+                            dot.classList.add('proxima');
+                        }
+                        
+                        indicators.appendChild(dot);
+                    });
+                    
+                    cell.appendChild(indicators);
+                    
+                    cell.addEventListener('mouseenter', (e) => mostrarTooltipTareas(e, tareasDelDia));
+                    cell.addEventListener('mouseleave', ocultarTooltip);
+                    cell.addEventListener('click', () => {
+                        if (tareasDelDia.length >= 1) {
+                            // Usar task_id en lugar de id
+                            verTarea(tareasDelDia[0].task_id);
+                        }
+                    });
+                    cell.style.cursor = 'pointer';
+                }
+            }
+            
+            return cell;
+        }
+
+        function mostrarTooltipTareas(event, tareas) {
+            const tooltip = document.getElementById('taskTooltip');
+            
+            let html = '';
+            tareas.forEach(tarea => {
+                const ahora = new Date();
+                const fechaEntrega = new Date(tarea.fecha_entrega);
+                const horasRestantes = (fechaEntrega - ahora) / (1000 * 60 * 60);
+                
+                let estadoColor = '#10b981';
+                if (horasRestantes < 0) estadoColor = '#ef4444';
+                else if (horasRestantes <= 24) estadoColor = '#f59e0b';
+                
+                html += `
+                    <div class="tooltip-task" style="border-left: 3px solid ${estadoColor}; padding-left: 8px;">
+                        <div class="tooltip-title">${tarea.titulo}</div>
+                        <div class="tooltip-subject">${tarea.materia || 'Sin materia'}</div>
+                    </div>
+                `;
+            });
+            
+            tooltip.innerHTML = html;
+            tooltip.classList.add('show');
+            
+            const rect = event.target.getBoundingClientRect();
+            tooltip.style.left = rect.left + 'px';
+            tooltip.style.top = (rect.bottom + 10) + 'px';
+        }
+
+        function ocultarTooltip() {
+            const tooltip = document.getElementById('taskTooltip');
+            tooltip.classList.remove('show');
+        }
+
+        function cambiarMes(direccion) {
+            mesActual += direccion;
+            
+            if (mesActual > 11) {
+                mesActual = 0;
+                anioActual++;
+            } else if (mesActual < 0) {
+                mesActual = 11;
+                anioActual--;
+            }
+            
+            renderizarCalendario();
+        }
+
         // ==================== LOGOUT ====================
         function logout() {
             localStorage.removeItem('currentUser');
@@ -1491,5 +2050,8 @@
             window.location.href = '../login.html';
         }
     </script>
+    <div class="footer-bottom" role="contentinfo">
+        <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
+    </div>
 </body>
 </html>
