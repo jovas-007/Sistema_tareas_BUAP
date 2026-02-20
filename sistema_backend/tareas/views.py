@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db.models import Avg
+from django.db.models import Avg, Count, Q
 from .models import Task, Submission, SubmissionFile
 from .serializers import (
     TaskListSerializer, TaskCreateSerializer, TaskDetailSerializer,
@@ -659,7 +659,46 @@ def my_submissions(request):
         'total_calificadas': len(calificaciones)
     })
 
+# ==================== ENDPOINTS PARA GRÁFICAS ====================
 
+@api_view(['GET'])
+def teacher_stats(request):
+    """Estadísticas globales para el dashboard del docente"""
+    docente_id = request.headers.get('X-User-Id') or request.query_params.get('docente_id')
+    
+    tareas_stats = Task.objects.filter(docente__id_usuario=docente_id).values('estado').annotate(total=Count('id'))
+    
+    entregas_stats = Submission.objects.filter(task__docente__id_usuario=docente_id) \
+        .values('estado').annotate(total=Count('id'))
+
+    promedios_tareas = Task.objects.filter(docente__id_usuario=docente_id, estado__in=['activa', 'cerrada']) \
+        .annotate(promedio=Avg('submissions__calificacion')) \
+        .values('titulo', 'promedio')
+
+    return Response({
+        'success': True,
+        'tareas_por_estado': list(tareas_stats),
+        'entregas_por_estado': list(entregas_stats),
+        'promedios': list(promedios_tareas)
+    })
+
+@api_view(['GET'])
+def student_stats(request):
+    """Estadísticas personales para el dashboard del estudiante"""
+    student_id = request.headers.get('X-User-Id') or request.query_params.get('student_id')
+    
+    mis_entregas = Submission.objects.filter(student__id_usuario=student_id) \
+        .values('estado').annotate(total=Count('id'))
+    
+    mis_notas = Submission.objects.filter(student__id_usuario=student_id, estado='calificado') \
+        .select_related('task').order_by('task__fecha_entrega') \
+        .values('task__titulo', 'calificacion')
+
+    return Response({
+        'success': True,
+        'mis_estados': list(mis_entregas),
+        'mis_notas': list(mis_notas)
+    })
 # ==================== ENDPOINTS PÚBLICOS ====================
 
 @api_view(['GET'])
