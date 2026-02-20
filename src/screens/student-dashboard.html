@@ -883,7 +883,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
+           .sidebar {
                 display: none;
             }
             
@@ -1036,6 +1036,18 @@
                     <a href="#" onclick="showSection('mis-calificaciones')">
                         <span class="icon"></span>
                         <span>Mis Calificaciones</span>
+                    </a>
+                </li>
+                 <!-- 
+                <a href="#" onclick="showSection('mi-perfil')">
+                    <span class="icon"></span>
+                    <span>Mi Perfil</span>
+                </a>
+                </li>-->
+                <li>
+                    <a href="./graficas.html">
+                        <span class="icon"></span>
+                        <span>Gráficas</span>
                     </a>
                 </li>
             </ul>
@@ -2204,66 +2216,75 @@
         }
 
         // ==================== GRÁFICAS ====================
+        let chartEstado = null;
+        let chartNotas = null;
+
         async function cargarEstadisticasVisuales() {
-        try {
-        const response = await fetch(`${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`, {
-            headers: getHeaders()
-        });
-        
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const data = await response.json();
+            try {
+                const response = await fetch(`${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`, {
+                    headers: getHeaders()
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
 
-        if (chartEstado) chartEstado.destroy();
-        if (chartNotas) chartNotas.destroy();
-        
-        if (data && data.success) {
-            
-            // 1. Gráfica de Estados
-            const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
-            const estados = Array.isArray(data.tareas_por_estado) ? data.tareas_por_estado : [];
-            
-            chartEstado = new Chart(ctxEstado, {
-                type: 'doughnut',
-                data: {
-                    labels: estados.map(i => (i.estado || 'S/E').toUpperCase()),
-                    datasets: [{
-                        data: estados.map(i => i.total || 0),
-                        backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
-                        hoverOffset: 4
-                    }]
-                },
-                options: { responsive: true }
-            });
+                if (chartEstado) chartEstado.destroy();
+                if (chartNotas) chartNotas.destroy();
+                
+                if (data && data.success) {
+                    const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
+                    const estados = Array.isArray(data.tareas_por_estado) ? data.tareas_por_estado : [];
+                    
+                    chartEstado = new Chart(ctxEstado, {
+                        type: 'doughnut',
+                        data: {
+                            labels: estados.map(i => (i.estado || 'S/E').toUpperCase()),
+                            datasets: [{
+                                data: estados.map(i => i.total || 0),
+                                backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
 
-            // 2. Gráfica de Rendimiento
-            const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
-            const notas = Array.isArray(data.promedios) ? data.promedios : [];
-            
-            chartNotas = new Chart(ctxNotas, {
-                type: 'line',
-                data: {
-                    labels: notas.map(i => i.materia || 'Materia'),
-                    datasets: [{
-                        label: 'Calificación',
-                        data: notas.map(i => i.promedio || 0),
-                        borderColor: '#6366f1',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    scales: { y: { beginAtZero: true, max: 10 } },
-                    responsive: true
+                    const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
+                    const notas = Array.isArray(data.promedios) ? data.promedios : [];
+                    
+                    chartNotas = new Chart(ctxNotas, {
+                        type: 'line',
+                        data: {
+                            labels: notas.map(i => i.materia || 'Materia'),
+                            datasets: [{
+                                label: 'Calificación',
+                                data: notas.map(i => i.promedio || 0),
+                                borderColor: '#6366f1',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            scales: { y: { beginAtZero: true, max: 10 } },
+                            responsive: true
+                        }
+                    });
                 }
-            });
-        } else {
-            console.warn("El backend respondió success:false o data malformada", data);
+            } catch (error) {
+                console.error('Error al cargar gráficas:', error);
+            }
+        } // <--- Asegúrate de que esta llave esté ahí
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '../login.html';
         }
-    } catch (error) {
-        console.error('Error al cargar gráficas:', error);
-    }
-}
+
+        function getHeaders() {
+            return {
+                "X-User-Id": currentUser?.id_usuario || ""
+            };
+        }
     </script>
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>

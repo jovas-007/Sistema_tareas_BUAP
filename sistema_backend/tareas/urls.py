@@ -16,6 +16,9 @@ urlpatterns = [
     
     # Estudiantes
     path('students/', views.students_list, name='students-list'),
+
+    # Materias del docente
+    path('docente/materias/', views.docente_materias, name='docente-materias'),
     
     # ==================== ENDPOINTS ESTUDIANTE ====================
     path('my-tasks/', views.my_tasks, name='my-tasks'),
