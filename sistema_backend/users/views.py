@@ -29,54 +29,93 @@ def register(request):
     Registrar un nuevo usuario
     """
     from .email_service import send_welcome_email
+    from django.db import IntegrityError
     
     print(f"[DEBUG] Datos recibidos: {request.data}")
     serializer = RegisterSerializer(data=request.data)
     
     if serializer.is_valid():
-        user = serializer.save()
-        
-        # Enviar email de bienvenida
         try:
-            send_welcome_email(
-                nombre_completo=user.nombre_completo,
-                correo=user.correo,
-                rol=user.rol
-            )
-            print(f"[DEBUG] Email de bienvenida enviado a {user.correo}")
-        except Exception as e:
-            print(f"[ERROR] No se pudo enviar email de bienvenida: {e}")
+            user = serializer.save()
+            
+            # Enviar email de bienvenida
+            try:
+                send_welcome_email(
+                    nombre_completo=user.nombre_completo,
+                    correo=user.correo,
+                    rol=user.rol
+                )
+                print(f"[DEBUG] Email de bienvenida enviado a {user.correo}")
+            except Exception as e:
+                print(f"[ERROR] No se pudo enviar email de bienvenida: {e}")
+            
+            return Response({
+                'success': True,
+                'message': 'Usuario registrado exitosamente',
+                'id_usuario': user.id_usuario,
+                'nombre_completo': user.nombre_completo,
+                'correo': user.correo,
+                'rol': user.rol,
+            }, status=status.HTTP_201_CREATED)
         
-        return Response({
-            'success': True,
-            'message': 'Usuario registrado exitosamente',
-            'id_usuario': user.id_usuario,
-            'nombre_completo': user.nombre_completo,
-            'correo': user.correo,
-            'rol': user.rol,
-        }, status=status.HTTP_201_CREATED)
+        except IntegrityError as e:
+            # Manejar errores de integridad de la base de datos (duplicados)
+            error_str = str(e).lower()
+            print(f"[ERROR] IntegrityError: {e}")
+            
+            if 'id_usuario' in error_str or 'primary' in error_str:
+                error_message = 'La matrícula ya está registrada'
+            elif 'correo' in error_str or 'email' in error_str:
+                error_message = 'El correo electrónico ya está registrado'
+            else:
+                error_message = 'El usuario ya existe en el sistema'
+            
+            return Response({
+                'success': False,
+                'message': error_message
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            # Cualquier otro error inesperado
+            print(f"[ERROR] Error inesperado al registrar: {e}")
+            return Response({
+                'success': False,
+                'message': f'Error interno del servidor: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Formatear errores para mantener compatibilidad con frontend
     errors = serializer.errors
     print(f"[DEBUG] Errores de validación: {errors}")
     error_message = ''
     
+    # Manejar errores de unicidad (duplicados)
     if 'id_usuario' in errors:
-        if 'unique' in str(errors['id_usuario']).lower():
-            error_message = 'El ID de usuario ya está registrado'
+        error_str = str(errors['id_usuario'][0]).lower()
+        if 'unique' in error_str or 'already exists' in error_str or 'duplicate' in error_str:
+            error_message = 'La matrícula ya está registrada'
         else:
             error_message = str(errors['id_usuario'][0])
     elif 'correo' in errors:
-        if 'unique' in str(errors['correo']).lower():
+        error_str = str(errors['correo'][0]).lower()
+        if 'unique' in error_str or 'already exists' in error_str or 'duplicate' in error_str:
             error_message = 'El correo electrónico ya está registrado'
         else:
             error_message = str(errors['correo'][0])
     elif 'password' in errors:
         error_message = str(errors['password'][0])
+    elif 'carrera' in errors:
+        error_message = str(errors['carrera'][0])
+    elif 'materias' in errors:
+        error_message = str(errors['materias'][0])
+    elif 'nombre_completo' in errors:
+        error_message = str(errors['nombre_completo'][0])
+    elif 'telefono' in errors:
+        error_message = str(errors['telefono'][0])
     else:
-        error_message = str(list(errors.values())[0][0])
+        # Error genérico
+        error_message = str(list(errors.values())[0][0]) if errors else 'Error de validación'
     
-    print(f"[DEBUG] Mensaje de error: {error_message}")
+    print(f"[DEBUG] Mensaje de error formateado: {error_message}")
     return Response({
         'success': False,
         'message': error_message
