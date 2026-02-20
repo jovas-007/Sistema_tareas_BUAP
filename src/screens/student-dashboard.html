@@ -6,12 +6,8 @@
     <title>Dashboard Estudiante - Sistema de Gestión de Tareas</title>
     <link rel="stylesheet" href="../assets/diseños.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -31,22 +27,10 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .header h1 {
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .header h1 { font-size: 24px; display: flex; align-items: center; gap: 10px; }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-info span {
-            font-size: 14px;
-        }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-info span { font-size: 14px; }
 
         .badge-estudiante {
             background: #002855;
@@ -66,30 +50,15 @@
             transition: all 0.3s;
         }
 
-        .btn-logout:hover {
-            background: rgba(255,255,255,0.3);
-        }
+        .btn-logout:hover { background: rgba(255,255,255,0.3); }
 
-        /* Main Layout */
-        .main-container {
-            display: flex;
-            min-height: calc(100vh - 70px);
-        }
+        /* Layout */
+        .main-container { display: flex; min-height: calc(100vh - 70px); }
 
         /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background: #0f172a;
-            padding: 20px 0;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            padding: 0;
-        }
+        .sidebar { width: 250px; background: #0f172a; padding: 20px 0; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { padding: 0; }
 
         .sidebar-menu a {
             display: flex;
@@ -109,31 +78,17 @@
             border-left-color: #10b981;
         }
 
-        .sidebar-menu .icon {
-            font-size: 20px;
-            width: 25px;
-            text-align: center;
-        }
+        .sidebar-menu .icon { font-size: 20px; width: 25px; text-align: center; }
 
-        /* Content Area */
-        .content {
-            flex: 1;
-            padding: 25px;
-            overflow-y: auto;
-        }
+        /* Content */
+        .content { flex: 1; padding: 25px; overflow-y: auto; }
 
-        .section {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .section.active {
-            display: block;
-        }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         /* Cards */
@@ -154,15 +109,9 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        .card-title {
-            font-size: 20px;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .card-title { font-size: 20px; color: #1e293b; display: flex; align-items: center; gap: 10px; }
 
-        /* Stats Grid */
+        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -178,24 +127,16 @@
             text-align: center;
         }
 
-        .stat-card.warning { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
-        .stat-card.success { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-        .stat-card.info { background: linear-gradient(135deg, #002855 0%, #004080 100%); }
-        .stat-card.danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
-        .stat-card.promedio-bajo { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+        .stat-card.warning        { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .stat-card.success        { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .stat-card.info           { background: linear-gradient(135deg, #002855 0%, #004080 100%); }
+        .stat-card.danger         { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+        .stat-card.promedio-bajo  { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
         .stat-card.promedio-medio { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
-        .stat-card.promedio-alto { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .stat-card.promedio-alto  { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
 
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
+        .stat-value { font-size: 36px; font-weight: 700; }
+        .stat-label { font-size: 14px; opacity: 0.9; margin-top: 5px; }
 
         /* Buttons */
         .btn {
@@ -211,84 +152,19 @@
             gap: 8px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Estilo para el botón de descarga de material del profesor */
-        .resource-download-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 2px solid #86efac;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #059669;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
-        }
-
-        .resource-download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
-            border-color: #4ade80;
-        }
-
-        .resource-download-btn .icon {
-            font-size: 32px;
-        }
-
-        .resource-download-btn .info {
-            flex: 1;
-        }
-
-        .resource-download-btn .info strong {
-            display: block;
-            color: #065f46;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .resource-download-btn .info span {
-            font-size: 12px;
-            color: #059669;
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #64748b;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
+        .btn-primary   { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16,185,129,0.4); }
+        .btn-success   { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
         /* Badges */
-        .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-pendiente { background: #fef3c7; color: #92400e; }
-        .badge-entregado { background: #dbeafe; color: #1e40af; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-pendiente  { background: #fef3c7; color: #92400e; }
+        .badge-entregado  { background: #dbeafe; color: #1e40af; }
         .badge-calificado { background: #d1fae5; color: #065f46; }
-        .badge-vencida { background: #fee2e2; color: #991b1b; }
-        .badge-tardia { background: #fef3c7; color: #92400e; }
+        .badge-vencida    { background: #fee2e2; color: #991b1b; }
+        .badge-tardia     { background: #fef3c7; color: #92400e; }
 
         /* Task Cards */
         .task-grid {
@@ -304,24 +180,13 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-left: 4px solid #059669;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
-        .task-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .task-card.vencida {
-            border-left-color: #dc2626;
-        }
-
-        .task-card.entregada {
-            border-left-color: #3b82f6;
-        }
-
-        .task-card.calificada {
-            border-left-color: #059669;
-        }
+        .task-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .task-card.vencida   { border-left-color: #dc2626; }
+        .task-card.entregada { border-left-color: #3b82f6; }
+        .task-card.calificada{ border-left-color: #059669; }
 
         .task-card-header {
             display: flex;
@@ -330,22 +195,10 @@
             margin-bottom: 15px;
         }
 
-        .task-card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-        }
+        .task-card-title { font-size: 18px; font-weight: 600; color: #1e293b; }
 
-        .task-card-meta {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 15px;
-        }
-
-        .task-card-meta span {
-            display: block;
-            margin-bottom: 5px;
-        }
+        .task-card-meta { font-size: 13px; color: #64748b; margin-bottom: 15px; }
+        .task-card-meta span { display: block; margin-bottom: 5px; }
 
         .task-card-footer {
             display: flex;
@@ -360,19 +213,15 @@
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: white;
@@ -386,7 +235,7 @@
 
         @keyframes modalSlide {
             from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            to   { transform: translateY(0);     opacity: 1; }
         }
 
         .modal-header {
@@ -397,43 +246,13 @@
             align-items: center;
         }
 
-        .modal-header h3 {
-            font-size: 20px;
-            color: #1e293b;
-        }
+        .modal-header h3 { font-size: 20px; color: #1e293b; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; }
+        .modal-body { padding: 25px; }
 
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .modal-body {
-            padding: 25px;
-        }
-
-        .modal-footer {
-            padding: 20px 25px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        /* Task Detail */
-        .task-detail-section {
-            margin-bottom: 25px;
-        }
-
-        .task-detail-section h4 {
-            color: #374151;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        /* Task detail */
+        .task-detail-section { margin-bottom: 25px; }
+        .task-detail-section h4 { color: #374151; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
         .task-description {
             background: #f8fafc;
@@ -455,9 +274,7 @@
             transition: all 0.3s;
         }
 
-        .resource-link:hover {
-            background: #bfdbfe;
-        }
+        .resource-link:hover { background: #bfdbfe; }
 
         /* File Upload */
         .file-upload-area {
@@ -470,28 +287,12 @@
             background: #f8fafc;
         }
 
-        .file-upload-area:hover {
-            border-color: #10b981;
-            background: #f0fdf4;
-        }
+        .file-upload-area:hover   { border-color: #10b981; background: #f0fdf4; }
+        .file-upload-area.dragover{ border-color: #10b981; background: #d1fae5; }
+        .file-upload-area input   { display: none; }
+        .file-upload-area .icon   { font-size: 48px; margin-bottom: 10px; }
 
-        .file-upload-area.dragover {
-            border-color: #10b981;
-            background: #d1fae5;
-        }
-
-        .file-upload-area input {
-            display: none;
-        }
-
-        .file-upload-area .icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .uploaded-files {
-            margin-top: 20px;
-        }
+        .uploaded-files { margin-top: 20px; }
 
         .uploaded-file {
             display: flex;
@@ -503,11 +304,7 @@
             margin-bottom: 10px;
         }
 
-        .uploaded-file .file-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .uploaded-file .file-info { display: flex; align-items: center; gap: 10px; }
 
         .uploaded-file .remove-file {
             background: #fee2e2;
@@ -518,7 +315,7 @@
             cursor: pointer;
         }
 
-        /* Calificación Display */
+        /* Grade display */
         .grade-display {
             text-align: center;
             padding: 20px;
@@ -527,25 +324,10 @@
             margin-bottom: 20px;
         }
 
-        .grade-display .grade-value {
-            font-size: 48px;
-            font-weight: 700;
-            color: #059669;
-        }
-
-        .grade-display.low .grade-value {
-            color: #dc2626;
-        }
-
-        .grade-display.medium .grade-value {
-            color: #d97706;
-        }
-
-        .grade-display .grade-label {
-            font-size: 14px;
-            color: #64748b;
-            margin-top: 5px;
-        }
+        .grade-display .grade-value { font-size: 48px; font-weight: 700; color: #059669; }
+        .grade-display.low    .grade-value { color: #dc2626; }
+        .grade-display.medium .grade-value { color: #d97706; }
+        .grade-display .grade-label { font-size: 14px; color: #64748b; margin-top: 5px; }
 
         .feedback-box {
             background: #f8fafc;
@@ -554,15 +336,10 @@
             border-left: 4px solid #059669;
         }
 
-        .feedback-box h5 {
-            color: #374151;
-            margin-bottom: 10px;
-        }
+        .feedback-box h5 { color: #374151; margin-bottom: 10px; }
 
-        /* Previous Submissions */
-        .submission-history {
-            margin-top: 20px;
-        }
+        /* Submission history */
+        .submission-history { margin-top: 20px; }
 
         .submission-item {
             display: flex;
@@ -574,35 +351,15 @@
             margin-bottom: 8px;
         }
 
-        .submission-item .file-name {
-            color: #1e293b;
-            font-weight: 500;
-        }
+        .submission-item .file-name { color: #1e293b; font-weight: 500; }
+        .submission-item .file-date { font-size: 12px; color: #64748b; }
 
-        .submission-item .file-date {
-            font-size: 12px;
-            color: #64748b;
-        }
+        /* Empty state */
+        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+        .empty-state .icon { font-size: 60px; margin-bottom: 20px; }
+        .empty-state h3 { font-size: 20px; color: #1e293b; margin-bottom: 10px; }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #64748b;
-        }
-
-        .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-
-        /* Alert */
+        /* Alerts */
         .alert {
             padding: 15px 20px;
             border-radius: 8px;
@@ -613,22 +370,17 @@
         }
 
         .alert-success { background: #d1fae5; color: #065f46; }
-        .alert-error { background: #fee2e2; color: #991b1b; }
+        .alert-error   { background: #fee2e2; color: #991b1b; }
         .alert-warning { background: #fef3c7; color: #92400e; }
-        .alert-info { background: #dbeafe; color: #1e40af; }
+        .alert-info    { background: #dbeafe; color: #1e40af; }
 
         /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #64748b;
-        }
+        .loading { text-align: center; padding: 40px; color: #64748b; }
 
         .loading::after {
             content: '';
             display: inline-block;
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             border: 3px solid #e2e8f0;
             border-top-color: #10b981;
             border-radius: 50%;
@@ -637,38 +389,21 @@
             vertical-align: middle;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Calificaciones Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
 
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
 
-        th {
-            background: #f8fafc;
-            font-weight: 600;
-            color: #475569;
-        }
+        th { background: #f8fafc; font-weight: 600; color: #475569; }
 
-        .grade-cell {
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .grade-cell.high { color: #059669; }
+        .grade-cell { font-weight: 700; text-align: center; }
+        .grade-cell.high   { color: #059669; }
         .grade-cell.medium { color: #d97706; }
-        .grade-cell.low { color: #dc2626; }
+        .grade-cell.low    { color: #dc2626; }
 
-        /* =============== ESTILOS DEL CALENDARIO =============== */
+        /* Calendar */
         .calendar-container {
             background: white;
             border-radius: 12px;
@@ -685,25 +420,14 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        .calendar-title {
-            font-size: 20px;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .calendar-title { font-size: 20px; color: #1e293b; display: flex; align-items: center; gap: 10px; }
 
-        .calendar-nav {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        .calendar-nav { display: flex; gap: 10px; align-items: center; }
 
         .nav-btn {
             background: #f1f5f9;
             border: none;
-            width: 35px;
-            height: 35px;
+            width: 35px; height: 35px;
             border-radius: 8px;
             cursor: pointer;
             display: flex;
@@ -713,10 +437,7 @@
             font-size: 18px;
         }
 
-        .nav-btn:hover {
-            background: #10b981;
-            color: white;
-        }
+        .nav-btn:hover { background: #10b981; color: white; }
 
         .current-month {
             font-weight: 600;
@@ -755,63 +476,20 @@
             background: white;
         }
 
-        .calendar-day:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+        .calendar-day:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .calendar-day.other-month { opacity: 0.3; cursor: default; }
+        .calendar-day.other-month:hover { transform: none; box-shadow: none; }
+        .calendar-day.today { border-color: #10b981; background: rgba(16,185,129,0.05); }
 
-        .calendar-day.other-month {
-            opacity: 0.3;
-            cursor: default;
-        }
+        .day-number { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #1e293b; }
+        .calendar-day.other-month .day-number { color: #cbd5e1; }
 
-        .calendar-day.other-month:hover {
-            transform: none;
-            box-shadow: none;
-        }
+        .task-indicators { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
 
-        .calendar-day.today {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .day-number {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-            color: #1e293b;
-        }
-
-        .calendar-day.other-month .day-number {
-            color: #cbd5e1;
-        }
-
-        .task-indicators {
-            display: flex;
-            gap: 3px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 4px;
-        }
-
-        .task-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .task-dot.proxima {
-            background: #10b981;
-        }
-
-        .task-dot.urgente {
-            background: #f59e0b;
-        }
-
-        .task-dot.vencida {
-            background: #ef4444;
-        }
+        .task-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .task-dot.proxima { background: #10b981; }
+        .task-dot.urgente { background: #f59e0b; }
+        .task-dot.vencida { background: #ef4444; }
 
         .calendar-legend {
             display: flex;
@@ -822,20 +500,10 @@
             flex-wrap: wrap;
         }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #64748b;
-        }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
+        /* Tooltip */
         .task-tooltip {
             position: absolute;
             background: #1e293b;
@@ -851,152 +519,34 @@
             display: none;
         }
 
-        .task-tooltip.show {
-            display: block;
-        }
+        .task-tooltip.show { display: block; }
 
         .tooltip-task {
             padding: 6px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .tooltip-task:last-child {
-            border-bottom: none;
-        }
-
-        .tooltip-title {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .tooltip-subject {
-            font-size: 11px;
-            opacity: 0.8;
-        }
-
-       .chart-container {
-            position: relative;
-            height: 40vh; 
-            width: 100%;
-            margin-bottom: 20px;
-        }
+        .tooltip-task:last-child { border-bottom: none; }
+        .tooltip-title { font-weight: 600; margin-bottom: 2px; }
+        .tooltip-subject { font-size: 11px; opacity: 0.8; }
 
         /* Responsive */
         @media (max-width: 768px) {
-           .sidebar {
-                display: none;
-            }
-            
-            .header h1 {
-                font-size: 18px;
-            }
-            
-            .task-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .calendar-grid {
-                gap: 4px;
-            }
-
-            .calendar-day {
-                padding: 4px;
-            }
-
-            .day-number {
-                font-size: 12px;
-            }
-
-            .task-dot {
-                width: 4px;
-                height: 4px;
-            }
+            .sidebar { display: none; }
+            .header h1 { font-size: 18px; }
+            .task-grid { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 4px; }
+            .calendar-day { padding: 4px; }
+            .day-number { font-size: 12px; }
+            .task-dot { width: 4px; height: 4px; }
         }
-        .form-grid{
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            }
-
-            .form-group label{
-            display:block;
-            font-size: 13px;
-            color:#475569;
-            margin-bottom:6px;
-            font-weight:600;
-            }
-
-            .form-group input, .form-group select{
-            width:100%;
-            padding:10px 12px;
-            border:1px solid #e2e8f0;
-            border-radius:10px;
-            outline:none;
-            font-size:14px;
-            }
-
-            .form-group input:focus, .form-group select:focus{
-            border-color:#10b981;
-            box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
-            }
-
-            .materias-box{
-            margin-top: 18px;
-            padding: 15px;
-            border:1px solid #e2e8f0;
-            border-radius:12px;
-            background:#f8fafc;
-            }
-
-            .materias-header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:12px;
-            }
-
-            .materias-header .hint{
-            font-size: 12px;
-            color:#64748b;
-            }
-
-            .materias-grid{
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap:10px;
-            }
-
-            .materia-item{
-            background:white;
-            border:1px solid #e2e8f0;
-            border-radius:10px;
-            padding:10px 12px;
-            display:flex;
-            gap:10px;
-            align-items:flex-start;
-            }
-
-            .materia-item input{
-            margin-top: 3px;
-            }
-
-            .materia-title{
-            font-weight:700;
-            color:#1e293b;
-            font-size: 13px;
-            }
-
-            .materia-sub{
-            font-size:12px;
-            color:#64748b;
-            margin-top:2px;
-            }
     </style>
 </head>
 <body>
+
     <!-- Header -->
     <header class="header">
-        <h1> Sistema de Gestión de Tareas</h1>
+        <h1>Sistema de Gestión de Tareas</h1>
         <div class="user-info">
             <span id="userName">Cargando...</span>
             <span class="badge-estudiante">ESTUDIANTE</span>
@@ -1005,57 +555,35 @@
     </header>
 
     <div class="main-container">
+
         <!-- Sidebar -->
         <nav class="sidebar">
             <ul class="sidebar-menu">
-                <li>
-                    <a href="#" class="active" onclick="showSection('dashboard')">
-                        <span class="icon"></span>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('calendario')">
-                        <span class="icon"></span>
-                        <span>Calendario</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('tareas-pendientes')">
-                        <span class="icon"></span>
-                        <span>Tareas Pendientes</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('tareas-entregadas')">
-                        <span class="icon"></span>
-                        <span>Tareas Entregadas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('mis-calificaciones')">
-                        <span class="icon"></span>
-                        <span>Mis Calificaciones</span>
-                    </a>
-                </li>
-                 <!-- 
-                <a href="#" onclick="showSection('mi-perfil')">
-                    <span class="icon"></span>
-                    <span>Mi Perfil</span>
-                </a>
-                </li>-->
-                <li>
-                    <a href="./graficas.html">
-                        <span class="icon"></span>
-                        <span>Gráficas</span>
-                    </a>
-                </li>
+                <li><a href="#" class="active" onclick="showSection('dashboard')">
+                    <span class="icon"></span><span>Dashboard</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('calendario')">
+                    <span class="icon"></span><span>Calendario</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('tareas-pendientes')">
+                    <span class="icon"></span><span>Tareas Pendientes</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('tareas-entregadas')">
+                    <span class="icon"></span><span>Tareas Entregadas</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('mis-calificaciones')">
+                    <span class="icon"></span><span>Mis Calificaciones</span>
+                </a></li>
+                <li><a href="./graficas.html">
+                    <span class="icon"></span><span>Gráficas</span>
+                </a></li>
             </ul>
         </nav>
 
         <!-- Content -->
         <main class="content">
-            <!-- Dashboard Section -->
+
+            <!-- Dashboard -->
             <section id="section-dashboard" class="section active">
                 <div class="stats-grid">
                     <div class="stat-card danger">
@@ -1067,20 +595,21 @@
                         <div class="stat-label">Promedio</div>
                     </div>
                 </div>
-                <div class="charts-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-                     <div class="card">
-                         <div class="card-header"><h2 class="card-title">Estado de mis Tareas</h2></div>
-                         <canvas id="chartEstadoTareas" style="max-height: 250px;"></canvas>
+
+                <div class="charts-row" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:25px;">
+                    <div class="card">
+                        <div class="card-header"><h2 class="card-title">Estado de mis Tareas</h2></div>
+                        <canvas id="chartEstadoTareas" style="max-height:250px;"></canvas>
                     </div>
                     <div class="card">
                         <div class="card-header"><h2 class="card-title">Histórico de Notas</h2></div>
-                        <canvas id="chartHistoricoNotas" style="max-height: 250px;"></canvas>
+                        <canvas id="chartHistoricoNotas" style="max-height:250px;"></canvas>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Tareas Próximas a Vencer</h2>
+                        <h2 class="card-title">⏰ Tareas Próximas a Vencer</h2>
                     </div>
                     <div id="tareasProximas">
                         <div class="loading">Cargando tareas</div>
@@ -1089,7 +618,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Últimas Calificaciones</h2>
+                        <h2 class="card-title">⭐ Últimas Calificaciones</h2>
                     </div>
                     <div id="ultimasCalificaciones">
                         <div class="loading">Cargando</div>
@@ -1097,12 +626,12 @@
                 </div>
             </section>
 
-            <!-- Sección Calendario -->
+            <!-- Calendario -->
             <section id="section-calendario" class="section">
                 <div class="calendar-container">
                     <div class="calendar-header">
                         <h2 class="calendar-title">
-                            <span></span>
+                            <span>📅</span>
                             <span>Calendario de Tareas</span>
                         </h2>
                         <div class="calendar-nav">
@@ -1111,33 +640,29 @@
                             <button class="nav-btn" onclick="cambiarMes(1)">▶</button>
                         </div>
                     </div>
-                    
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Calendario generado dinámicamente -->
-                    </div>
-
+                    <div class="calendar-grid" id="calendarGrid"></div>
                     <div class="calendar-legend">
                         <div class="legend-item">
-                            <div class="legend-dot proxima"></div>
+                            <div class="legend-dot proxima" style="background:#10b981;"></div>
                             <span>Tareas próximas (más de 1 día)</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-dot urgente"></div>
+                            <div class="legend-dot urgente" style="background:#f59e0b;"></div>
                             <span>Tareas urgentes (24 horas o menos)</span>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-dot vencida"></div>
+                            <div class="legend-dot vencida" style="background:#ef4444;"></div>
                             <span>Tareas vencidas</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Tareas Pendientes Section -->
+            <!-- Tareas Pendientes -->
             <section id="section-tareas-pendientes" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Tareas Pendientes</h2>
+                        <h2 class="card-title">📋 Tareas Pendientes</h2>
                     </div>
                     <div id="listaTareasPendientes" class="task-grid">
                         <div class="loading">Cargando tareas</div>
@@ -1145,11 +670,11 @@
                 </div>
             </section>
 
-            <!-- Tareas Entregadas Section -->
+            <!-- Tareas Entregadas -->
             <section id="section-tareas-entregadas" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Tareas Entregadas</h2>
+                        <h2 class="card-title">✅ Tareas Entregadas</h2>
                     </div>
                     <div id="listaTareasEntregadas" class="task-grid">
                         <div class="loading">Cargando tareas</div>
@@ -1157,77 +682,25 @@
                 </div>
             </section>
 
-            <!-- Mis Calificaciones Section -->
+            <!-- Mis Calificaciones -->
             <section id="section-mis-calificaciones" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Mis Calificaciones</h2>
+                        <h2 class="card-title">⭐ Mis Calificaciones</h2>
                     </div>
                     <div id="tablaCalificaciones">
                         <div class="loading">Cargando calificaciones</div>
                     </div>
                 </div>
             </section>
-            <!-- Mi Perfil Section -->
-            <section id="section-mi-perfil" class="section">
-            <div class="card">
-                <div class="card-header">
-                <h2 class="card-title">Mi Perfil</h2>
-                <button class="btn btn-secondary btn-sm" onclick="cargarPerfil(true)">Recargar</button>
-                </div>
 
-                <div id="perfilMsg"></div>
-
-                <form id="perfilForm" onsubmit="guardarPerfil(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                    <label>Matrícula</label>
-                    <input id="perfil_id" type="text" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Rol</label>
-                    <input id="perfil_rol" type="text" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Nombre completo</label>
-                    <input id="perfil_nombre" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Correo</label>
-                    <input id="perfil_correo" type="email" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Teléfono</label>
-                    <input id="perfil_telefono" type="text" placeholder="Opcional">
-                    </div>
-
-                    <div class="form-group">
-                    <label>Sexo</label>
-                    <select id="perfil_sexo">
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                    </div>
-
-                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top: 18px;">
-                    <button type="button" class="btn btn-secondary" onclick="cargarPerfil(true)">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btnGuardarPerfil">Guardar cambios</button>
-                </div>
-                </form>
-            </div>
-            </section>
         </main>
     </div>
 
-    <!-- Tooltip para mostrar tareas del día -->
+    <!-- Tooltip -->
     <div class="task-tooltip" id="taskTooltip"></div>
 
-    <!-- Modal Ver/Entregar Tarea -->
+    <!-- Modal Tarea -->
     <div id="modalTarea" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1235,13 +708,14 @@
                 <button class="modal-close" onclick="cerrarModal('modalTarea')">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- Info de calificación (si existe) -->
-                <div id="seccionCalificacion" style="display: none;">
+
+                <!-- Calificación -->
+                <div id="seccionCalificacion" style="display:none;">
                     <div class="grade-display" id="gradeDisplay">
                         <div class="grade-value" id="gradeValue">-</div>
                         <div class="grade-label">de <span id="gradeMax">10</span> puntos</div>
                     </div>
-                    <div class="feedback-box" id="feedbackBox" style="display: none;">
+                    <div class="feedback-box" id="feedbackBox" style="display:none;">
                         <h5>💬 Comentario del docente:</h5>
                         <p id="feedbackText"></p>
                     </div>
@@ -1249,15 +723,13 @@
 
                 <!-- Descripción -->
                 <div class="task-detail-section">
-                    <h4> Descripción</h4>
-                    <div class="task-description" id="tareaDescripcion">
-                        Sin descripción
-                    </div>
+                    <h4>📝 Descripción</h4>
+                    <div class="task-description" id="tareaDescripcion">Sin descripción</div>
                 </div>
 
                 <!-- Recursos -->
-                <div class="task-detail-section" id="seccionRecursos" style="display: none;">
-                    <h4> Recursos del Docente</h4>
+                <div class="task-detail-section" id="seccionRecursos" style="display:none;">
+                    <h4>🔗 Recursos del Docente</h4>
                     <div id="recursosDocente"></div>
                 </div>
 
@@ -1269,60 +741,55 @@
                     <p id="estadoTarea"></p>
                 </div>
 
-                <!-- Área de entrega (solo si puede entregar) -->
-                <div class="task-detail-section" id="seccionEntrega" style="display: none;">
-                    <h4> Entregar Tarea</h4>
+                <!-- Área de entrega -->
+                <div class="task-detail-section" id="seccionEntrega" style="display:none;">
+                    <h4>📤 Entregar Tarea</h4>
                     <div class="file-upload-area" id="dropZone" onclick="document.getElementById('inputArchivos').click()">
                         <div class="icon">📁</div>
                         <p><strong>Arrastra archivos aquí</strong></p>
-                        <p style="font-size: 13px; color: #64748b;">o haz clic para seleccionar</p>
-                        <p style="font-size: 12px; color: #94a3b8; margin-top: 10px;">
+                        <p style="font-size:13px;color:#64748b;">o haz clic para seleccionar</p>
+                        <p style="font-size:12px;color:#94a3b8;margin-top:10px;">
                             PDF, DOC, PPT, imágenes, código (máx. 20MB por archivo)
                         </p>
-                        <input type="file" id="inputArchivos" multiple 
+                        <input type="file" id="inputArchivos" multiple
                                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.zip,.rar,.txt,.py,.js,.html,.css,.java,.cpp,.c">
                     </div>
-
                     <div class="uploaded-files" id="archivosSeleccionados"></div>
-
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" 
+                    <button class="btn btn-primary" style="width:100%;margin-top:15px;"
                             onclick="enviarEntrega()" id="btnEnviar" disabled>
-                         Enviar Entrega
+                        📤 Enviar Entrega
                     </button>
                 </div>
 
                 <!-- Historial de entregas -->
-                <div class="task-detail-section" id="seccionHistorial" style="display: none;">
-                    <h4> Historial de Entregas</h4>
+                <div class="task-detail-section" id="seccionHistorial" style="display:none;">
+                    <h4>📁 Historial de Entregas</h4>
                     <div class="submission-history" id="historialEntregas"></div>
                 </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN ====================
-        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';        let currentUser = null;
-        let tareaActual = null;
+        // ==================== CONFIG ====================
+        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';
+        let currentUser      = null;
+        let tareaActual      = null;
         let archivosParaSubir = [];
 
-        // Variables del calendario
-        let mesActual = new Date().getMonth();
-        let anioActual = new Date().getFullYear();
+        let mesActual      = new Date().getMonth();
+        let anioActual     = new Date().getFullYear();
         let tareasPorFecha = {};
         let todasLasTareas = [];
 
-        // ==================== INICIALIZACIÓN ====================
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
-            // Verificar sesión
             const userCookie = getCookie('currentUser');
-            const userLocal = localStorage.getItem('currentUser');
-            
-            if (userCookie) {
-                currentUser = JSON.parse(decodeURIComponent(userCookie));
-            } else if (userLocal) {
-                currentUser = JSON.parse(userLocal);
-            }
+            const userLocal  = localStorage.getItem('currentUser');
+
+            if (userCookie)     currentUser = JSON.parse(decodeURIComponent(userCookie));
+            else if (userLocal) currentUser = JSON.parse(userLocal);
 
             if (!currentUser || currentUser.rol !== 'estudiante') {
                 alert('Acceso denegado. Solo estudiantes pueden acceder.');
@@ -1331,34 +798,22 @@
             }
 
             document.getElementById('userName').textContent = currentUser.nombre_completo;
-            
-            // Configurar drag and drop
+
             const dropZone = document.getElementById('dropZone');
-            
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            });
-
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
-            });
-
+            dropZone.addEventListener('dragover',  (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+            dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('dragover'));
             dropZone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('dragover');
                 handleFiles(e.dataTransfer.files);
             });
 
-            document.getElementById('inputArchivos').addEventListener('change', (e) => {
-                handleFiles(e.target.files);
-            });
+            document.getElementById('inputArchivos').addEventListener('change', (e) => handleFiles(e.target.files));
 
-            // Cargar datos
             cargarDashboard();
         });
 
-        // ==================== UTILIDADES ====================
+        // ==================== UTILS ====================
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
@@ -1367,19 +822,13 @@
         }
 
         function getHeaders() {
-            return {
-                'X-User-Id': currentUser.id_usuario
-            };
+            return { 'X-User-Id': currentUser?.id_usuario || '' };
         }
 
         function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('es-MX', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+            return new Date(dateStr).toLocaleDateString('es-MX', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
             });
         }
 
@@ -1390,25 +839,12 @@
             document.getElementById(`section-${section}`).classList.add('active');
             event.target.closest('a')?.classList.add('active');
 
-            switch(section) {
-                case 'dashboard':
-                    cargarDashboard();
-                    break;
-                case 'calendario':
-                    cargarCalendario();
-                    break;
-                case 'tareas-pendientes':
-                    cargarTareasPendientes();
-                    break;
-                case 'tareas-entregadas':
-                    cargarTareasEntregadas();
-                    break;
-                case 'mis-calificaciones':
-                    cargarMisCalificaciones();
-                    break;
-                case 'mi-perfil':
-                    cargarPerfil();
-                    break;
+            switch (section) {
+                case 'dashboard':         cargarDashboard();          break;
+                case 'calendario':        cargarCalendario();          break;
+                case 'tareas-pendientes': cargarTareasPendientes();   break;
+                case 'tareas-entregadas': cargarTareasEntregadas();   break;
+                case 'mis-calificaciones':cargarMisCalificaciones();  break;
             }
         }
 
@@ -1422,62 +858,52 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type}`;
             alertDiv.innerHTML = message;
-            
             const content = document.querySelector('.content');
             content.insertBefore(alertDiv, content.firstChild);
-            
             setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = '../login.html';
         }
 
         // ==================== DASHBOARD ====================
         async function cargarDashboard() {
             try {
-                const response = await fetch(`${API_URL}/my-tasks/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-tasks/`, { headers: getHeaders() });
                 const data = await response.json();
 
                 if (data.success) {
                     document.getElementById('totalPendientes').textContent = data.pendientes.length;
 
-                    // Mostrar tareas próximas a vencer
                     const proximas = data.pendientes
                         .filter(t => !t.esta_vencida)
                         .sort((a, b) => new Date(a.fecha_entrega) - new Date(b.fecha_entrega))
                         .slice(0, 3);
-                    
+
                     renderTareasProximas(proximas);
                 }
 
-                // Cargar calificaciones para el promedio
-                const calResponse = await fetch(`${API_URL}/my-submissions/`, {
-                    headers: getHeaders()
-                });
+                const calResponse = await fetch(`${API_URL}/my-submissions/`, { headers: getHeaders() });
                 const calData = await calResponse.json();
 
                 if (calData.success) {
                     const promedio = calData.promedio ? calData.promedio : 0;
-                    document.getElementById('promedioGeneral').textContent = 
-                        promedio > 0 ? promedio.toFixed(1) : '-';
-                    
-                    // Aplicar color dinámico basado en el promedio
-                    const statPromedio = document.getElementById('statPromedio');
-                    statPromedio.className = 'stat-card'; // Resetear clases
+                    document.getElementById('promedioGeneral').textContent = promedio > 0 ? promedio.toFixed(1) : '-';
 
+                    const statPromedio = document.getElementById('statPromedio');
+                    statPromedio.className = 'stat-card';
                     if (promedio > 0) {
-                        if (promedio < 6) {
-                            statPromedio.classList.add('promedio-bajo'); // Rojo
-                        } else if (promedio < 8) {
-                            statPromedio.classList.add('promedio-medio'); // Amarillo
-                        } else {
-                            statPromedio.classList.add('promedio-alto'); // Verde
-                        }
+                        if (promedio < 6)      statPromedio.classList.add('promedio-bajo');
+                        else if (promedio < 8) statPromedio.classList.add('promedio-medio');
+                        else                   statPromedio.classList.add('promedio-alto');
                     }
-                    
+
                     renderUltimasCalificaciones(calData.calificaciones.slice(0, 5));
                     cargarEstadisticasVisuales();
                 }
-
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -1485,18 +911,15 @@
 
         function renderTareasProximas(tareas) {
             const container = document.getElementById('tareasProximas');
-
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon"></div>
+                        <div class="icon">🎉</div>
                         <h3>¡Todo al día!</h3>
                         <p>No tienes tareas pendientes próximas a vencer</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = `
                 <div class="task-grid">
                     ${tareas.map(t => `
@@ -1507,35 +930,27 @@
                             </div>
                             <div class="task-card-meta">
                                 <span>📅 Entrega: ${formatDate(t.fecha_entrega)}</span>
-                                <span> ${t.puntos_maximos} puntos</span>
+                                <span>⭐ ${t.puntos_maximos} puntos</span>
                             </div>
                             <div class="task-card-footer">
                                 <button class="btn btn-primary btn-sm">Ver Tarea</button>
                             </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+                        </div>`).join('')}
+                </div>`;
         }
 
         function renderUltimasCalificaciones(calificaciones) {
             const container = document.getElementById('ultimasCalificaciones');
-
             if (calificaciones.length === 0) {
-                container.innerHTML = `
-                    <p style="color: #64748b; text-align: center; padding: 20px;">
-                        Aún no tienes calificaciones
-                    </p>
-                `;
+                container.innerHTML = `<p style="color:#64748b;text-align:center;padding:20px;">Aún no tienes calificaciones</p>`;
                 return;
             }
-
             container.innerHTML = `
                 <table>
                     <thead>
                         <tr>
                             <th>Tarea</th>
-                            <th style="text-align: center;">Calificación</th>
+                            <th style="text-align:center;">Calificación</th>
                             <th>Fecha</th>
                         </tr>
                     </thead>
@@ -1545,178 +960,138 @@
                                 <td>${c.tarea}</td>
                                 <td class="grade-cell ${c.calificacion >= 8 ? 'high' : c.calificacion >= 6 ? 'medium' : 'low'}">
                                     ${c.calificacion}/${c.puntos_maximos}
-                                    ${c.es_tardia ? '<br><small style="color: #d97706;">(Tardía)</small>' : ''}
+                                    ${c.es_tardia ? '<br><small style="color:#d97706;">(Tardía)</small>' : ''}
                                 </td>
-                                <td style="font-size: 13px; color: #64748b;">${formatDate(c.fecha_calificacion)}</td>
-                            </tr>
-                        `).join('')}
+                                <td style="font-size:13px;color:#64748b;">${formatDate(c.fecha_calificacion)}</td>
+                            </tr>`).join('')}
                     </tbody>
-                </table>
-            `;
+                </table>`;
         }
 
         // ==================== TAREAS PENDIENTES ====================
         async function cargarTareasPendientes() {
             try {
-                const response = await fetch(`${API_URL}/my-tasks/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-tasks/`, { headers: getHeaders() });
                 const data = await response.json();
-
-                if (data.success) {
-                    renderTareasPendientes(data.pendientes);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                if (data.success) renderTareasPendientes(data.pendientes);
+            } catch (error) { console.error('Error:', error); }
         }
 
         function renderTareasPendientes(tareas) {
             const container = document.getElementById('listaTareasPendientes');
-
             if (tareas.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <div class="icon"></div>
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="icon">🎉</div>
                         <h3>¡Sin tareas pendientes!</h3>
                         <p>Has completado todas tus tareas</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = tareas.map(t => `
                 <div class="task-card ${t.esta_vencida ? 'vencida' : ''}" onclick="verTarea(${t.task_id})">
                     <div class="task-card-header">
                         <span class="task-card-title">${t.titulo}</span>
-                        ${t.esta_vencida ? 
-                            '<span class="badge badge-vencida">VENCIDA</span>' : 
-                            '<span class="badge badge-pendiente">PENDIENTE</span>'}
+                        ${t.esta_vencida
+                            ? '<span class="badge badge-vencida">VENCIDA</span>'
+                            : '<span class="badge badge-pendiente">PENDIENTE</span>'}
                     </div>
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
-                        <span> ${t.puntos_maximos} puntos</span>
+                        <span>⭐ ${t.puntos_maximos} puntos</span>
                     </div>
-                    <div style="margin: 8px 0;">
-                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                    <div style="margin:8px 0;">
+                        <span class="badge" style="background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:white;font-size:11px;">
                             📚 ${t.materia_nombre || 'Sin materia'}
                         </span>
                     </div>
-                    <p style="color: #64748b; font-size: 13px; margin: 10px 0;">
-                        ${t.descripcion || 'Sin descripción'}
-                    </p>
+                    <p style="color:#64748b;font-size:13px;margin:10px 0;">${t.descripcion || 'Sin descripción'}</p>
                     <div class="task-card-footer">
-                        <span style="font-size: 13px; color: ${t.puede_entregar ? '#059669' : '#dc2626'};">
-                            ${t.puede_entregar ? ' Puede entregar' : ' No acepta entregas'}
+                        <span style="font-size:13px;color:${t.puede_entregar ? '#059669' : '#dc2626'};">
+                            ${t.puede_entregar ? '✅ Puede entregar' : '❌ No acepta entregas'}
                         </span>
                         <button class="btn btn-primary btn-sm">Ver Tarea</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         // ==================== TAREAS ENTREGADAS ====================
         async function cargarTareasEntregadas() {
             try {
-                const response = await fetch(`${API_URL}/my-tasks/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-tasks/`, { headers: getHeaders() });
                 const data = await response.json();
-
-                if (data.success) {
-                    const entregadas = [...data.entregadas, ...data.calificadas];
-                    renderTareasEntregadas(entregadas);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                if (data.success) renderTareasEntregadas([...data.entregadas, ...data.calificadas]);
+            } catch (error) { console.error('Error:', error); }
         }
 
         function renderTareasEntregadas(tareas) {
             const container = document.getElementById('listaTareasEntregadas');
-
             if (tareas.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <div class="icon"></div>
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="icon">📭</div>
                         <h3>Sin entregas aún</h3>
                         <p>Aún no has entregado ninguna tarea</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = tareas.map(t => `
-                <div class="task-card ${t.estado === 'calificado' ? 'calificada' : 'entregada'}" 
-                     onclick="verTarea(${t.task_id})">
+                <div class="task-card ${t.estado === 'calificado' ? 'calificada' : 'entregada'}" onclick="verTarea(${t.task_id})">
                     <div class="task-card-header">
                         <span class="task-card-title">${t.titulo}</span>
                         <span class="badge badge-${t.estado}">${t.estado.toUpperCase()}</span>
                     </div>
                     <div class="task-card-meta">
                         <span>📅 ${formatDate(t.fecha_entrega)}</span>
-                        ${t.calificacion ? `<span> ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
+                        ${t.calificacion ? `<span>⭐ ${t.calificacion}/${t.puntos_maximos}</span>` : ''}
                     </div>
-                    <div style="margin: 8px 0;">
-                        <span class="badge" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 11px;">
+                    <div style="margin:8px 0;">
+                        <span class="badge" style="background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:white;font-size:11px;">
                             📚 ${t.materia_nombre || 'Sin materia'}
                         </span>
                     </div>
                     <div class="task-card-footer">
-                        ${t.calificacion ? 
-                            `<span class="grade-cell ${t.calificacion >= 8 ? 'high' : t.calificacion >= 6 ? 'medium' : 'low'}" 
-                                   style="font-size: 24px;">${t.calificacion}</span>` :
-                            '<span style="color: #64748b;">Esperando calificación</span>'}
+                        ${t.calificacion
+                            ? `<span class="grade-cell ${t.calificacion >= 8 ? 'high' : t.calificacion >= 6 ? 'medium' : 'low'}" style="font-size:24px;">${t.calificacion}</span>`
+                            : '<span style="color:#64748b;">Esperando calificación</span>'}
                         <button class="btn btn-secondary btn-sm">Ver Detalles</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         // ==================== MIS CALIFICACIONES ====================
         async function cargarMisCalificaciones() {
             try {
-                const response = await fetch(`${API_URL}/my-submissions/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-submissions/`, { headers: getHeaders() });
                 const data = await response.json();
-
-                if (data.success) {
-                    renderMisCalificaciones(data);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                if (data.success) renderMisCalificaciones(data);
+            } catch (error) { console.error('Error:', error); }
         }
 
         function renderMisCalificaciones(data) {
             const container = document.getElementById('tablaCalificaciones');
-
             if (data.calificaciones.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon"></div>
+                        <div class="icon">📭</div>
                         <h3>Sin calificaciones</h3>
                         <p>Aún no tienes tareas calificadas</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = `
-                <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px;">
-                    <h2 style="color: #065f46; margin: 0;">Promedio General</h2>
-                    <div style="font-size: 48px; font-weight: 700; color: ${data.promedio >= 8 ? '#059669' : data.promedio >= 6 ? '#d97706' : '#dc2626'};">
+                <div style="text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border-radius:12px;">
+                    <h2 style="color:#065f46;margin:0;">Promedio General</h2>
+                    <div style="font-size:48px;font-weight:700;color:${data.promedio >= 8 ? '#059669' : data.promedio >= 6 ? '#d97706' : '#dc2626'};">
                         ${data.promedio ? data.promedio.toFixed(1) : '-'}
                     </div>
-                    <p style="color: #64748b;">${data.total_calificadas} tareas calificadas</p>
+                    <p style="color:#64748b;">${data.total_calificadas} tareas calificadas</p>
                 </div>
-
                 <table>
                     <thead>
                         <tr>
                             <th>Tarea</th>
-                            <th style="text-align: center;">Calificación</th>
+                            <th style="text-align:center;">Calificación</th>
                             <th>Comentario</th>
                             <th>Fecha</th>
                         </tr>
@@ -1728,78 +1103,60 @@
                                     <strong>${c.tarea}</strong>
                                     ${c.es_tardia ? '<br><span class="badge badge-tardia">TARDÍA</span>' : ''}
                                 </td>
-                                <td class="grade-cell ${c.calificacion >= 8 ? 'high' : c.calificacion >= 6 ? 'medium' : 'low'}" 
-                                    style="font-size: 20px;">
+                                <td class="grade-cell ${c.calificacion >= 8 ? 'high' : c.calificacion >= 6 ? 'medium' : 'low'}" style="font-size:20px;">
                                     ${c.calificacion}/${c.puntos_maximos}
                                 </td>
-                                <td style="max-width: 300px; font-size: 13px; color: #64748b;">
-                                    ${c.comentario || '-'}
-                                </td>
-                                <td style="font-size: 13px; color: #64748b; white-space: nowrap;">
-                                    ${formatDate(c.fecha_calificacion)}
-                                </td>
-                            </tr>
-                        `).join('')}
+                                <td style="max-width:300px;font-size:13px;color:#64748b;">${c.comentario || '-'}</td>
+                                <td style="font-size:13px;color:#64748b;white-space:nowrap;">${formatDate(c.fecha_calificacion)}</td>
+                            </tr>`).join('')}
                     </tbody>
-                </table>
-            `;
+                </table>`;
         }
 
-        // ==================== VER TAREA DETALLE ====================
+        // ==================== VER TAREA ====================
         async function verTarea(taskId) {
             try {
-                const response = await fetch(`${API_URL}/my-tasks/${taskId}/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-tasks/${taskId}/`, { headers: getHeaders() });
                 const data = await response.json();
-
                 if (data.success) {
                     tareaActual = data.submission;
                     mostrarModalTarea(data.submission);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert(' Error al cargar la tarea', 'error');
+                showAlert('❌ Error al cargar la tarea', 'error');
             }
         }
 
         function mostrarModalTarea(submission) {
-            // Título
             document.getElementById('modalTareaTitulo').textContent = submission.tarea_titulo;
 
-            // Descripción con nombre del profesor
             document.getElementById('tareaDescripcion').innerHTML = `
-                <div class="task-info-grid" style="margin-bottom: 15px;">
-                    <div class="info-item">
-                        <span class="label" style="font-weight: 600; color: #64748b;">👨‍🏫 Profesor:</span>
-                        <span class="value" style="color: #1e293b; font-weight: 500;">${submission.docente_nombre || 'No asignado'}</span>
+                <div style="margin-bottom:15px;">
+                    <div style="margin-bottom:6px;">
+                        <span style="font-weight:600;color:#64748b;">👨‍🏫 Profesor:</span>
+                        <span style="color:#1e293b;font-weight:500;">${submission.docente_nombre || 'No asignado'}</span>
                     </div>
-                        <div class="info-item">
-                            <span class="label">📚 Materia:</span>
-                            <span class="value">${submission.materia_nombre || 'Sin materia'}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">🔢 NRC:</span>
-                            <span class="value">${submission.materia_nrc || 'N/A'}</span>
-                        </div>
+                    <div style="margin-bottom:6px;">
+                        <span style="font-weight:600;color:#64748b;">📚 Materia:</span>
+                        <span>${submission.materia_nombre || 'Sin materia'}</span>
+                    </div>
+                    <div>
+                        <span style="font-weight:600;color:#64748b;">🔢 NRC:</span>
+                        <span>${submission.materia_nrc || 'N/A'}</span>
                     </div>
                 </div>
-                <p>${submission.tarea_descripcion || 'Sin descripción'}</p>
-            `;
-            
-            // Fecha límite
+                <p>${submission.tarea_descripcion || 'Sin descripción'}</p>`;
+
             document.getElementById('fechaLimite').textContent = formatDate(submission.tarea_fecha_entrega);
             document.getElementById('puntosMax').textContent = submission.tarea_puntos_maximos;
-            
-            // Estado
+
             const estadoEl = document.getElementById('estadoTarea');
-            if (submission.tarea_esta_vencida) {
-                estadoEl.innerHTML = '<span style="color: #dc2626;">⚠️ Esta tarea ha vencido</span>';
-            } else {
-                estadoEl.innerHTML = '<span style="color: #059669;">✅ Tiempo disponible para entregar</span>';
-            }
-        
-            // Recursos del docente
+            estadoEl.innerHTML = submission.tarea_esta_vencida
+                ? '<span style="color:#dc2626;">⚠️ Esta tarea ha vencido</span>'
+                : '<span style="color:#059669;">✅ Tiempo disponible para entregar</span>';
+
+            // Recursos
             const seccionRecursos = document.getElementById('seccionRecursos');
             const recursosHtml = [];
 
@@ -1807,41 +1164,29 @@
                 recursosHtml.push(`
                     <a href="${submission.tarea_url_recurso}" target="_blank" class="resource-link">
                         🔗 Ver recurso externo
-                    </a>
-                `);
+                    </a>`);
             }
 
-            // AGREGAR ARCHIVO ADJUNTO DEL PROFESOR SI EXISTE
             if (submission.tarea_archivo_adjunto) {
-                console.log('📎 Archivo adjunto encontrado:', submission.tarea_archivo_adjunto);
-                console.log('📄 Nombre del archivo:', submission.tarea_archivo_nombre);
-            
-                const fileUrl = submission.tarea_archivo_adjunto;
-                const fileName = submission.tarea_archivo_nombre || "Material del profesor";
-            
+                const fileUrl  = submission.tarea_archivo_adjunto;
+                const fileName = submission.tarea_archivo_nombre || 'Material del profesor';
                 recursosHtml.push(`
-                    <div style="margin-top: 10px;">
-                        <h5 style="color: #059669; margin-bottom: 10px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                            <span>📎</span>
-                            <span>Material de Apoyo del Profesor</span>
+                    <div style="margin-top:10px;">
+                        <h5 style="color:#059669;margin-bottom:10px;font-size:14px;display:flex;align-items:center;gap:6px;">
+                            <span>📎</span><span>Material de Apoyo del Profesor</span>
                         </h5>
-                        <a href="${fileUrl}" 
-                           target="_blank" 
-                           download 
-                           style="display: flex; align-items: center; gap: 12px; padding: 15px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; border-radius: 10px; text-decoration: none; color: #059669; transition: all 0.3s; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);"
-                           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.2)'"
-                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(5, 150, 105, 0.1)'">
-                            <span style="font-size: 32px;">📁</span>
-                            <div style="flex: 1;">
-                                <strong style="display: block; color: #065f46; font-size: 14px; margin-bottom: 4px;">${fileName}</strong>
-                                <span style="font-size: 12px; color: #059669;">Click para abrir o descargar</span>
+                        <a href="${fileUrl}" target="_blank" download
+                           style="display:flex;align-items:center;gap:12px;padding:15px;background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border:2px solid #86efac;border-radius:10px;text-decoration:none;color:#059669;box-shadow:0 2px 8px rgba(5,150,105,0.1);"
+                           onmouseover="this.style.transform='translateY(-2px)'"
+                           onmouseout="this.style.transform='translateY(0)'">
+                            <span style="font-size:32px;">📁</span>
+                            <div style="flex:1;">
+                                <strong style="display:block;color:#065f46;font-size:14px;margin-bottom:4px;">${fileName}</strong>
+                                <span style="font-size:12px;color:#059669;">Click para abrir o descargar</span>
                             </div>
-                            <span style="color: #059669; font-size: 20px;">⬇️</span>
+                            <span style="color:#059669;font-size:20px;">⬇️</span>
                         </a>
-                    </div>
-                `);
-            } else {
-                console.log('⚠️ No hay archivo adjunto en esta tarea');
+                    </div>`);
             }
 
             if (recursosHtml.length > 0) {
@@ -1851,37 +1196,36 @@
                 seccionRecursos.style.display = 'none';
             }
 
-            // Sección de calificación
+            // Calificación
             const seccionCalificacion = document.getElementById('seccionCalificacion');
             if (submission.calificacion) {
                 const gradeDisplay = document.getElementById('gradeDisplay');
                 gradeDisplay.className = 'grade-display';
-                if (submission.calificacion < 6) gradeDisplay.classList.add('low');
+                if (submission.calificacion < 6)      gradeDisplay.classList.add('low');
                 else if (submission.calificacion < 8) gradeDisplay.classList.add('medium');
-                
+
                 document.getElementById('gradeValue').textContent = submission.calificacion;
-                document.getElementById('gradeMax').textContent = submission.tarea_puntos_maximos;
-                
+                document.getElementById('gradeMax').textContent   = submission.tarea_puntos_maximos;
+
                 if (submission.comentario_docente) {
                     document.getElementById('feedbackText').textContent = submission.comentario_docente;
                     document.getElementById('feedbackBox').style.display = 'block';
                 } else {
                     document.getElementById('feedbackBox').style.display = 'none';
                 }
-                
                 seccionCalificacion.style.display = 'block';
             } else {
                 seccionCalificacion.style.display = 'none';
             }
 
-            // Sección de entrega - SOLO MOSTRAR SI ESTÁ PENDIENTE
+            // Área de entrega
             const seccionEntrega = document.getElementById('seccionEntrega');
             if (submission.estado === 'pendiente' && submission.puede_entregar) {
                 seccionEntrega.style.display = 'block';
                 archivosParaSubir = [];
                 document.getElementById('archivosSeleccionados').innerHTML = '';
                 document.getElementById('btnEnviar').disabled = true;
-            } else {    
+            } else {
                 seccionEntrega.style.display = 'none';
             }
 
@@ -1891,17 +1235,16 @@
                 document.getElementById('historialEntregas').innerHTML = submission.archivos.map(a => `
                     <div class="submission-item">
                         <div class="file-info">
-                            <span></span>
+                            <span>📄</span>
                             <div>
                                 <span class="file-name">${a.nombre_original}</span>
                                 <span class="file-date">${formatDate(a.fecha_subida)}</span>
-                                ${a.es_entrega_tardia ? '<span class="badge badge-tardia" style="margin-left: 5px;">TARDÍA</span>' : ''}
+                                ${a.es_entrega_tardia ? '<span class="badge badge-tardia" style="margin-left:5px;">TARDÍA</span>' : ''}
                             </div>
                         </div>
-                        <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank" 
+                        <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank"
                            class="btn btn-sm btn-secondary">Descargar</a>
-                    </div>
-                `).join('');
+                    </div>`).join('');
                 seccionHistorial.style.display = 'block';
             } else {
                 seccionHistorial.style.display = 'none';
@@ -1910,59 +1253,48 @@
             document.getElementById('modalTarea').classList.add('active');
         }
 
-        // ==================== SUBIR ARCHIVOS ====================
+        // ==================== ARCHIVOS ====================
         function handleFiles(files) {
-            const maxSize = 20 * 1024 * 1024; // 20MB
-            const allowedExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 
-                               'jpg', 'jpeg', 'png', 'gif', 'zip', 'rar', 'txt',
-                               'py', 'js', 'html', 'css', 'java', 'cpp', 'c'];
+            const maxSize = 20 * 1024 * 1024;
+            const allowedExt = ['pdf','doc','docx','ppt','pptx','xls','xlsx',
+                                'jpg','jpeg','png','gif','zip','rar','txt',
+                                'py','js','html','css','java','cpp','c'];
 
             for (const file of files) {
                 const ext = file.name.split('.').pop().toLowerCase();
-                
                 if (!allowedExt.includes(ext)) {
-                    showAlert(` Extensión no permitida: .${ext}`, 'error');
+                    showAlert(`❌ Extensión no permitida: .${ext}`, 'error');
                     continue;
                 }
-
                 if (file.size > maxSize) {
-                    showAlert(` ${file.name} excede los 20MB`, 'error');
+                    showAlert(`❌ ${file.name} excede los 20MB`, 'error');
                     continue;
                 }
-
-                // Evitar duplicados
                 if (!archivosParaSubir.find(f => f.name === file.name)) {
                     archivosParaSubir.push(file);
                 }
             }
-
             renderArchivosSeleccionados();
         }
 
         function renderArchivosSeleccionados() {
             const container = document.getElementById('archivosSeleccionados');
-            
             if (archivosParaSubir.length === 0) {
                 container.innerHTML = '';
                 document.getElementById('btnEnviar').disabled = true;
                 return;
             }
-
             container.innerHTML = archivosParaSubir.map((file, index) => `
                 <div class="uploaded-file">
                     <div class="file-info">
-                        <span></span>
+                        <span>📄</span>
                         <div>
                             <strong>${file.name}</strong>
-                            <span style="font-size: 12px; color: #64748b;">
-                                (${(file.size / 1024 / 1024).toFixed(2)} MB)
-                            </span>
+                            <span style="font-size:12px;color:#64748b;">(${(file.size/1024/1024).toFixed(2)} MB)</span>
                         </div>
                     </div>
-                    <button class="remove-file" onclick="removerArchivo(${index})"></button>
-                </div>
-            `).join('');
-
+                    <button class="remove-file" onclick="removerArchivo(${index})">🗑️</button>
+                </div>`).join('');
             document.getElementById('btnEnviar').disabled = false;
         }
 
@@ -1973,134 +1305,103 @@
 
         async function enviarEntrega() {
             if (archivosParaSubir.length === 0) {
-                showAlert(' Selecciona al menos un archivo', 'error');
+                showAlert('❌ Selecciona al menos un archivo', 'error');
                 return;
             }
 
             const formData = new FormData();
-            archivosParaSubir.forEach(file => {
-                formData.append('archivos', file);
-            });
+            archivosParaSubir.forEach(file => formData.append('archivos', file));
 
             try {
                 document.getElementById('btnEnviar').disabled = true;
                 document.getElementById('btnEnviar').textContent = '⏳ Enviando...';
 
-                const response = await fetch(`${API_URL}/my-tasks/${tareaActual.task_id}/submit/?student_id=${currentUser.id_usuario}`, {
-                    method: 'POST',
-                    body: formData
-                });
-
+                const response = await fetch(
+                    `${API_URL}/my-tasks/${tareaActual.task_id}/submit/?student_id=${currentUser.id_usuario}`,
+                    { method: 'POST', body: formData }
+                );
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert(` ${data.message}`);
+                    showAlert(`✅ ${data.message}`);
                     cerrarModal('modalTarea');
-                    
-                    // Recargar la vista actual
                     const activeSection = document.querySelector('.section.active');
-                    if (activeSection.id === 'section-dashboard') {
-                        cargarDashboard();
-                    } else if (activeSection.id === 'section-tareas-pendientes') {
-                        cargarTareasPendientes();
-                    }
+                    if (activeSection.id === 'section-dashboard')         cargarDashboard();
+                    else if (activeSection.id === 'section-tareas-pendientes') cargarTareasPendientes();
                 } else {
-                    showAlert(` ${data.message}`, 'error');
+                    showAlert(`❌ ${data.message}`, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert(' Error al enviar la entrega', 'error');
+                showAlert('❌ Error al enviar la entrega', 'error');
             } finally {
                 document.getElementById('btnEnviar').disabled = false;
-                document.getElementById('btnEnviar').textContent = ' Enviar Entrega';
+                document.getElementById('btnEnviar').textContent = '📤 Enviar Entrega';
             }
         }
 
         // ==================== CALENDARIO ====================
         async function cargarCalendario() {
             try {
-                const response = await fetch(`${API_URL}/my-tasks/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/my-tasks/`, { headers: getHeaders() });
                 const data = await response.json();
-                
                 if (data.success) {
-                    // Combinar todas las tareas (pendientes, entregadas, calificadas)
                     todasLasTareas = [
-                        ...(data.pendientes || []),
-                        ...(data.entregadas || []),
+                        ...(data.pendientes  || []),
+                        ...(data.entregadas  || []),
                         ...(data.calificadas || [])
                     ];
                     organizarTareasPorFecha();
                     renderizarCalendario();
                 }
-            } catch (error) {
-                console.error('Error al cargar calendario:', error);
-            }
+            } catch (error) { console.error('Error al cargar calendario:', error); }
         }
 
         function organizarTareasPorFecha() {
             tareasPorFecha = {};
-            
             todasLasTareas.forEach(tarea => {
-                // Usar fecha_entrega en lugar de tarea_fecha_entrega
-                const fechaEntrega = new Date(tarea.fecha_entrega);
-                const fechaKey = `${fechaEntrega.getFullYear()}-${fechaEntrega.getMonth()}-${fechaEntrega.getDate()}`;
-                
-                if (!tareasPorFecha[fechaKey]) {
-                    tareasPorFecha[fechaKey] = [];
-                }
-                
-                tareasPorFecha[fechaKey].push(tarea);
+                const f = new Date(tarea.fecha_entrega);
+                const key = `${f.getFullYear()}-${f.getMonth()}-${f.getDate()}`;
+                if (!tareasPorFecha[key]) tareasPorFecha[key] = [];
+                tareasPorFecha[key].push(tarea);
             });
         }
 
         function renderizarCalendario() {
             const grid = document.getElementById('calendarGrid');
             const monthSpan = document.getElementById('currentMonth');
-            
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                           'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
             monthSpan.textContent = `${meses[mesActual]} ${anioActual}`;
-            
             grid.innerHTML = '';
-            
-            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-            dias.forEach(dia => {
+
+            ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].forEach(dia => {
                 const header = document.createElement('div');
                 header.className = 'calendar-day-header';
                 header.textContent = dia;
                 grid.appendChild(header);
             });
-            
-            const primerDia = new Date(anioActual, mesActual, 1);
-            const ultimoDia = new Date(anioActual, mesActual + 1, 0);
-            const diasEnMes = ultimoDia.getDate();
-            const primerDiaSemana = primerDia.getDay();
-            
-            const mesAnterior = new Date(anioActual, mesActual, 0);
-            const diasMesAnterior = mesAnterior.getDate();
-            
-            for (let i = primerDiaSemana - 1; i >= 0; i--) {
-                const dia = diasMesAnterior - i;
-                const cell = crearCeldaDia(dia, true);
-                grid.appendChild(cell);
+
+            const primerDia     = new Date(anioActual, mesActual, 1);
+            const ultimoDia     = new Date(anioActual, mesActual + 1, 0);
+            const diasEnMes     = ultimoDia.getDate();
+            const primerSemana  = primerDia.getDay();
+            const diasMesAnterior = new Date(anioActual, mesActual, 0).getDate();
+
+            for (let i = primerSemana - 1; i >= 0; i--) {
+                grid.appendChild(crearCeldaDia(diasMesAnterior - i, true));
             }
-            
+
             const hoy = new Date();
             for (let dia = 1; dia <= diasEnMes; dia++) {
-                const esHoy = dia === hoy.getDate() && 
-                             mesActual === hoy.getMonth() && 
-                             anioActual === hoy.getFullYear();
-                
-                const cell = crearCeldaDia(dia, false, esHoy);
-                grid.appendChild(cell);
+                const esHoy = dia === hoy.getDate() && mesActual === hoy.getMonth() && anioActual === hoy.getFullYear();
+                grid.appendChild(crearCeldaDia(dia, false, esHoy));
             }
-            
+
             const celdasRestantes = 42 - grid.children.length + 7;
             for (let dia = 1; dia < celdasRestantes; dia++) {
-                const cell = crearCeldaDia(dia, true);
-                grid.appendChild(cell);
+                grid.appendChild(crearCeldaDia(dia, true));
             }
         }
 
@@ -2108,140 +1409,103 @@
             const cell = document.createElement('div');
             cell.className = 'calendar-day';
             if (otroMes) cell.classList.add('other-month');
-            if (esHoy) cell.classList.add('today');
-            
+            if (esHoy)   cell.classList.add('today');
+
             const dayNumber = document.createElement('div');
             dayNumber.className = 'day-number';
             dayNumber.textContent = numeroDia;
             cell.appendChild(dayNumber);
-            
+
             if (!otroMes) {
-                const fecha = new Date(anioActual, mesActual, numeroDia);
+                const fecha    = new Date(anioActual, mesActual, numeroDia);
                 const fechaKey = `${fecha.getFullYear()}-${fecha.getMonth()}-${fecha.getDate()}`;
                 const tareasDelDia = tareasPorFecha[fechaKey] || [];
-                
+
                 if (tareasDelDia.length > 0) {
                     const indicators = document.createElement('div');
                     indicators.className = 'task-indicators';
-                    
+
                     tareasDelDia.forEach(tarea => {
-                        const dot = document.createElement('div');
+                        const dot  = document.createElement('div');
                         dot.className = 'task-dot';
-                        
                         const ahora = new Date();
-                        const fechaEntrega = new Date(tarea.fecha_entrega);
-                        const horasRestantes = (fechaEntrega - ahora) / (1000 * 60 * 60);
-                        
-                        if (horasRestantes < 0) {
-                            dot.classList.add('vencida');
-                        } else if (horasRestantes <= 24) {
-                            dot.classList.add('urgente');
-                        } else {
-                            dot.classList.add('proxima');
-                        }
-                        
+                        const horas = (new Date(tarea.fecha_entrega) - ahora) / (1000 * 60 * 60);
+
+                        if (horas < 0)       dot.classList.add('vencida');
+                        else if (horas <= 24) dot.classList.add('urgente');
+                        else                 dot.classList.add('proxima');
+
                         indicators.appendChild(dot);
                     });
-                    
+
                     cell.appendChild(indicators);
-                    
                     cell.addEventListener('mouseenter', (e) => mostrarTooltipTareas(e, tareasDelDia));
                     cell.addEventListener('mouseleave', ocultarTooltip);
-                    cell.addEventListener('click', () => {
-                        if (tareasDelDia.length >= 1) {
-                            // Usar task_id en lugar de id
-                            verTarea(tareasDelDia[0].task_id);
-                        }
-                    });
+                    cell.addEventListener('click', () => verTarea(tareasDelDia[0].task_id));
                     cell.style.cursor = 'pointer';
                 }
             }
-            
+
             return cell;
         }
 
         function mostrarTooltipTareas(event, tareas) {
             const tooltip = document.getElementById('taskTooltip');
-            
-            let html = '';
-            tareas.forEach(tarea => {
-                const ahora = new Date();
-                const fechaEntrega = new Date(tarea.fecha_entrega);
-                const horasRestantes = (fechaEntrega - ahora) / (1000 * 60 * 60);
-                
-                let estadoColor = '#10b981';
-                if (horasRestantes < 0) estadoColor = '#ef4444';
-                else if (horasRestantes <= 24) estadoColor = '#f59e0b';
-                
-                html += `
-                    <div class="tooltip-task" style="border-left: 3px solid ${estadoColor}; padding-left: 8px;">
+            tooltip.innerHTML = tareas.map(tarea => {
+                const horas  = (new Date(tarea.fecha_entrega) - new Date()) / (1000 * 60 * 60);
+                const color  = horas < 0 ? '#ef4444' : horas <= 24 ? '#f59e0b' : '#10b981';
+                return `
+                    <div class="tooltip-task" style="border-left:3px solid ${color};padding-left:8px;">
                         <div class="tooltip-title">${tarea.titulo}</div>
                         <div class="tooltip-subject">${tarea.materia || 'Sin materia'}</div>
-                    </div>
-                `;
-            });
-            
-            tooltip.innerHTML = html;
+                    </div>`;
+            }).join('');
             tooltip.classList.add('show');
-            
+
             const rect = event.target.getBoundingClientRect();
             tooltip.style.left = rect.left + 'px';
-            tooltip.style.top = (rect.bottom + 10) + 'px';
+            tooltip.style.top  = (rect.bottom + 10) + 'px';
         }
 
         function ocultarTooltip() {
-            const tooltip = document.getElementById('taskTooltip');
-            tooltip.classList.remove('show');
+            document.getElementById('taskTooltip').classList.remove('show');
         }
 
         function cambiarMes(direccion) {
             mesActual += direccion;
-            
-            if (mesActual > 11) {
-                mesActual = 0;
-                anioActual++;
-            } else if (mesActual < 0) {
-                mesActual = 11;
-                anioActual--;
-            }
-            
+            if (mesActual > 11)     { mesActual = 0;  anioActual++; }
+            else if (mesActual < 0) { mesActual = 11; anioActual--; }
             renderizarCalendario();
-        }
-
-        // ==================== LOGOUT ====================
-        function logout() {
-            localStorage.removeItem('currentUser');
-            document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            window.location.href = '../login.html';
         }
 
         // ==================== GRÁFICAS ====================
         let chartEstado = null;
-        let chartNotas = null;
+        let chartNotas  = null;
 
         async function cargarEstadisticasVisuales() {
             try {
-                const response = await fetch(`${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`, {
-                    headers: getHeaders()
-                });
-                
+                const response = await fetch(
+                    `${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`,
+                    { headers: getHeaders() }
+                );
+
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
 
                 if (chartEstado) chartEstado.destroy();
-                if (chartNotas) chartNotas.destroy();
-                
+                if (chartNotas)  chartNotas.destroy();
+
                 if (data && data.success) {
                     const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
-                    const estados = Array.isArray(data.tareas_por_estado) ? data.tareas_por_estado : [];
-                    
+                    const estados   = Array.isArray(data.tareas_por_estado) ? data.tareas_por_estado : [];
+
                     chartEstado = new Chart(ctxEstado, {
                         type: 'doughnut',
                         data: {
                             labels: estados.map(i => (i.estado || 'S/E').toUpperCase()),
                             datasets: [{
                                 data: estados.map(i => i.total || 0),
-                                backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
+                                backgroundColor: ['#ef4444', '#3b82f6', '#10b981'],
                                 hoverOffset: 4
                             }]
                         },
@@ -2249,8 +1513,8 @@
                     });
 
                     const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
-                    const notas = Array.isArray(data.promedios) ? data.promedios : [];
-                    
+                    const notas    = Array.isArray(data.promedios) ? data.promedios : [];
+
                     chartNotas = new Chart(ctxNotas, {
                         type: 'line',
                         data: {
@@ -2272,18 +1536,6 @@
             } catch (error) {
                 console.error('Error al cargar gráficas:', error);
             }
-        } // <--- Asegúrate de que esta llave esté ahí
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = '../login.html';
-        }
-
-        function getHeaders() {
-            return {
-                "X-User-Id": currentUser?.id_usuario || ""
-            };
         }
     </script>
     <div class="footer-bottom" role="contentinfo">

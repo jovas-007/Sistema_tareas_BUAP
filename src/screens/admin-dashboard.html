@@ -180,18 +180,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        .stat-card.success { 
-            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .stat-card.warning { 
-            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .stat-card.danger { 
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+        .stat-card.success { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); }
+        .stat-card.warning { background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); }
+        .stat-card.danger  { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
 
         .stat-value {
             font-size: 36px;
@@ -218,40 +209,13 @@
             gap: 8px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #002855 0%, #004080 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 64, 128, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: white;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #64748b;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
+        .btn-primary   { background: linear-gradient(135deg, #002855 0%, #004080 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,64,128,0.4); }
+        .btn-success   { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; }
+        .btn-warning   { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); color: white; }
+        .btn-danger    { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
         /* Forms */
         .form-group {
@@ -304,14 +268,9 @@
         }
 
         /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
+        .table-container { overflow-x: auto; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
 
         th, td {
             padding: 12px 15px;
@@ -327,25 +286,17 @@
             text-transform: uppercase;
         }
 
-        tr:hover {
-            background: #f8fafc;
-        }
+        tr:hover { background: #f8fafc; }
 
         /* Badges */
-        .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-borrador { background: #fef3c7; color: #92400e; }
-        .badge-activa { background: #d1fae5; color: #065f46; }
-        .badge-cerrada { background: #fee2e2; color: #991b1b; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-borrador  { background: #fef3c7; color: #92400e; }
+        .badge-activa    { background: #d1fae5; color: #065f46; }
+        .badge-cerrada   { background: #fee2e2; color: #991b1b; }
         .badge-pendiente { background: #e0e7ff; color: #3730a3; }
         .badge-entregado { background: #dbeafe; color: #1e40af; }
-        .badge-calificado { background: #d1fae5; color: #065f46; }
-        .badge-tardia { background: #fef3c7; color: #92400e; }
+        .badge-calificado{ background: #d1fae5; color: #065f46; }
+        .badge-tardia    { background: #fef3c7; color: #92400e; }
 
         /* Task List */
         .task-item {
@@ -356,9 +307,7 @@
             transition: all 0.3s;
         }
 
-        .task-item:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+        .task-item:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
         .task-header {
             display: flex;
@@ -367,11 +316,7 @@
             margin-bottom: 10px;
         }
 
-        .task-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-        }
+        .task-title { font-size: 18px; font-weight: 600; color: #1e293b; }
 
         .task-meta {
             display: flex;
@@ -381,50 +326,26 @@
             margin-bottom: 10px;
         }
 
-        .task-meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .task-meta span { display: flex; align-items: center; gap: 5px; }
 
-        .task-stats {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .task-stat {
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .task-stat strong {
-            color: #1e293b;
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .task-stats { display: flex; gap: 15px; margin-top: 10px; }
+        .task-stat { font-size: 13px; color: #64748b; }
+        .task-stat strong { color: #1e293b; }
+        .task-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
         /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: white;
@@ -438,7 +359,7 @@
 
         @keyframes modalSlide {
             from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            to   { transform: translateY(0);     opacity: 1; }
         }
 
         .modal-header {
@@ -449,22 +370,9 @@
             align-items: center;
         }
 
-        .modal-header h3 {
-            font-size: 20px;
-            color: #1e293b;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .modal-body {
-            padding: 25px;
-        }
+        .modal-header h3 { font-size: 20px; color: #1e293b; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; }
+        .modal-body { padding: 25px; }
 
         .modal-footer {
             padding: 20px 25px;
@@ -475,129 +383,12 @@
         }
 
         /* Grades Table */
-        .grades-table {
-            font-size: 13px;
-        }
-
-        .grades-table th {
-            position: sticky;
-            top: 0;
-            background: #f8fafc;
-        }
-
-        .grades-table .grade-cell {
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .grade-cell.high { color: #059669; }
+        .grades-table { font-size: 13px; }
+        .grades-table th { position: sticky; top: 0; background: #f8fafc; }
+        .grades-table .grade-cell { text-align: center; font-weight: 600; }
+        .grade-cell.high   { color: #059669; }
         .grade-cell.medium { color: #d97706; }
-        .grade-cell.low { color: #dc2626; }
-
-        .grade-input {
-            width: 60px;
-            padding: 5px;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            
-            .header h1 {
-                font-size: 18px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #64748b;
-        }
-
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #002855;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #64748b;
-        }
-
-        .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-
-        /* Alert */
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert-success { background: #d1fae5; color: #065f46; }
-        .alert-error { background: #fee2e2; color: #991b1b; }
-        .alert-warning { background: #fef3c7; color: #92400e; }
-        .alert-info { background: #dbeafe; color: #1e40af; }
-
-        /* File Upload */
-        .file-upload {
-            border: 2px dashed #e2e8f0;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-upload:hover {
-            border-color: #00d4ff;
-            background: #f8fafc;
-        }
-
-        .file-upload input {
-            display: none;
-        }
-
-        .file-upload .icon {
-            font-size: 40px;
-            color: #94a3b8;
-            margin-bottom: 10px;
-        }
+        .grade-cell.low    { color: #dc2626; }
 
         /* Tabs */
         .tabs {
@@ -620,103 +411,74 @@
             transition: all 0.3s;
         }
 
-        .tab-btn:hover {
-            color: #002855;
+        .tab-btn:hover  { color: #002855; }
+        .tab-btn.active { color: #002855; border-bottom-color: #002855; }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .tab-btn.active {
-            color: #002855;
-            border-bottom-color: #002855;
+        .file-upload:hover  { border-color: #00d4ff; background: #f8fafc; }
+        .file-upload input  { display: none; }
+        .file-upload .icon  { font-size: 40px; color: #94a3b8; margin-bottom: 10px; }
+
+        /* Misc */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
         }
 
-        .form-grid{
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px; height: 30px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #002855;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
 
-            .form-group label{
-            display:block;
-            font-size: 13px;
-            color:#475569;
-            margin-bottom:6px;
-            font-weight:600;
-            }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-            .form-group input, .form-group select{
-            width:100%;
-            padding:10px 12px;
-            border:1px solid #e2e8f0;
-            border-radius:10px;
-            outline:none;
-            font-size:14px;
-            }
+        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+        .empty-state .icon { font-size: 60px; margin-bottom: 20px; }
+        .empty-state h3 { font-size: 20px; color: #1e293b; margin-bottom: 10px; }
 
-            .form-group input:focus, .form-group select:focus{
-            border-color:#10b981;
-            box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
-            }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-            .materias-box{
-            margin-top: 18px;
-            padding: 15px;
-            border:1px solid #e2e8f0;
-            border-radius:12px;
-            background:#f8fafc;
-            }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-error   { background: #fee2e2; color: #991b1b; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
+        .alert-info    { background: #dbeafe; color: #1e40af; }
 
-            .materias-header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:12px;
-            }
-
-            .materias-header .hint{
-            font-size: 12px;
-            color:#64748b;
-            }
-
-            .materias-grid{
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap:10px;
-            }
-
-            .materia-item{
-            background:white;
-            border:1px solid #e2e8f0;
-            border-radius:10px;
-            padding:10px 12px;
-            display:flex;
-            gap:10px;
-            align-items:flex-start;
-            }
-
-            .materia-item input{
-            margin-top: 3px;
-            }
-
-            .materia-title{
-            font-weight:700;
-            color:#1e293b;
-            font-size: 13px;
-            }
-
-            .materia-sub{
-            font-size:12px;
-            color:#64748b;
-            margin-top:2px;
-            }
-
-            
-
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .header h1 { font-size: 18px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
+
     <!-- Header -->
     <header class="header">
-        <h1> Sistema de Gestión de Tareas</h1>
+        <h1>Sistema de Gestión de Tareas</h1>
         <div class="user-info">
             <span id="userName">Cargando...</span>
             <span class="badge-docente">DOCENTE</span>
@@ -725,57 +487,35 @@
     </header>
 
     <div class="main-container">
+
         <!-- Sidebar -->
         <nav class="sidebar">
             <ul class="sidebar-menu">
-                <li>
-                    <a href="#" class="active" onclick="showSection('dashboard')">
-                        <span class="icon"></span>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('crear-tarea')">
-                        <span class="icon"></span>
-                        <span>Crear Tarea</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('mis-tareas')">
-                        <span class="icon"></span>
-                        <span>Mis Tareas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('calificaciones')">
-                        <span class="icon"></span>
-                        <span>Calificaciones</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onclick="showSection('estudiantes')">
-                        <span class="icon"></span>
-                        <span>Estudiantes</span>
-                    </a>
-                </li>
-                <li>
-                 <!-- 
-                <a href="#" onclick="showSection('mi-perfil')">
-                    <span class="icon"></span>
-                    <span>Mi Perfil</span>
-                </a>
-                </li>-->
-                <li>
-                    <a href="./graficas.html">
-                        <span class="icon"></span>
-                        <span>Gráficas</span>
-                    </a>
-                </li>
+                <li><a href="#" class="active" onclick="showSection('dashboard')">
+                    <span class="icon"></span><span>Dashboard</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('crear-tarea')">
+                    <span class="icon"></span><span>Crear Tarea</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('mis-tareas')">
+                    <span class="icon"></span><span>Mis Tareas</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('calificaciones')">
+                    <span class="icon"></span><span>Calificaciones</span>
+                </a></li>
+                <li><a href="#" onclick="showSection('estudiantes')">
+                    <span class="icon"></span><span>Estudiantes</span>
+                </a></li>
+                <li><a href="./graficas.html">
+                    <span class="icon"></span><span>Gráficas</span>
+                </a></li>
             </ul>
         </nav>
+
         <!-- Content -->
         <main class="content">
-            <!-- Dashboard Section -->
+
+            <!-- Dashboard -->
             <section id="section-dashboard" class="section active">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -798,10 +538,8 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Tareas Recientes</h2>
-                        <button class="btn btn-primary" onclick="showSection('crear-tarea')">
-                             Nueva Tarea
-                        </button>
+                        <h2 class="card-title">📝 Tareas Recientes</h2>
+                        <button class="btn btn-primary" onclick="showSection('crear-tarea')">➕ Nueva Tarea</button>
                     </div>
                     <div id="tareasRecientes">
                         <div class="loading">Cargando tareas</div>
@@ -809,23 +547,23 @@
                 </div>
             </section>
 
-            <!-- Crear Tarea Section -->
+            <!-- Crear Tarea -->
             <section id="section-crear-tarea" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Crear Nueva Tarea</h2>
+                        <h2 class="card-title">➕ Crear Nueva Tarea</h2>
                     </div>
                     <form id="formCrearTarea" onsubmit="crearTarea(event)">
                         <div class="form-group">
                             <label for="titulo">Título de la Tarea *</label>
-                            <input type="text" id="titulo" class="form-control" required 
+                            <input type="text" id="titulo" class="form-control" required
                                    placeholder="Ej: Ensayo sobre cambio climático">
                         </div>
-                        <!--SELECTOR DE MATERIA -->
+
                         <div class="form-group">
                             <label for="selectMateria">
                                 📚 Materia *
-                                <span style="font-size: 12px; color: #64748b; font-weight: normal;">
+                                <span style="font-size:12px;color:#64748b;font-weight:normal;">
                                     (Selecciona la materia para esta tarea)
                                 </span>
                             </label>
@@ -833,15 +571,16 @@
                                 <option value="">Cargando materias...</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" class="form-control" 
+                            <textarea id="descripcion" class="form-control"
                                       placeholder="Instrucciones detalladas para los estudiantes..."></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="urlRecurso">URL de Recurso (opcional)</label>
-                            <input type="url" id="urlRecurso" class="form-control" 
+                            <input type="url" id="urlRecurso" class="form-control"
                                    placeholder="https://youtube.com/watch?v=...">
                         </div>
 
@@ -850,11 +589,11 @@
                             <div class="file-upload" onclick="document.getElementById('archivoAdjunto').click()">
                                 <div class="icon">📁</div>
                                 <p>Haz clic para seleccionar un archivo</p>
-                                <p style="font-size: 12px; color: #94a3b8;">PDF, DOC, PPT, imágenes (máx. 20MB)</p>
-                                <input type="file" id="archivoAdjunto" 
+                                <p style="font-size:12px;color:#94a3b8;">PDF, DOC, PPT, imágenes (máx. 20MB)</p>
+                                <input type="file" id="archivoAdjunto"
                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif">
                             </div>
-                            <p id="nombreArchivo" style="margin-top: 10px; color: #059669;"></p>
+                            <p id="nombreArchivo" style="margin-top:10px;color:#059669;"></p>
                         </div>
 
                         <div class="form-row">
@@ -862,7 +601,6 @@
                                 <label for="fechaEntrega">Fecha de Entrega *</label>
                                 <input type="datetime-local" id="fechaEntrega" class="form-control" required>
                             </div>
-
                             <div class="form-group">
                                 <label for="puntosMaximos">Puntos Máximos</label>
                                 <select id="puntosMaximos" class="form-control">
@@ -881,49 +619,39 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 15px; margin-top: 30px;">
-                            <button type="submit" class="btn btn-primary">
-                                 Guardar como Borrador
-                            </button>
-                            <button type="button" class="btn btn-success" onclick="crearYActivarTarea()">
-                                🚀 Crear y Activar
-                            </button>
+                        <div style="display:flex;gap:15px;margin-top:30px;">
+                            <button type="submit" class="btn btn-primary">💾 Guardar como Borrador</button>
+                            <button type="button" class="btn btn-success" onclick="crearYActivarTarea()">🚀 Crear y Activar</button>
                         </div>
                     </form>
                 </div>
             </section>
 
-            <!-- Mis Tareas Section -->
+            <!-- Mis Tareas -->
             <section id="section-mis-tareas" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Mis Tareas</h2>
-                        <button class="btn btn-primary" onclick="showSection('crear-tarea')">
-                             Nueva Tarea
-                        </button>
+                        <h2 class="card-title">📋 Mis Tareas</h2>
+                        <button class="btn btn-primary" onclick="showSection('crear-tarea')">➕ Nueva Tarea</button>
                     </div>
-
                     <div class="tabs">
                         <button class="tab-btn active" onclick="filtrarTareas('todas')">Todas</button>
                         <button class="tab-btn" onclick="filtrarTareas('borrador')">Borradores</button>
                         <button class="tab-btn" onclick="filtrarTareas('activa')">Activas</button>
                         <button class="tab-btn" onclick="filtrarTareas('cerrada')">Cerradas</button>
                     </div>
-
                     <div id="listaTareas">
                         <div class="loading">Cargando tareas</div>
                     </div>
                 </div>
             </section>
 
-            <!-- Calificaciones Section -->
+            <!-- Calificaciones -->
             <section id="section-calificaciones" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Reporte de Calificaciones</h2>
-                        <button class="btn btn-secondary" onclick="exportarCalificaciones()">
-                            📥 Exportar
-                        </button>
+                        <h2 class="card-title">⭐ Reporte de Calificaciones</h2>
+                        <button class="btn btn-secondary" onclick="exportarCalificaciones()">📥 Exportar</button>
                     </div>
                     <div class="table-container">
                         <div id="tablaCalificaciones">
@@ -933,11 +661,11 @@
                 </div>
             </section>
 
-            <!-- Estudiantes Section -->
+            <!-- Estudiantes -->
             <section id="section-estudiantes" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title"> Lista de Estudiantes</h2>
+                        <h2 class="card-title">👥 Lista de Estudiantes</h2>
                     </div>
                     <div class="table-container">
                         <div id="listaEstudiantes">
@@ -946,64 +674,13 @@
                     </div>
                 </div>
             </section>
-            <!-- Mi Perfil Section -->
-            <section id="section-mi-perfil" class="section">
-            <div class="card">
-                <div class="card-header">
-                <h2 class="card-title">Mi Perfil</h2>
-                <button class="btn btn-secondary btn-sm" onclick="cargarPerfil(true)">Recargar</button>
-                </div>
 
-                <div id="perfilMsg"></div>
-
-                <form id="perfilForm" onsubmit="guardarPerfil(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                    <label>Matrícula</label>
-                    <input id="perfil_id" type="text" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Rol</label>
-                    <input id="perfil_rol" type="text" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Nombre completo</label>
-                    <input id="perfil_nombre" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Correo</label>
-                    <input id="perfil_correo" type="email" disabled>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Teléfono</label>
-                    <input id="perfil_telefono" type="text" placeholder="Opcional">
-                    </div>
-
-                    <div class="form-group">
-                    <label>Sexo</label>
-                    <select id="perfil_sexo">
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                    </div>
-
-                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top: 18px;">
-                    <button type="button" class="btn btn-secondary" onclick="cargarPerfil(true)">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btnGuardarPerfil">Guardar cambios</button>
-                </div>
-                </form>
-            </div>
-            </section>
         </main>
     </div>
+
     <!-- Modal Ver Entregas -->
     <div id="modalEntregas" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content" style="max-width:800px;">
             <div class="modal-header">
                 <h3 id="modalEntregasTitulo">Entregas de Tarea</h3>
                 <button class="modal-close" onclick="cerrarModal('modalEntregas')">&times;</button>
@@ -1018,29 +695,26 @@
 
     <!-- Modal Calificar -->
     <div id="modalCalificar" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width:500px;">
             <div class="modal-header">
                 <h3>Calificar Entrega</h3>
                 <button class="modal-close" onclick="cerrarModal('modalCalificar')">&times;</button>
             </div>
             <div class="modal-body">
-                <p id="infoEstudiante" style="margin-bottom: 20px; color: #64748b;"></p>
-                
+                <p id="infoEstudiante" style="margin-bottom:20px;color:#64748b;"></p>
                 <div class="form-group">
                     <label for="inputCalificacion">Calificación (1-10)</label>
-                    <input type="number" id="inputCalificacion" class="form-control" 
-                           min="1" max="10" required>
+                    <input type="number" id="inputCalificacion" class="form-control" min="1" max="10" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="inputComentario">Comentario (opcional)</label>
-                    <textarea id="inputComentario" class="form-control" 
+                    <textarea id="inputComentario" class="form-control"
                               placeholder="Retroalimentación para el estudiante..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="cerrarModal('modalCalificar')">Cancelar</button>
-                <button class="btn btn-success" onclick="guardarCalificacion()"> Guardar</button>
+                <button class="btn btn-success" onclick="guardarCalificacion()">✅ Guardar</button>
             </div>
         </div>
     </div>
@@ -1055,34 +729,22 @@
             <div class="modal-body">
                 <form id="formEditarTarea">
                     <input type="hidden" id="editTareaId">
-                    
                     <div class="form-group">
                         <label for="editTitulo">Título</label>
                         <input type="text" id="editTitulo" class="form-control" required>
                     </div>
-
-                    <div class="form-group">
-                        <label for="selectMateria">📚 Materia *</label>
-                        <select id="selectMateria" required>
-                            <option value="">Cargando materias...</option>
-                        </select>
-                    </div>
-
                     <div class="form-group">
                         <label for="editDescripcion">Descripción</label>
                         <textarea id="editDescripcion" class="form-control"></textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="editUrlRecurso">URL de Recurso</label>
                         <input type="url" id="editUrlRecurso" class="form-control">
                     </div>
-
                     <div class="form-group">
                         <label for="editFechaEntrega">Fecha de Entrega</label>
                         <input type="datetime-local" id="editFechaEntrega" class="form-control" required>
                     </div>
-
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="editPermiteTardias">
@@ -1093,36 +755,26 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="cerrarModal('modalEditarTarea')">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarEdicionTarea()"> Guardar Cambios</button>
+                <button class="btn btn-primary" onclick="guardarEdicionTarea()">💾 Guardar Cambios</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN ====================
-        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';       
+        // ==================== CONFIG ====================
+        const API_URL = 'https://grateful-sparkle-production-cac8.up.railway.app/api';
         let currentUser = null;
         let todasLasTareas = [];
         let submissionIdActual = null;
         let materiasDocente = [];
 
-        // ==================== UTILIDADES ====================
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/['"\\]/g, '\\$&').replace(/\n/g, ' ');
-        }
-
-        // ==================== INICIALIZACIÓN ====================
-        document.addEventListener('DOMContentLoaded', async  () => {
-            // Verificar sesión
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', async () => {
             const userCookie = getCookie('currentUser');
-            const userLocal = localStorage.getItem('currentUser');
-            
-            if (userCookie) {
-                currentUser = JSON.parse(decodeURIComponent(userCookie));
-            } else if (userLocal) {
-                currentUser = JSON.parse(userLocal);
-            }
+            const userLocal  = localStorage.getItem('currentUser');
+
+            if (userCookie)     currentUser = JSON.parse(decodeURIComponent(userCookie));
+            else if (userLocal) currentUser = JSON.parse(userLocal);
 
             if (!currentUser || currentUser.rol !== 'docente') {
                 alert('Acceso denegado. Solo docentes pueden acceder.');
@@ -1131,26 +783,21 @@
             }
 
             document.getElementById('userName').textContent = currentUser.nombre_completo;
-            
-            // Configurar archivo adjunto
+
             document.getElementById('archivoAdjunto').addEventListener('change', (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    document.getElementById('nombreArchivo').textContent = ` ${file.name}`;
-                }
+                if (file) document.getElementById('nombreArchivo').textContent = `📎 ${file.name}`;
             });
 
-            // Configurar fecha mínima
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('fechaEntrega').min = now.toISOString().slice(0, 16);
 
             await cargarMateriasDocente();
-            // Cargar datos
             cargarDashboard();
         });
 
-        // ==================== UTILIDADES ====================
+        // ==================== UTILS ====================
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
@@ -1161,50 +808,35 @@
         function getHeaders() {
             return {
                 'Content-Type': 'application/json',
-                'X-User-Id': currentUser.id_usuario
+                'X-User-Id': currentUser?.id_usuario || ''
             };
         }
 
         function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('es-MX', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+            return new Date(dateStr).toLocaleDateString('es-MX', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
             });
         }
 
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/['"\\]/g, '\\$&').replace(/\n/g, ' ');
+        }
+
         function showSection(section) {
-            // Ocultar todas las secciones
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
 
-            // Mostrar sección seleccionada
             document.getElementById(`section-${section}`).classList.add('active');
             event.target.closest('a')?.classList.add('active');
 
-            // Cargar datos según sección
-            switch(section) {
-                case 'dashboard':
-                    cargarDashboard();
-                    break;
-                case 'crear-tarea': 
-                    renderSelectorMaterias(); // Re-renderizar cuando abra la sección
-                    break;
-                case 'mis-tareas':
-                    cargarTareas();
-                    break;
-                case 'calificaciones':
-                    cargarCalificaciones();
-                    break;
-                case 'estudiantes':
-                    cargarEstudiantes();
-                    break;
-                case 'mi-perfil':
-                    cargarPerfil();
-                    break;
+            switch (section) {
+                case 'dashboard':      cargarDashboard();          break;
+                case 'crear-tarea':    renderSelectorMaterias();   break;
+                case 'mis-tareas':     cargarTareas();             break;
+                case 'calificaciones': cargarCalificaciones();      break;
+                case 'estudiantes':    cargarEstudiantes();        break;
             }
         }
 
@@ -1216,45 +848,40 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type}`;
             alertDiv.innerHTML = message;
-            
             const content = document.querySelector('.content');
             content.insertBefore(alertDiv, content.firstChild);
-            
             setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = '../login.html';
         }
 
         // ==================== DASHBOARD ====================
         async function cargarDashboard() {
             try {
-                // Cargar tareas
-                const tareasRes = await fetch(`${API_URL}/tasks/`, {
-                    headers: getHeaders()
-                });
+                const tareasRes = await fetch(`${API_URL}/tasks/`, { headers: getHeaders() });
                 const tareasData = await tareasRes.json();
 
                 if (tareasData.success) {
                     todasLasTareas = tareasData.tareas;
-                    
-                    const activas = todasLasTareas.filter(t => t.estado === 'activa');
+                    const activas   = todasLasTareas.filter(t => t.estado === 'activa');
                     const pendientes = activas.reduce((sum, t) => sum + (t.total_estudiantes - t.total_entregados), 0);
-                    
-                    document.getElementById('totalTareas').textContent = todasLasTareas.length;
-                    document.getElementById('tareasActivas').textContent = activas.length;
+
+                    document.getElementById('totalTareas').textContent       = todasLasTareas.length;
+                    document.getElementById('tareasActivas').textContent     = activas.length;
                     document.getElementById('entregasPendientes').textContent = pendientes;
-                    
-                    // Mostrar tareas recientes
-                    const recientes = todasLasTareas.slice(0, 5);
-                    renderTareasRecientes(recientes);
+
+                    renderTareasRecientes(todasLasTareas.slice(0, 5));
                 }
 
-                // Cargar estudiantes
-                const estudiantesRes = await fetch(`${API_URL}/students/`, { headers: getHeaders() });
+                const estudiantesRes  = await fetch(`${API_URL}/students/`, { headers: getHeaders() });
                 const estudiantesData = await estudiantesRes.json();
-                
                 if (estudiantesData.success) {
                     document.getElementById('totalEstudiantes').textContent = estudiantesData.total;
                 }
-
             } catch (error) {
                 console.error('Error cargando dashboard:', error);
             }
@@ -1262,18 +889,15 @@
 
         function renderTareasRecientes(tareas) {
             const container = document.getElementById('tareasRecientes');
-            
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon"></div>
+                        <div class="icon">📭</div>
                         <h3>No hay tareas</h3>
                         <p>Crea tu primera tarea para comenzar</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = tareas.map(tarea => `
                 <div class="task-item">
                     <div class="task-header">
@@ -1282,18 +906,16 @@
                     </div>
                     <div class="task-meta">
                         <span>📅 ${formatDate(tarea.fecha_entrega)}</span>
-                        <span> ${tarea.puntos_maximos} pts</span>
-                        ${tarea.esta_vencida ? '<span style="color: #dc2626;"> Vencida</span>' : ''}
+                        <span>⭐ ${tarea.puntos_maximos} pts</span>
+                        ${tarea.esta_vencida ? '<span style="color:#dc2626;">⚠️ Vencida</span>' : ''}
                     </div>
                     ${tarea.estado !== 'borrador' ? `
                         <div class="task-stats">
-                            <span class="task-stat"> <strong>${tarea.total_estudiantes}</strong> asignados</span>
-                            <span class="task-stat"> <strong>${tarea.total_entregados}</strong> entregados</span>
-                            <span class="task-stat"> <strong>${tarea.total_calificados}</strong> calificados</span>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                            <span class="task-stat">👥 <strong>${tarea.total_estudiantes}</strong> asignados</span>
+                            <span class="task-stat">📥 <strong>${tarea.total_entregados}</strong> entregados</span>
+                            <span class="task-stat">✅ <strong>${tarea.total_calificados}</strong> calificados</span>
+                        </div>` : ''}
+                </div>`).join('');
         }
 
         // ==================== CREAR TAREA ====================
@@ -1308,89 +930,71 @@
 
         async function enviarTarea(activar) {
             const materiaId = document.getElementById('selectMateria')?.value;
-
             if (!materiaId) {
                 showAlert('⚠️ Debes seleccionar una materia', 'error');
                 return;
             }
 
             const formData = new FormData();
-            formData.append('titulo', document.getElementById('titulo').value);
-            formData.append('descripcion', document.getElementById('descripcion').value);
-            formData.append('materia', String(parseInt(materiaId, 10))); // ✅ enviar materia
-            formData.append('url_recurso', document.getElementById('urlRecurso').value);
-            formData.append('fecha_entrega', document.getElementById('fechaEntrega').value);
-            formData.append('puntos_maximos', document.getElementById('puntosMaximos').value);
-            formData.append(
-                'permite_tardias',
-                document.getElementById('permiteTardias').checked ? 'true' : 'false'
-            );
+            formData.append('titulo',          document.getElementById('titulo').value);
+            formData.append('descripcion',     document.getElementById('descripcion').value);
+            formData.append('materia',         String(parseInt(materiaId, 10)));
+            formData.append('url_recurso',     document.getElementById('urlRecurso').value);
+            formData.append('fecha_entrega',   document.getElementById('fechaEntrega').value);
+            formData.append('puntos_maximos',  document.getElementById('puntosMaximos').value);
+            formData.append('permite_tardias', document.getElementById('permiteTardias').checked ? 'true' : 'false');
 
-            const archivoInput = document.getElementById('archivoAdjunto');
-            const archivo = archivoInput?.files?.[0];
+            const archivo = document.getElementById('archivoAdjunto')?.files?.[0];
             if (archivo) formData.append('archivo_adjunto', archivo);
 
             try {
-                // ✅ Solo 1 fetch, solo FormData, sin Content-Type
                 const response = await fetch(`${API_URL}/tasks/`, {
-                method: 'POST',
-                headers: {
-                    'X-User-Id': currentUser.id_usuario
-                },
-                body: formData
+                    method: 'POST',
+                    headers: { 'X-User-Id': currentUser.id_usuario },
+                    body: formData
                 });
 
-                // ✅ Por si el backend devuelve HTML/error no JSON
                 const contentType = response.headers.get('content-type') || '';
                 const data = contentType.includes('application/json')
-                ? await response.json()
-                : { success: false, message: await response.text() };
+                    ? await response.json()
+                    : { success: false, message: await response.text() };
 
                 if (data.success) {
-                // 🔥 según tu backend puede venir data.tarea.id o data.id
-                const tareaId = data.tarea?.id ?? data.id ?? null;
+                    const tareaId = data.tarea?.id ?? data.id ?? null;
 
-                if (activar && tareaId) {
-                    const activarRes = await fetch(`${API_URL}/tasks/${tareaId}/activate/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-User-Id': currentUser.id_usuario
+                    if (activar && tareaId) {
+                        const activarRes = await fetch(`${API_URL}/tasks/${tareaId}/activate/`, {
+                            method: 'POST',
+                            headers: { 'X-User-Id': currentUser.id_usuario }
+                        });
+                        const activarType = activarRes.headers.get('content-type') || '';
+                        const activarData = activarType.includes('application/json')
+                            ? await activarRes.json()
+                            : { success: false, message: await activarRes.text() };
+
+                        if (activarData.success) showAlert(`✅ ${activarData.message}`);
+                        else showAlert(`❌ ${activarData.message || 'No se pudo activar'}`, 'error');
+                    } else {
+                        showAlert('✅ Tarea guardada como borrador');
                     }
-                    });
 
-                    const activarType = activarRes.headers.get('content-type') || '';
-                    const activarData = activarType.includes('application/json')
-                    ? await activarRes.json()
-                    : { success: false, message: await activarRes.text() };
-
-                    if (activarData.success) showAlert(`✅ ${activarData.message}`);
-                    else showAlert(`❌ ${activarData.message || 'No se pudo activar'}`, 'error');
+                    document.getElementById('formCrearTarea').reset();
+                    document.getElementById('nombreArchivo').textContent = '';
+                    showSection('mis-tareas');
                 } else {
-                    showAlert('✅ Tarea guardada como borrador');
-                }
-
-                document.getElementById('formCrearTarea').reset();
-                document.getElementById('nombreArchivo').textContent = '';
-                showSection('mis-tareas');
-                } else {
-                showAlert(`❌ ${data.message || 'Error al crear tarea'}`, 'error');
+                    showAlert(`❌ ${data.message || 'Error al crear tarea'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
                 showAlert('❌ Error al crear la tarea', 'error');
             }
-            }
-
-
+        }
 
         // ==================== MIS TAREAS ====================
         async function cargarTareas() {
             try {
-                const response = await fetch(`${API_URL}/tasks/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/tasks/`, { headers: getHeaders() });
                 const data = await response.json();
-
                 if (data.success) {
                     todasLasTareas = data.tareas;
                     renderTareas(todasLasTareas);
@@ -1403,163 +1007,105 @@
         function filtrarTareas(estado) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-
-            let tareasFiltradas = todasLasTareas;
-            if (estado !== 'todas') {
-                tareasFiltradas = todasLasTareas.filter(t => t.estado === estado);
-            }
-            renderTareas(tareasFiltradas);
+            renderTareas(estado === 'todas' ? todasLasTareas : todasLasTareas.filter(t => t.estado === estado));
         }
 
         function renderTareas(tareas) {
             const container = document.getElementById('listaTareas');
-
             if (tareas.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon"></div>
+                        <div class="icon">📭</div>
                         <h3>No hay tareas</h3>
                         <p>No tienes tareas en esta categoría</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = tareas.map(tarea => `
                 <div class="task-item">
                     <div class="task-header">
                         <div>
                             <span class="task-title">${tarea.titulo}</span>
-                            <span class="badge badge-${tarea.estado}" style="margin-left: 10px;">
-                                ${tarea.estado.toUpperCase()}
-                            </span>
-                            ${tarea.esta_vencida ? '<span class="badge badge-tardia" style="margin-left: 5px;">VENCIDA</span>' : ''}
+                            <span class="badge badge-${tarea.estado}" style="margin-left:10px;">${tarea.estado.toUpperCase()}</span>
+                            ${tarea.esta_vencida ? '<span class="badge badge-tardia" style="margin-left:5px;">VENCIDA</span>' : ''}
                         </div>
                         <div class="task-actions">
                             ${tarea.estado === 'borrador' ? `
-                                <button class="btn btn-success btn-sm" onclick="activarTarea(${tarea.id})">
-                                    🚀 Activar
-                                </button>
-                                <button class="btn btn-primary btn-sm" onclick="editarTarea(${tarea.id})">
-                                     Editar
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${tarea.id})">
-                                     Eliminar
-                                </button>
-                            ` : ''}
+                                <button class="btn btn-success btn-sm" onclick="activarTarea(${tarea.id})">🚀 Activar</button>
+                                <button class="btn btn-primary btn-sm" onclick="editarTarea(${tarea.id})">✏️ Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${tarea.id})">🗑️ Eliminar</button>` : ''}
                             ${tarea.estado === 'activa' ? `
-                                <button class="btn btn-primary btn-sm" onclick="verEntregas(${tarea.id})">
-                                    📥 Ver Entregas
-                                </button>
-                                <button class="btn btn-warning btn-sm" onclick="editarTarea(${tarea.id})">
-                                     Editar
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="cerrarTarea(${tarea.id})">
-                                     Cerrar
-                                </button>
-                            ` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="verEntregas(${tarea.id})">📥 Ver Entregas</button>
+                                <button class="btn btn-warning btn-sm" onclick="editarTarea(${tarea.id})">✏️ Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="cerrarTarea(${tarea.id})">🔒 Cerrar</button>` : ''}
                             ${tarea.estado === 'cerrada' ? `
-                                <button class="btn btn-primary btn-sm" onclick="verEntregas(${tarea.id})">
-                                    📥 Ver Entregas
-                                </button>
-                            ` : ''}
+                                <button class="btn btn-primary btn-sm" onclick="verEntregas(${tarea.id})">📥 Ver Entregas</button>` : ''}
                         </div>
                     </div>
-                    <p style="color: #64748b; margin: 10px 0;">${tarea.descripcion || 'Sin descripción'}</p>
+                    <p style="color:#64748b;margin:10px 0;">${tarea.descripcion || 'Sin descripción'}</p>
                     <div class="task-meta">
                         <span>📚 ${tarea.materia_info ? tarea.materia_info.nombre : 'Sin materia'}</span>
                         <span>📅 Entrega: ${formatDate(tarea.fecha_entrega)}</span>
-                        <span> ${tarea.puntos_maximos} pts</span>
-                        <span>${tarea.permite_tardias ? ' Permite tardías' : ' No tardías'}</span>
+                        <span>⭐ ${tarea.puntos_maximos} pts</span>
+                        <span>${tarea.permite_tardias ? '✅ Permite tardías' : '❌ No tardías'}</span>
                     </div>
                     ${tarea.estado !== 'borrador' ? `
                         <div class="task-stats">
-                            <span class="task-stat"> <strong>${tarea.total_estudiantes}</strong> asignados</span>
-                            <span class="task-stat"> <strong>${tarea.total_entregados}</strong> entregados</span>
-                            <span class="task-stat"> <strong>${tarea.total_calificados}</strong> calificados</span>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                            <span class="task-stat">👥 <strong>${tarea.total_estudiantes}</strong> asignados</span>
+                            <span class="task-stat">📥 <strong>${tarea.total_entregados}</strong> entregados</span>
+                            <span class="task-stat">✅ <strong>${tarea.total_calificados}</strong> calificados</span>
+                        </div>` : ''}
+                </div>`).join('');
         }
 
         async function activarTarea(tareaId) {
             if (!confirm('¿Activar esta tarea? Se asignará a todos los estudiantes.')) return;
-
             try {
                 const response = await fetch(`${API_URL}/tasks/${tareaId}/activate/`, {
-                    method: 'POST',
-                    headers: getHeaders()
+                    method: 'POST', headers: getHeaders()
                 });
                 const data = await response.json();
-
-                if (data.success) {
-                    showAlert(` ${data.message}`);
-                    cargarTareas();
-                } else {
-                    showAlert(` ${data.message}`, 'error');
-                }
-            } catch (error) {
-                showAlert(' Error al activar tarea', 'error');
-            }
+                if (data.success) { showAlert(`✅ ${data.message}`); cargarTareas(); }
+                else showAlert(`❌ ${data.message}`, 'error');
+            } catch { showAlert('❌ Error al activar tarea', 'error'); }
         }
 
         async function cerrarTarea(tareaId) {
             if (!confirm('¿Cerrar esta tarea? No se permitirán más entregas.')) return;
-
             try {
                 const response = await fetch(`${API_URL}/tasks/${tareaId}/close/`, {
-                    method: 'POST',
-                    headers: getHeaders()
+                    method: 'POST', headers: getHeaders()
                 });
                 const data = await response.json();
-
-                if (data.success) {
-                    showAlert(' Tarea cerrada');
-                    cargarTareas();
-                } else {
-                    showAlert(` ${data.message}`, 'error');
-                }
-            } catch (error) {
-                showAlert(' Error al cerrar tarea', 'error');
-            }
+                if (data.success) { showAlert('🔒 Tarea cerrada'); cargarTareas(); }
+                else showAlert(`❌ ${data.message}`, 'error');
+            } catch { showAlert('❌ Error al cerrar tarea', 'error'); }
         }
 
         async function eliminarTarea(tareaId) {
             if (!confirm('¿Eliminar esta tarea? Esta acción no se puede deshacer.')) return;
-
             try {
                 const response = await fetch(`${API_URL}/tasks/${tareaId}/`, {
-                    method: 'DELETE',
-                    headers: getHeaders()
+                    method: 'DELETE', headers: getHeaders()
                 });
                 const data = await response.json();
-
-                if (data.success) {
-                    showAlert(' Tarea eliminada');
-                    cargarTareas();
-                } else {
-                    showAlert(` ${data.message}`, 'error');
-                }
-            } catch (error) {
-                showAlert(' Error al eliminar tarea', 'error');
-            }
+                if (data.success) { showAlert('🗑️ Tarea eliminada'); cargarTareas(); }
+                else showAlert(`❌ ${data.message}`, 'error');
+            } catch { showAlert('❌ Error al eliminar tarea', 'error'); }
         }
 
         function editarTarea(tareaId) {
             const tarea = todasLasTareas.find(t => t.id === tareaId);
             if (!tarea) return;
 
-            document.getElementById('editTareaId').value = tarea.id;
-            document.getElementById('editTitulo').value = tarea.titulo;
+            document.getElementById('editTareaId').value    = tarea.id;
+            document.getElementById('editTitulo').value     = tarea.titulo;
             document.getElementById('editDescripcion').value = tarea.descripcion;
             document.getElementById('editUrlRecurso').value = tarea.url_recurso || '';
-            
-            // Formatear fecha para input
+
             const fecha = new Date(tarea.fecha_entrega);
             fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
-            document.getElementById('editFechaEntrega').value = fecha.toISOString().slice(0, 16);
-            
+            document.getElementById('editFechaEntrega').value   = fecha.toISOString().slice(0, 16);
             document.getElementById('editPermiteTardias').checked = tarea.permite_tardias;
 
             document.getElementById('modalEditarTarea').classList.add('active');
@@ -1567,57 +1113,43 @@
 
         async function guardarEdicionTarea() {
             const tareaId = document.getElementById('editTareaId').value;
-
             try {
                 const response = await fetch(`${API_URL}/tasks/${tareaId}/`, {
                     method: 'PUT',
                     headers: getHeaders(),
                     body: JSON.stringify({
-                        titulo: document.getElementById('editTitulo').value,
-                        descripcion: document.getElementById('editDescripcion').value,
-                        url_recurso: document.getElementById('editUrlRecurso').value,
-                        fecha_entrega: document.getElementById('editFechaEntrega').value,
+                        titulo:          document.getElementById('editTitulo').value,
+                        descripcion:     document.getElementById('editDescripcion').value,
+                        url_recurso:     document.getElementById('editUrlRecurso').value,
+                        fecha_entrega:   document.getElementById('editFechaEntrega').value,
                         permite_tardias: document.getElementById('editPermiteTardias').checked
                     })
                 });
                 const data = await response.json();
-
                 if (data.success) {
-                    showAlert(' Tarea actualizada');
+                    showAlert('✅ Tarea actualizada');
                     cerrarModal('modalEditarTarea');
                     cargarTareas();
-                } else {
-                    showAlert(` ${data.message}`, 'error');
-                }
-            } catch (error) {
-                showAlert(' Error al actualizar tarea', 'error');
-            }
+                } else showAlert(`❌ ${data.message}`, 'error');
+            } catch { showAlert('❌ Error al actualizar tarea', 'error'); }
         }
 
         // ==================== ENTREGAS ====================
         async function verEntregas(tareaId) {
             const tarea = todasLasTareas.find(t => t.id === tareaId);
             document.getElementById('modalEntregasTitulo').textContent = `Entregas: ${tarea?.titulo || ''}`;
-
             try {
-                const response = await fetch(`${API_URL}/tasks/${tareaId}/submissions/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/tasks/${tareaId}/submissions/`, { headers: getHeaders() });
                 const data = await response.json();
-
                 if (data.success) {
                     renderEntregas(data.submissions);
                     document.getElementById('modalEntregas').classList.add('active');
                 }
-            } catch (error) {
-                showAlert(' Error al cargar entregas', 'error');
-            }
+            } catch { showAlert('❌ Error al cargar entregas', 'error'); }
         }
 
         function renderEntregas(entregas) {
-            const container = document.getElementById('listaEntregas');
-
-            container.innerHTML = `
+            document.getElementById('listaEntregas').innerHTML = `
                 <table class="grades-table">
                     <thead>
                         <tr>
@@ -1633,53 +1165,48 @@
                             <tr>
                                 <td>
                                     <strong>${e.student.nombre_completo}</strong><br>
-                                    <small style="color: #64748b;">${e.student.correo}</small>
+                                    <small style="color:#64748b;">${e.student.correo}</small>
                                 </td>
                                 <td>
                                     <span class="badge badge-${e.estado}">${e.estado.toUpperCase()}</span>
-                                    ${e.archivos.some(a => a.es_entrega_tardia) ? 
-                                        '<span class="badge badge-tardia" style="margin-left: 5px;">TARDÍA</span>' : ''}
+                                    ${e.archivos.some(a => a.es_entrega_tardia) ?
+                                        '<span class="badge badge-tardia" style="margin-left:5px;">TARDÍA</span>' : ''}
                                 </td>
                                 <td>
-                                    ${e.archivos.length > 0 ? 
-                                        e.archivos.map(a => `
-                                            <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank" 
-                                               style="display: block; color: #002855; font-size: 13px;">
-                                                 ${a.nombre_original}
-                                            </a>
-                                        `).join('') : 
-                                        '<span style="color: #94a3b8;">Sin archivos</span>'
-                                    }
+                                    ${e.archivos.length > 0
+                                        ? e.archivos.map(a => `
+                                            <a href="${API_URL.replace('/api', '')}${a.archivo}" target="_blank"
+                                               style="display:block;color:#002855;font-size:13px;">
+                                                📎 ${a.nombre_original}
+                                            </a>`).join('')
+                                        : '<span style="color:#94a3b8;">Sin archivos</span>'}
                                 </td>
                                 <td class="grade-cell ${e.calificacion >= 8 ? 'high' : e.calificacion >= 6 ? 'medium' : e.calificacion ? 'low' : ''}">
                                     ${e.calificacion ? `${e.calificacion}/10` : '-'}
                                 </td>
                                 <td>
                                     ${e.estado === 'entregado' || e.estado === 'calificado' ? `
-                                        <button class="btn btn-success btn-sm" 
+                                        <button class="btn btn-success btn-sm"
                                                 onclick="abrirCalificar(${e.id}, '${escapeHtml(e.student.nombre_completo)}', ${e.calificacion !== null ? e.calificacion : 'null'}, '${escapeHtml(e.comentario_docente || '')}')">
-                                             Calificar
-                                        </button>
-                                    ` : '<span style="color: #94a3b8;">Pendiente</span>'}
+                                            ✅ Calificar
+                                        </button>` : '<span style="color:#94a3b8;">Pendiente</span>'}
                                 </td>
-                            </tr>
-                        `).join('')}
+                            </tr>`).join('')}
                     </tbody>
-                </table>
-            `;
+                </table>`;
         }
 
         function abrirCalificar(submissionId, nombre, calificacion, comentario) {
             submissionIdActual = submissionId;
             document.getElementById('infoEstudiante').textContent = `Estudiante: ${nombre}`;
-            document.getElementById('inputCalificacion').value = calificacion !== null ? calificacion : '';
-            document.getElementById('inputComentario').value = comentario || '';
+            document.getElementById('inputCalificacion').value    = calificacion !== null ? calificacion : '';
+            document.getElementById('inputComentario').value      = comentario || '';
             document.getElementById('modalCalificar').classList.add('active');
         }
 
         async function guardarCalificacion() {
             const calificacion = parseInt(document.getElementById('inputCalificacion').value);
-            const comentario = document.getElementById('inputComentario').value;
+            const comentario   = document.getElementById('inputComentario').value;
 
             if (!calificacion || calificacion < 1 || calificacion > 10) {
                 alert('La calificación debe ser entre 1 y 10');
@@ -1690,77 +1217,48 @@
                 const response = await fetch(`${API_URL}/submissions/${submissionIdActual}/grade/`, {
                     method: 'POST',
                     headers: getHeaders(),
-                    body: JSON.stringify({
-                        calificacion,
-                        comentario_docente: comentario
-                    })
+                    body: JSON.stringify({ calificacion, comentario_docente: comentario })
                 });
                 const data = await response.json();
-
                 if (data.success) {
-                    showAlert(' Calificación guardada');
+                    showAlert('✅ Calificación guardada');
                     cerrarModal('modalCalificar');
-                    
-                    // Recargar entregas
-                    const tareaId = todasLasTareas.find(t => 
-                        t.submissions?.some(s => s.id === submissionIdActual)
-                    )?.id;
-                    
-                    // Cerrar y reabrir modal de entregas para actualizar
-                    const modalVisible = document.getElementById('modalEntregas').classList.contains('active');
-                    if (modalVisible) {
-                        // Buscar la tarea actual
-                        const titulo = document.getElementById('modalEntregasTitulo').textContent;
-                        const tarea = todasLasTareas.find(t => titulo.includes(t.titulo));
-                        if (tarea) {
-                            verEntregas(tarea.id);
-                        }
+                    const titulo = document.getElementById('modalEntregasTitulo').textContent;
+                    const tarea  = todasLasTareas.find(t => titulo.includes(t.titulo));
+                    if (tarea && document.getElementById('modalEntregas').classList.contains('active')) {
+                        verEntregas(tarea.id);
                     }
-                } else {
-                    showAlert(` ${data.message}`, 'error');
-                }
-            } catch (error) {
-                showAlert(' Error al guardar calificación', 'error');
-            }
+                } else showAlert(`❌ ${data.message}`, 'error');
+            } catch { showAlert('❌ Error al guardar calificación', 'error'); }
         }
 
         // ==================== CALIFICACIONES ====================
         async function cargarCalificaciones() {
             try {
-                const response = await fetch(`${API_URL}/reports/grades/`, {
-                    headers: getHeaders()
-                });
+                const response = await fetch(`${API_URL}/reports/grades/`, { headers: getHeaders() });
                 const data = await response.json();
-
-                if (data.success) {
-                    renderTablaCalificaciones(data);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                if (data.success) renderTablaCalificaciones(data);
+            } catch (error) { console.error('Error:', error); }
         }
 
         function renderTablaCalificaciones(data) {
             const container = document.getElementById('tablaCalificaciones');
-
             if (data.tareas_headers.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon"></div>
+                        <div class="icon">📭</div>
                         <h3>Sin datos</h3>
                         <p>No hay tareas activas o cerradas para mostrar</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
-
             container.innerHTML = `
                 <table class="grades-table">
                     <thead>
                         <tr>
                             <th>Estudiante</th>
-                            ${data.tareas_headers.map(t => `<th style="text-align: center;">${t.titulo}</th>`).join('')}
-                            <th style="text-align: center;">Promedio</th>
+                            ${data.tareas_headers.map(t => `<th style="text-align:center;">${t.titulo}</th>`).join('')}
+                            <th style="text-align:center;">Promedio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1768,28 +1266,25 @@
                             <tr>
                                 <td>
                                     <strong>${r.estudiante.nombre_completo}</strong><br>
-                                    <small style="color: #64748b;">${r.estudiante.carrera}</small>
+                                    <small style="color:#64748b;">${r.estudiante.carrera}</small>
                                 </td>
                                 ${r.tareas.map(t => `
                                     <td class="grade-cell ${t.calificacion >= 8 ? 'high' : t.calificacion >= 6 ? 'medium' : t.calificacion ? 'low' : ''}">
                                         ${t.calificacion ? t.calificacion : '-'}
-                                        ${t.es_tardia ? '<br><small style="color: #d97706;">(T)</small>' : ''}
-                                    </td>
-                                `).join('')}
-                                <td class="grade-cell ${r.promedio >= 8 ? 'high' : r.promedio >= 6 ? 'medium' : r.promedio ? 'low' : ''}" style="font-size: 16px;">
+                                        ${t.es_tardia ? '<br><small style="color:#d97706;">(T)</small>' : ''}
+                                    </td>`).join('')}
+                                <td class="grade-cell ${r.promedio >= 8 ? 'high' : r.promedio >= 6 ? 'medium' : r.promedio ? 'low' : ''}" style="font-size:16px;">
                                     ${r.promedio ? r.promedio.toFixed(1) : '-'}
                                 </td>
-                            </tr>
-                        `).join('')}
+                            </tr>`).join('')}
                     </tbody>
                 </table>
-                <p style="margin-top: 15px; color: #64748b; font-size: 13px;">
-                    <strong>(T)</strong> = Entrega tardía | 
-                    <span style="color: #059669;">■</span> ≥8 | 
-                    <span style="color: #d97706;">■</span> 6-7 | 
-                    <span style="color: #dc2626;">■</span> &lt;6
-                </p>
-            `;
+                <p style="margin-top:15px;color:#64748b;font-size:13px;">
+                    <strong>(T)</strong> = Entrega tardía |
+                    <span style="color:#059669;">■</span> ≥8 |
+                    <span style="color:#d97706;">■</span> 6-7 |
+                    <span style="color:#dc2626;">■</span> &lt;6
+                </p>`;
         }
 
         function exportarCalificaciones() {
@@ -1801,19 +1296,12 @@
             try {
                 const response = await fetch(`${API_URL}/students/`, { headers: getHeaders() });
                 const data = await response.json();
-
-                if (data.success) {
-                    renderEstudiantes(data.estudiantes);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                if (data.success) renderEstudiantes(data.estudiantes);
+            } catch (error) { console.error('Error:', error); }
         }
 
         function renderEstudiantes(estudiantes) {
-            const container = document.getElementById('listaEstudiantes');
-
-            container.innerHTML = `
+            document.getElementById('listaEstudiantes').innerHTML = `
                 <table>
                     <thead>
                         <tr>
@@ -1830,204 +1318,58 @@
                                 <td>${e.nombre_completo}</td>
                                 <td>${e.correo}</td>
                                 <td>${e.carrera || '-'}</td>
-                            </tr>
-                        `).join('')}
+                            </tr>`).join('')}
                     </tbody>
-                </table>
-            `;
+                </table>`;
         }
 
-       async function cargarMateriasDocente() {
+        // ==================== MATERIAS ====================
+        async function cargarMateriasDocente() {
             try {
-                console.log('🔍 Cargando materias del docente...');
-                console.log('👤 Docente ID:', currentUser.id_usuario);
-
-                const response = await fetch(`${API_URL}/docente/materias/`, {
-                    headers: getHeaders()
-                });
-
-                console.log('📡 Response status:', response.status);
-
+                const response = await fetch(`${API_URL}/docente/materias/`, { headers: getHeaders() });
                 const data = await response.json();
-                console.log('📦 Data recibida:', data);
-
                 if (data.success) {
                     materiasDocente = data.materias;
-                    console.log(`✅ Cargadas ${materiasDocente.length} materias del docente`);
-                    console.log('📚 Materias:', materiasDocente);
-                    renderSelectorMaterias(); // ✅ Renderizar inmediatamente
+                    renderSelectorMaterias();
                 } else {
-                    console.error('❌ Error en la respuesta:', data.message);
                     showAlert('⚠️ ' + data.message, 'error');
                 }
             } catch (error) {
-                console.error('❌ Error cargando materias:', error);
+                console.error('Error cargando materias:', error);
                 materiasDocente = [];
-
-                // Mostrar mensaje en el selector
                 const select = document.getElementById('selectMateria');
-                if (select) {
-                    select.innerHTML = '<option value="">Error cargando materias</option>';
-                }
+                if (select) select.innerHTML = '<option value="">Error cargando materias</option>';
             }
         }
 
         function renderSelectorMaterias() {
             const select = document.getElementById('selectMateria');
-                
-            if (!select) {
-                console.error('❌ No se encontró el elemento selectMateria');
-                return;
-            }
-            
-            console.log('🎨 Renderizando selector con', materiasDocente.length, 'materias');
-            
-            // Limpiar opciones
+            if (!select) return;
+
             select.innerHTML = '';
-            
+
             if (materiasDocente.length === 0) {
                 select.innerHTML = '<option value="">No tienes materias asignadas</option>';
                 select.disabled = true;
-                console.warn('⚠️ El docente no tiene materias asignadas');
                 return;
             }
-            
-            // Agregar opción por defecto
+
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Selecciona una materia...';
             select.appendChild(defaultOption);
-            
-            // Agregar materias
+
             materiasDocente.forEach(m => {
-                console.log('➕ Agregando materia:', m.nombre);
                 const option = document.createElement('option');
                 option.value = m.id;
                 option.textContent = `${m.nombre} - NRC: ${m.nrc}`;
                 select.appendChild(option);
             });
-            
+
             select.disabled = false;
-            console.log('✅ Selector renderizado correctamente');
         }
-
-        // ==================== LOGOUT ====================
-        function logout() {
-            localStorage.removeItem('currentUser');
-            document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            window.location.href = '../login.html';
-        }
-
-        // ==================== PERFIL ====================
-        async function cargarPerfil(esManual = false) {
-            if (esManual) perfilMensaje('⌛ Cargando datos...', 'info');
-
-            try {
-                const res = await fetch(`${API_URL}/users/me/`, { headers: getHeaders() });
-                const data = await safeJson(res);
-
-                if (!res.ok || !data.success) {
-                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
-                perfilMensaje(` No se pudo cargar el perfil (HTTP ${res.status}). ${data.message || ''}${extra}`, 'error');
-                return;
-                }
-
-                const u = data.user;
-                document.getElementById('perfil_id').value = u.id_usuario || '';
-                document.getElementById('perfil_rol').value = (u.rol || '').toUpperCase();
-                document.getElementById('perfil_nombre').value = u.nombre_completo || '';
-                document.getElementById('perfil_correo').value = u.correo || '';
-                document.getElementById('perfil_telefono').value = u.telefono || '';
-                document.getElementById('perfil_sexo').value = u.sexo || 'Otro';
-
-                if (esManual) document.getElementById('perfilMsg').innerHTML = '';
-            } catch (e) {
-                console.error(e);
-                perfilMensaje(' Error de conexión al cargar perfil', 'error');
-            }
-            }
-
-
-        async function guardarPerfil(ev) {
-            ev.preventDefault();
-
-            const btn = document.getElementById('btnGuardarPerfil');
-            btn.disabled = true;
-            const oldText = btn.textContent;
-            btn.textContent = ' Guardando...';
-
-            const payload = {
-                nombre_completo: document.getElementById('perfil_nombre').value.trim(),
-                telefono: document.getElementById('perfil_telefono').value.trim(),
-                sexo: document.getElementById('perfil_sexo').value
-            };
-
-            try {
-                const res = await fetch(`${API_URL}/users/me/`, {
-                method: 'PATCH',
-                headers: { ...getHeaders(), 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-                });
-
-                const data = await safeJson(res);
-
-                if (!res.ok || !data.success) {
-                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
-                perfilMensaje(` No se pudo guardar (HTTP ${res.status}). ${JSON.stringify(data.errors || data.message || data)}${extra}`, 'error');
-                return;
-                }
-
-                if (data.user) {
-                currentUser.nombre_completo = data.user.nombre_completo;
-                currentUser.telefono = data.user.telefono;
-                currentUser.sexo = data.user.sexo;
-
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(currentUser))}; path=/; max-age=${60 * 60 * 24 * 7}`;
-                document.getElementById('userName').textContent = currentUser.nombre_completo;
-                }
-
-                perfilMensaje('Perfil actualizado correctamente', 'success');
-
-                await cargarPerfil(false);
-
-            } catch (e) {
-                console.error(e);
-                perfilMensaje('Error de red al guardar', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = oldText;
-            }
-            }
-
-        async function safeJson(res) {
-            const text = await res.text();
-            try {
-                return JSON.parse(text);
-            } catch {
-                return { success: false, message: text, _raw: true };
-            }
-        }
-
-        function perfilMensaje(html, type = 'info') {
-        const msg = document.getElementById('perfilMsg');
-        msg.innerHTML = `<div class="alert alert-${type}">${html}</div>`;
-        }
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = '../login.html';
-        }
-
-        function getHeaders() {
-            console.log("currentUser =", currentUser);
-            console.log("X-User-Id enviado =", currentUser?.id_usuario);
-            return {
-                "X-User-Id": currentUser?.id_usuario || ""
-            };
-            }
     </script>
+
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
     </div>
