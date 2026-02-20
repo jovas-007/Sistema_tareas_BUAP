@@ -1205,6 +1205,8 @@
                 requestData.materias = [];
             }
 
+            console.log('[DEBUG] Enviando datos de registro:', requestData);
+
             try {
                 const response = await fetch(`${API_URL}/register`, {
                     method: 'POST',
@@ -1212,10 +1214,21 @@
                     body: JSON.stringify(requestData)
                 });
 
-                const data = await response.json();
+                console.log('[DEBUG] Respuesta HTTP status:', response.status, response.statusText);
 
-                if (data.success) {
-                    // Mostrar feedback de éxito
+                // Intentar parsear la respuesta JSON
+                let data;
+                try {
+                    data = await response.json();
+                    console.log('[DEBUG] Respuesta del servidor:', data);
+                } catch (jsonError) {
+                    console.error('[ERROR] Error al parsear JSON:', jsonError);
+                    throw new Error('El servidor no respondió correctamente');
+                }
+
+                // Verificar si fue exitoso (status 200-299 o success: true en la respuesta)
+                if (response.ok && data.success) {
+                    // ✓ REGISTRO EXITOSO
                     btnRegister.classList.remove('btn-loading');
                     btnRegister.classList.add('btn-success-feedback');
                     btnRegister.textContent = 'Cuenta creada';
@@ -1244,38 +1257,70 @@
                         feedbackMessage.textContent = '';
                     }, 2000);
                 } else {
-                    // Mostrar feedback de error
+                    // ✗ ERROR DE VALIDACIÓN (correo duplicado, matrícula duplicada, etc.)
+                    console.log('[DEBUG] Error de validación recibido:', data.message);
+                    
                     btnRegister.classList.remove('btn-loading');
                     btnRegister.classList.add('btn-error-feedback');
-                    btnRegister.textContent = 'Error al registrar';
-                    feedbackMessage.textContent = data.message || 'Error al crear cuenta';
+                    
+                    // Definir mensaje de error específico
+                    let errorMsg = data.message || 'Error al crear cuenta';
+                    
+                    // Personalizar el texto del botón según el error
+                    if (errorMsg.toLowerCase().includes('correo')) {
+                        btnRegister.textContent = 'Correo ya existe';
+                    } else if (errorMsg.toLowerCase().includes('matrícula') || errorMsg.toLowerCase().includes('id')) {
+                        btnRegister.textContent = 'Matrícula ya existe';
+                    } else if (errorMsg.toLowerCase().includes('contraseña')) {
+                        btnRegister.textContent = 'Contraseña inválida';
+                    } else if (errorMsg.toLowerCase().includes('carrera')) {
+                        btnRegister.textContent = 'Error en carrera';
+                    } else if (errorMsg.toLowerCase().includes('materia')) {
+                        btnRegister.textContent = 'Error en materias';
+                    } else {
+                        btnRegister.textContent = 'Error en el formulario';
+                    }
+                    
+                    feedbackMessage.textContent = errorMsg;
                     feedbackMessage.classList.add('show', 'error');
                     
-                    // Resetear botón después de 3 segundos
+                    // Resetear botón después de 4 segundos
                     setTimeout(() => {
                         btnRegister.classList.remove('btn-error-feedback');
                         btnRegister.disabled = false;
                         btnRegister.textContent = 'Crear Cuenta';
                         feedbackMessage.classList.remove('show', 'error');
-                    }, 3000);
+                    }, 4000);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                // ✗ ERROR DE CONEXIÓN REAL (servidor no responde, red caída, etc.)
+                console.error('[ERROR] Error de conexión completo:', error);
+                console.error('[ERROR] Tipo:', error.name, '| Mensaje:', error.message);
                 
-                // Mostrar feedback de error de conexión
                 btnRegister.classList.remove('btn-loading');
                 btnRegister.classList.add('btn-error-feedback');
-                btnRegister.textContent = 'Error de conexión';
-                feedbackMessage.textContent = 'Error de conexión con el servidor';
+                btnRegister.textContent = 'Sin conexión';
+                
+                // Mensaje más descriptivo según el tipo de error
+                let connectionErrorMsg = 'Error de conexión con el servidor';
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    connectionErrorMsg = 'No se puede conectar al servidor. Verifica tu conexión a internet.';
+                } else if (error.message.includes('Timeout')) {
+                    connectionErrorMsg = 'El servidor tardó demasiado en responder. Intenta de nuevo.';
+                } else if (error.message.includes('respondió correctamente')) {
+                    connectionErrorMsg = 'El servidor respondió con un formato inválido.';
+                }
+                
+                feedbackMessage.textContent = connectionErrorMsg;
                 feedbackMessage.classList.add('show', 'error');
                 
-                // Resetear botón después de 3 segundos
+                // Resetear botón después de 4 segundos
                 setTimeout(() => {
                     btnRegister.classList.remove('btn-error-feedback');
                     btnRegister.disabled = false;
                     btnRegister.textContent = 'Crear Cuenta';
                     feedbackMessage.classList.remove('show', 'error');
-                }, 3000);
+                }, 4000);
             }
         }
 
