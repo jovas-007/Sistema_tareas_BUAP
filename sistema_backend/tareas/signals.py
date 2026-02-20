@@ -23,7 +23,8 @@ def task_state_change(sender, instance, **kwargs):
 @receiver(post_save, sender=Task)
 def create_submissions_on_activate(sender, instance, created, **kwargs):
     """
-    Cuando una tarea se activa, crear una Submission para cada estudiante
+    Cuando una tarea se activa, crear una Submission SOLO para estudiantes 
+    que estén inscritos en esa materia
     """
     old_estado = getattr(instance, '_old_estado', None)
     
@@ -38,8 +39,12 @@ def create_submissions_on_activate(sender, instance, created, **kwargs):
         should_create = True
     
     if should_create:
-        # Obtener todos los estudiantes activos
-        estudiantes = User.objects.filter(rol='estudiante', is_active=True)
+        #Obtener solo los estudiantes inscritos en esa materia
+        estudiantes = User.objects.filter(
+            rol='estudiante',
+            is_active=True,
+            materias_estudiante=instance.materia  # Solo estudiantes de esta materia
+        )
         
         # Crear submission para cada estudiante que no tenga una
         submissions_to_create = []
@@ -51,4 +56,8 @@ def create_submissions_on_activate(sender, instance, created, **kwargs):
         
         if submissions_to_create:
             Submission.objects.bulk_create(submissions_to_create)
-            print(f"✅ Creadas {len(submissions_to_create)} entregas para la tarea '{instance.titulo}'")
+            print(f"✅ Creadas {len(submissions_to_create)} entregas para la tarea '{instance.titulo}' " 
+                  f"en la materia '{instance.materia.nombre}'")
+        else:
+            print(f"⚠️ No hay estudiantes inscritos en la materia '{instance.materia.nombre}' "
+                  f"para la tarea '{instance.titulo}'")

@@ -883,7 +883,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
+           .sidebar {
                 display: none;
             }
             
@@ -1036,6 +1036,18 @@
                     <a href="#" onclick="showSection('mis-calificaciones')">
                         <span class="icon"></span>
                         <span>Mis Calificaciones</span>
+                    </a>
+                </li>
+                 <!-- 
+                <a href="#" onclick="showSection('mi-perfil')">
+                    <span class="icon"></span>
+                    <span>Mi Perfil</span>
+                </a>
+                </li>-->
+                <li>
+                    <a href="./graficas.html">
+                        <span class="icon"></span>
+                        <span>Gráficas</span>
                     </a>
                 </li>
             </ul>
@@ -2202,7 +2214,8 @@
             document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             window.location.href = '../login.html';
         }
-// ==================== GRÁFICAS ====================
+
+        // ==================== GRÁFICAS ====================
         let chartEstado = null;
         let chartNotas = null;
 
@@ -2211,44 +2224,43 @@
                 const response = await fetch(`${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`, {
                     headers: getHeaders()
                 });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
 
                 if (chartEstado) chartEstado.destroy();
                 if (chartNotas) chartNotas.destroy();
                 
-                if (data.success) {
-                    // 1. Gráfica de Estados usando 'tareas_por_estado' del backend
+                if (data && data.success) {
                     const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
+                    const estados = Array.isArray(data.tareas_por_estado) ? data.tareas_por_estado : [];
+                    
                     chartEstado = new Chart(ctxEstado, {
                         type: 'doughnut',
                         data: {
-                            labels: data.tareas_por_estado.map(i => i.estado.toUpperCase()),
+                            labels: estados.map(i => (i.estado || 'S/E').toUpperCase()),
                             datasets: [{
-                                data: data.tareas_por_estado.map(i => i.total),
+                                data: estados.map(i => i.total || 0),
                                 backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
                                 hoverOffset: 4
                             }]
                         },
-                        options: { 
-                            responsive: true,
-                            plugins: { legend: { position: 'bottom' } }
-                        }
+                        options: { responsive: true }
                     });
 
-                    // 2. Gráfica de Rendimiento usando 'promedios' del backend
                     const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
+                    const notas = Array.isArray(data.promedios) ? data.promedios : [];
+                    
                     chartNotas = new Chart(ctxNotas, {
                         type: 'line',
                         data: {
-                            labels: data.promedios.map(i => i.materia || 'Materia'),
+                            labels: notas.map(i => i.materia || 'Materia'),
                             datasets: [{
-                                label: 'Calificación Promedio',
-                                data: data.promedios.map(i => i.promedio),
+                                label: 'Calificación',
+                                data: notas.map(i => i.promedio || 0),
                                 borderColor: '#6366f1',
-                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
                                 fill: true,
-                                tension: 0.4,
-                                pointRadius: 5
+                                tension: 0.4
                             }]
                         },
                         options: {
@@ -2260,6 +2272,18 @@
             } catch (error) {
                 console.error('Error al cargar gráficas:', error);
             }
+        } // <--- Asegúrate de que esta llave esté ahí
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '../login.html';
+        }
+
+        function getHeaders() {
+            return {
+                "X-User-Id": currentUser?.id_usuario || ""
+            };
         }
     </script>
     <div class="footer-bottom" role="contentinfo">
