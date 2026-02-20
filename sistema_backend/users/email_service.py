@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 
 # ── Configuración Brevo ──────────────────────────────────────────
 BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
-BREVO_SENDER_EMAIL = 'secretaria.instituto.aca@gmail.com'
-BREVO_SENDER_NAME = 'Sistema de Tareas BUAP'
-BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
+BREVO_SENDER_EMAIL = os.environ.get('BREVO_SENDER_EMAIL', '')
+BREVO_SENDER_NAME = os.environ.get('BREVO_SENDER_NAME', '')
+BREVO_API_URL = os.environ.get('BREVO_API_URL', 'https://api.brevo.com/v3/smtp/email')
 
 
 # ── Función principal de envío ────────────────────────────────────

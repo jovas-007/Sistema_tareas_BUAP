@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Estudiante - Sistema de Gestión de Tareas</title>
     <link rel="stylesheet" href="../assets/diseños.css">
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
         * {
             margin: 0;
             padding: 0;
@@ -873,9 +874,16 @@
             opacity: 0.8;
         }
 
+       .chart-container {
+            position: relative;
+            height: 40vh; 
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
+           .sidebar {
                 display: none;
             }
             
@@ -1057,6 +1065,16 @@
                     <div class="stat-card" id="statPromedio">
                         <div class="stat-value" id="promedioGeneral">-</div>
                         <div class="stat-label">Promedio</div>
+                    </div>
+                </div>
+                <div class="charts-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                     <div class="card">
+                         <div class="card-header"><h2 class="card-title">Estado de mis Tareas</h2></div>
+                         <canvas id="chartEstadoTareas" style="max-height: 250px;"></canvas>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h2 class="card-title">Histórico de Notas</h2></div>
+                        <canvas id="chartHistoricoNotas" style="max-height: 250px;"></canvas>
                     </div>
                 </div>
 
@@ -1445,7 +1463,7 @@
                     // Aplicar color dinámico basado en el promedio
                     const statPromedio = document.getElementById('statPromedio');
                     statPromedio.className = 'stat-card'; // Resetear clases
-                    
+
                     if (promedio > 0) {
                         if (promedio < 6) {
                             statPromedio.classList.add('promedio-bajo'); // Rojo
@@ -1457,6 +1475,7 @@
                     }
                     
                     renderUltimasCalificaciones(calData.calificaciones.slice(0, 5));
+                    cargarEstadisticasVisuales();
                 }
 
             } catch (error) {
@@ -2196,101 +2215,66 @@
             window.location.href = '../login.html';
         }
 
-        // ==================== PERFIL ====================
-        async function cargarPerfil(esManual = false) {
-            if (esManual) perfilMensaje('⌛ Cargando datos...', 'info');
+// ==================== GRÁFICAS ====================
+        let chartEstado = null;
+        let chartNotas = null;
 
+        async function cargarEstadisticasVisuales() {
             try {
-                const res = await fetch(`${API_URL}/users/me/`, { headers: getHeaders() });
-                const data = await safeJson(res);
-
-                if (!res.ok || !data.success) {
-                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
-                perfilMensaje(`No se pudo cargar el perfil (HTTP ${res.status}). ${data.message || ''}${extra}`, 'error');
-                return;
-                }
-
-                const u = data.user;
-                document.getElementById('perfil_id').value = u.id_usuario || '';
-                document.getElementById('perfil_rol').value = (u.rol || '').toUpperCase();
-                document.getElementById('perfil_nombre').value = u.nombre_completo || '';
-                document.getElementById('perfil_correo').value = u.correo || '';
-                document.getElementById('perfil_telefono').value = u.telefono || '';
-                document.getElementById('perfil_sexo').value = u.sexo || 'Otro';
-
-                if (esManual) document.getElementById('perfilMsg').innerHTML = '';
-            } catch (e) {
-                console.error(e);
-                perfilMensaje(' Error de conexión al cargar perfil', 'error');
-            }
-            }
-
-
-        async function guardarPerfil(ev) {
-            ev.preventDefault();
-
-            const btn = document.getElementById('btnGuardarPerfil');
-            btn.disabled = true;
-            const oldText = btn.textContent;
-            btn.textContent = 'Guardando...';
-
-            const payload = {
-                nombre_completo: document.getElementById('perfil_nombre').value.trim(),
-                telefono: document.getElementById('perfil_telefono').value.trim(),
-                sexo: document.getElementById('perfil_sexo').value
-            };
-
-            try {
-                const res = await fetch(`${API_URL}/users/me/`, {
-                method: 'PATCH',
-                headers: { ...getHeaders(), 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                const response = await fetch(`${API_URL}/stats/student/?student_id=${currentUser.id_usuario}`, {
+                    headers: getHeaders()
                 });
+                const data = await response.json();
 
-                const data = await safeJson(res);
+                if (chartEstado) chartEstado.destroy();
+                if (chartNotas) chartNotas.destroy();
+                
+                // Verificamos que 'data.success' sea true y que existan los arreglos
+                if (data.success) {
+                    
+                    // 1. Gráfica de Estados (Ajustado a 'tareas_por_estado')
+                    const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
+                    const estados = data.tareas_por_estado || []; // Si es undefined, usa lista vacía
+                    
+                    chartEstado = new Chart(ctxEstado, {
+                        type: 'doughnut',
+                        data: {
+                            labels: estados.map(i => i.estado.toUpperCase()),
+                            datasets: [{
+                                data: estados.map(i => i.total),
+                                backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: { responsive: true }
+                    });
 
-                if (!res.ok || !data.success) {
-                const extra = data?._raw ? '<br><small>(El servidor no devolvió JSON)</small>' : '';
-                perfilMensaje(`No se pudo guardar (HTTP ${res.status}). ${JSON.stringify(data.errors || data.message || data)}${extra}`, 'error');
-                return;
+                    // 2. Gráfica de Rendimiento (Ajustado a 'promedios')
+                    const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
+                    const notas = data.promedios || []; // Si es undefined, usa lista vacía
+                    
+                    chartNotas = new Chart(ctxNotas, {
+                        type: 'line',
+                        data: {
+                            labels: notas.map(i => i.materia || 'Materia'),
+                            datasets: [{
+                                label: 'Calificación',
+                                data: notas.map(i => i.promedio),
+                                borderColor: '#6366f1',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            scales: { y: { beginAtZero: true, max: 10 } },
+                            responsive: true
+                        }
+                    });
                 }
-
-                if (data.user) {
-                currentUser.nombre_completo = data.user.nombre_completo;
-                currentUser.telefono = data.user.telefono;
-                currentUser.sexo = data.user.sexo;
-
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(currentUser))}; path=/; max-age=${60 * 60 * 24 * 7}`;
-                document.getElementById('userName').textContent = currentUser.nombre_completo;
-                }
-
-                perfilMensaje('Perfil actualizado correctamente', 'success');
-
-                await cargarPerfil(false);
-
-            } catch (e) {
-                console.error(e);
-                perfilMensaje('error de red al guardar', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = oldText;
+            } catch (error) {
+                console.error('Error al cargar gráficas:', error);
             }
-            }
-
-        async function safeJson(res) {
-            const text = await res.text();
-            try {
-                return JSON.parse(text);
-            } catch {
-                return { success: false, message: text, _raw: true };
-            }
-        }
-
-        function perfilMensaje(html, type = 'info') {
-        const msg = document.getElementById('perfilMsg');
-        msg.innerHTML = `<div class="alert alert-${type}">${html}</div>`;
-        }
+}
     
         function logout() {
             localStorage.removeItem('currentUser');
@@ -2305,8 +2289,6 @@
                 "X-User-Id": currentUser?.id_usuario || ""
             };
             }
-
-
     </script>
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>

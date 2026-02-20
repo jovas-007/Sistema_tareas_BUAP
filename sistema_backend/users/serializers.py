@@ -70,11 +70,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         return value
     
     def validate_correo(self, value):
-        """Validar formato de correo"""
+        """Validar formato de correo y unicidad"""
         email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_regex, value):
             raise serializers.ValidationError('Formato de correo electrónico inválido')
-        return value.lower()
+        
+        # Verificar si el correo ya existe
+        value_lower = value.lower()
+        if User.objects.filter(correo__iexact=value_lower).exists():
+            raise serializers.ValidationError('El correo electrónico ya está registrado')
+        
+        return value_lower
+    
+    def validate_id_usuario(self, value):
+        """Validar que el ID de usuario no esté duplicado"""
+        if User.objects.filter(id_usuario=value).exists():
+            raise serializers.ValidationError('La matrícula ya está registrada')
+        return value
     
     def validate_rol(self, value):
         """Validar que el rol sea válido"""
