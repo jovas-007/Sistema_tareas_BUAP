@@ -2216,39 +2216,40 @@
                 if (chartEstado) chartEstado.destroy();
                 if (chartNotas) chartNotas.destroy();
                 
+                // Verificamos que 'data.success' sea true y que existan los arreglos
                 if (data.success) {
-                    // 1. Gráfica de Estados usando 'tareas_por_estado' del backend
+                    
+                    // 1. Gráfica de Estados (Ajustado a 'tareas_por_estado')
                     const ctxEstado = document.getElementById('chartEstadoTareas').getContext('2d');
+                    const estados = data.tareas_por_estado || []; // Si es undefined, usa lista vacía
+                    
                     chartEstado = new Chart(ctxEstado, {
                         type: 'doughnut',
                         data: {
-                            labels: data.tareas_por_estado.map(i => i.estado.toUpperCase()),
+                            labels: estados.map(i => i.estado.toUpperCase()),
                             datasets: [{
-                                data: data.tareas_por_estado.map(i => i.total),
+                                data: estados.map(i => i.total),
                                 backgroundColor: ['#ef4444', '#3b82f6', '#10b981'], 
                                 hoverOffset: 4
                             }]
                         },
-                        options: { 
-                            responsive: true,
-                            plugins: { legend: { position: 'bottom' } }
-                        }
+                        options: { responsive: true }
                     });
 
-                    // 2. Gráfica de Rendimiento usando 'promedios' del backend
+                    // 2. Gráfica de Rendimiento (Ajustado a 'promedios')
                     const ctxNotas = document.getElementById('chartHistoricoNotas').getContext('2d');
+                    const notas = data.promedios || []; // Si es undefined, usa lista vacía
+                    
                     chartNotas = new Chart(ctxNotas, {
                         type: 'line',
                         data: {
-                            labels: data.promedios.map(i => i.materia || 'Materia'),
+                            labels: notas.map(i => i.materia || 'Materia'),
                             datasets: [{
-                                label: 'Calificación Promedio',
-                                data: data.promedios.map(i => i.promedio),
+                                label: 'Calificación',
+                                data: notas.map(i => i.promedio),
                                 borderColor: '#6366f1',
-                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
                                 fill: true,
-                                tension: 0.4,
-                                pointRadius: 5
+                                tension: 0.4
                             }]
                         },
                         options: {
@@ -2260,7 +2261,7 @@
             } catch (error) {
                 console.error('Error al cargar gráficas:', error);
             }
-        }
+}
     </script>
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>
