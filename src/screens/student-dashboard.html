@@ -883,7 +883,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
+           .sidebar {
                 display: none;
             }
             
@@ -1036,6 +1036,18 @@
                     <a href="#" onclick="showSection('mis-calificaciones')">
                         <span class="icon"></span>
                         <span>Mis Calificaciones</span>
+                    </a>
+                </li>
+                 <!-- 
+                <a href="#" onclick="showSection('mi-perfil')">
+                    <span class="icon"></span>
+                    <span>Mi Perfil</span>
+                </a>
+                </li>-->
+                <li>
+                    <a href="./graficas.html">
+                        <span class="icon"></span>
+                        <span>Gráficas</span>
                     </a>
                 </li>
             </ul>
@@ -2202,6 +2214,7 @@
             document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             window.location.href = '../login.html';
         }
+
 // ==================== GRÁFICAS ====================
         let chartEstado = null;
         let chartNotas = null;
@@ -2262,6 +2275,20 @@
                 console.error('Error al cargar gráficas:', error);
             }
 }
+    
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '../login.html';
+        }
+
+        function getHeaders() {
+            console.log("currentUser =", currentUser);
+            console.log("X-User-Id enviado =", currentUser?.id_usuario);
+            return {
+                "X-User-Id": currentUser?.id_usuario || ""
+            };
+            }
     </script>
     <div class="footer-bottom" role="contentinfo">
         <p class="credits">Módulo desarrollado por <strong>Jorge Domínguez</strong></p>

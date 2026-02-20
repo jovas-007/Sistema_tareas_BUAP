@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.utils import timezone
 from .models import Task, Submission, SubmissionFile
-from users.models import User
+from users.models import User, Materia
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
@@ -19,6 +19,15 @@ class StudentBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id_usuario', 'nombre_completo', 'correo', 'carrera']
+
+
+#Serializer para Materia
+class MateriaSerializer(serializers.ModelSerializer):
+    """Serializer para información de materia"""
+    
+    class Meta:
+        model = Materia
+        fields = ['id', 'codigo', 'nombre', 'nrc']
 
 
 class SubmissionListSerializer(serializers.ModelSerializer):
@@ -46,10 +55,18 @@ class SubmissionStudentSerializer(serializers.ModelSerializer):
     tarea_descripcion = serializers.CharField(source='task.descripcion', read_only=True)
     tarea_fecha_entrega = serializers.DateTimeField(source='task.fecha_entrega', read_only=True)
     tarea_puntos_maximos = serializers.IntegerField(source='task.puntos_maximos', read_only=True)
-    tarea_archivo_adjunto = serializers.FileField(source='task.archivo_adjunto', read_only=True)
+    tarea_archivo_adjunto = serializers.SerializerMethodField()
+    tarea_archivo_nombre = serializers.SerializerMethodField()
+    docente_nombre = serializers.CharField(source='task.docente.nombre_completo', read_only=True)
     tarea_url_recurso = serializers.URLField(source='task.url_recurso', read_only=True)
     tarea_esta_vencida = serializers.BooleanField(source='task.esta_vencida', read_only=True)
     puede_entregar = serializers.SerializerMethodField()
+    
+    #Campos de materia
+    materia_id = serializers.IntegerField(source='task.materia.id', read_only=True)
+    materia_nombre = serializers.CharField(source='task.materia.nombre', read_only=True)
+    materia_codigo = serializers.CharField(source='task.materia.codigo', read_only=True)
+    materia_nrc = serializers.CharField(source='task.materia.nrc', read_only=True)
     
     class Meta:
         model = Submission
@@ -57,12 +74,28 @@ class SubmissionStudentSerializer(serializers.ModelSerializer):
             'id', 'task_id', 'estado', 'fecha_creacion',
             'calificacion', 'comentario_docente', 'fecha_calificacion',
             'archivos', 'tarea_titulo', 'tarea_descripcion', 'tarea_fecha_entrega',
-            'tarea_puntos_maximos', 'tarea_archivo_adjunto', 'tarea_url_recurso',
-            'tarea_esta_vencida', 'puede_entregar'
+            'tarea_puntos_maximos', 'tarea_archivo_adjunto', 'tarea_archivo_nombre', 
+            'docente_nombre', 'tarea_url_recurso',
+            'tarea_esta_vencida', 'puede_entregar',
+            'materia_id', 'materia_nombre', 'materia_codigo', 'materia_nrc'
         ]
     
     def get_puede_entregar(self, obj):
         return obj.task.puede_recibir_entregas
+    
+    def get_tarea_archivo_nombre(self, obj):
+        if obj.task.archivo_adjunto:
+            import os
+            return os.path.basename(obj.task.archivo_adjunto.name)
+        return None
+    
+    def get_tarea_archivo_adjunto(self, obj):
+        if obj.task.archivo_adjunto:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.task.archivo_adjunto.url)
+            return obj.task.archivo_adjunto.url
+        return None
 
 
 class TaskListSerializer(serializers.ModelSerializer):
@@ -74,13 +107,17 @@ class TaskListSerializer(serializers.ModelSerializer):
     total_calificados = serializers.SerializerMethodField()
     esta_vencida = serializers.BooleanField(read_only=True)
     
+    
+    materia_info = MateriaSerializer(source='materia', read_only=True)
+    
     class Meta:
         model = Task
         fields = [
             'id', 'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
             'fecha_creacion', 'fecha_modificacion', 'fecha_entrega',
             'docente_nombre', 'estado', 'puntos_maximos', 'permite_tardias',
-            'esta_vencida', 'total_estudiantes', 'total_entregados', 'total_calificados'
+            'esta_vencida', 'total_estudiantes', 'total_entregados', 'total_calificados',
+            'materia', 'materia_info'
         ]
     
     def get_total_estudiantes(self, obj):
@@ -100,7 +137,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         model = Task
         fields = [
             'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
-            'fecha_entrega', 'puntos_maximos', 'permite_tardias'
+            'fecha_entrega', 'puntos_maximos', 'permite_tardias',
+            'materia'
         ]
     
     def validate_fecha_entrega(self, value):
@@ -114,6 +152,21 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError('El título es requerido')
         return value.strip()
+    
+    
+    def validate(self, data):
+        """Validar que el docente esté asignado a la materia"""
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            docente = request.user
+            materia = data.get('materia')
+            
+            if materia and not docente.materias_docente.filter(id=materia.id).exists():
+                raise serializers.ValidationError({
+                    'materia': f'No tienes permisos para crear tareas en {materia.nombre}'
+                })
+        
+        return data
 
 
 class TaskDetailSerializer(serializers.ModelSerializer):
@@ -124,13 +177,17 @@ class TaskDetailSerializer(serializers.ModelSerializer):
     esta_vencida = serializers.BooleanField(read_only=True)
     puede_recibir_entregas = serializers.BooleanField(read_only=True)
     
+    
+    materia_info = MateriaSerializer(source='materia', read_only=True)
+    
     class Meta:
         model = Task
         fields = [
             'id', 'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
             'fecha_creacion', 'fecha_modificacion', 'fecha_entrega',
             'docente_nombre', 'estado', 'puntos_maximos', 'permite_tardias',
-            'esta_vencida', 'puede_recibir_entregas', 'submissions'
+            'esta_vencida', 'puede_recibir_entregas', 'submissions',
+            'materia', 'materia_info'
         ]
 
 
@@ -152,7 +209,7 @@ class SubmitFileSerializer(serializers.Serializer):
     archivos = serializers.ListField(
         child=serializers.FileField(),
         allow_empty=False,
-        max_length=10  # Máximo 10 archivos por entrega
+        max_length=10
     )
     
     def validate_archivos(self, value):
@@ -165,13 +222,11 @@ class SubmitFileSerializer(serializers.Serializer):
         max_size = 20 * 1024 * 1024  # 20MB
         
         for archivo in value:
-            # Verificar tamaño
             if archivo.size > max_size:
                 raise serializers.ValidationError(
                     f'El archivo {archivo.name} excede el límite de 20MB'
                 )
             
-            # Verificar extensión
             ext = archivo.name.split('.')[-1].lower() if '.' in archivo.name else ''
             if ext not in allowed_extensions:
                 raise serializers.ValidationError(
