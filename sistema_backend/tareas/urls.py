@@ -26,8 +26,5 @@ urlpatterns = [
     path('my-tasks/<int:task_id>/submit/', views.submit_task, name='submit-task'),
     path('my-submissions/', views.my_submissions, name='my-submissions'),
 
-    # ==================== ENDPOINTS PARA GRÁFICAS ====================
-    path('stats/teacher/', views.teacher_stats, name='teacher-stats'),
-    path('stats/student/', views.student_stats, name='student-stats'),
 
 ]

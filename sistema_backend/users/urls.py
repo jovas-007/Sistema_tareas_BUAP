@@ -13,10 +13,6 @@ urlpatterns = [
     path('forgot-password', views.forgot_password, name='forgot-password'),
     path('verify-recovery-code', views.verify_code, name='verify-recovery-code'),
     path('reset-password', views.reset_password, name='reset-password'),
-    
-    #Edicion
-    path('users/me/', views.my_profile, name='my-profile'),
-    path('users/me', views.my_profile), 
 
     # Usuarios
     path('users', views.get_users, name='get-users'),
