@@ -506,6 +506,9 @@
                 <li><a href="#" onclick="showSection('estudiantes')">
                     <span class="icon"></span><span>Estudiantes</span>
                 </a></li>
+                <li><a href="#" onclick="showSection('editar-perfil')">
+                    <span class="icon"></span><span>Editar Perfil</span>
+                </a></li>
                 <li><a href="./graficas.html">
                     <span class="icon"></span><span>Gráficas</span>
                 </a></li>
@@ -674,7 +677,56 @@
                     </div>
                 </div>
             </section>
+            <section id="section-editar-perfil" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"> Mi Perfil</h2>
+                    </div>
+                    <div style="max-width: 500px;">
+                        <form id="form-editar-perfil">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">Nombre Completo:</label>
+                                <input type="text" id="view-nombre" disabled style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background-color: #f1f5f9; color: #64748b; font-family:inherit; cursor: not-allowed;">
+                            </div>
+                            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">No. Trabajador (ID):</label>
+                                    <input type="text" id="view-matricula" disabled style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background-color: #f1f5f9; color: #64748b; font-family:inherit; cursor: not-allowed;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">Rol:</label>
+                                    <input type="text" id="view-carrera" disabled style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background-color: #f1f5f9; color: #64748b; font-family:inherit; cursor: not-allowed;">
+                                </div>
+                            </div>
 
+                            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
+                            <h4 style="margin-bottom: 15px; color: #1e293b;">Datos de Contacto (Editables)</h4>
+
+                            <div style="margin-bottom: 15px;">
+                                <label for="edit-correo" style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">Correo Electrónico:</label>
+                                <input type="email" id="edit-correo" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit;">
+                            </div>
+                            <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+                                <div style="flex: 1;">
+                                    <label for="edit-telefono" style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">Teléfono:</label>
+                                    <input type="text" id="edit-telefono" required maxlength="10" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label for="edit-sexo" style="display:block; margin-bottom:5px; font-weight:600; color:#475569;">Sexo:</label>
+                                    <select id="edit-sexo" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit; background-color: white;">
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Otro">Otro</option>
+                                        <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="btnGuardarPerfil" style="width: 100%; justify-content: center;">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -837,6 +889,7 @@
                 case 'mis-tareas':     cargarTareas();             break;
                 case 'calificaciones': cargarCalificaciones();      break;
                 case 'estudiantes':    cargarEstudiantes();        break;
+                case 'editar-perfil':  cargarEditarPerfil();        break; 
             }
         }
 
@@ -1322,6 +1375,73 @@
                     </tbody>
                 </table>`;
         }
+
+
+        // ==================== EDITAR PERFIL ====================
+        function cargarEditarPerfil() {
+            if (currentUser) {
+                // Llenar campos bloqueados
+                document.getElementById('view-nombre').value = currentUser.nombre_completo || '';
+                document.getElementById('view-matricula').value = currentUser.id_usuario || '';
+                document.getElementById('view-carrera').value = currentUser.rol ? currentUser.rol.toUpperCase() : 'DOCENTE';
+
+                // Llenar campos editables
+                document.getElementById('edit-correo').value = currentUser.correo || '';
+                document.getElementById('edit-telefono').value = currentUser.telefono || '';
+                if (currentUser.sexo) {
+                    document.getElementById('edit-sexo').value = currentUser.sexo;
+                }
+            }
+        }
+
+        document.getElementById('form-editar-perfil').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btnGuardar = document.getElementById('btnGuardarPerfil');
+            btnGuardar.disabled = true;
+            btnGuardar.textContent = ' Guardando...';
+
+            const nuevoCorreo = document.getElementById('edit-correo').value;
+            const nuevoTelefono = document.getElementById('edit-telefono').value;
+            const nuevoSexo = document.getElementById('edit-sexo').value;
+
+            try {
+                const response = await fetch(`${API_URL}/profile/edit/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Id': currentUser.id_usuario
+                    },
+                    body: JSON.stringify({
+                        correo: nuevoCorreo,
+                        telefono: nuevoTelefono,
+                        sexo: nuevoSexo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showAlert(' Perfil actualizado exitosamente');
+                    
+                    // Actualizar sesión local
+                    currentUser.correo = nuevoCorreo;
+                    currentUser.telefono = nuevoTelefono;
+                    currentUser.sexo = nuevoSexo;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(currentUser))}; path=/`;
+                    
+                } else {
+                    showAlert(`❌ Error: ${data.message || 'No se pudo actualizar'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error de conexión con el servidor', 'error');
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.textContent = ' Guardar Cambios';
+            }
+        });
 
         // ==================== MATERIAS ====================
         async function cargarMateriasDocente() {
