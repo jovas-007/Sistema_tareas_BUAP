@@ -18,6 +18,10 @@ urlpatterns = [
     path('users', views.get_users, name='get-users'),
     path('users/materias', views.update_materias, name='update-materias'),
     
+    # Editar perfil
+    path('profile/edit/', views.update_profile, name='update-profile'),
+    path('profile/edit', views.update_profile),
+    
     # Materias
     path('materias', views.get_materias_disponibles, name='get-materias'),
     

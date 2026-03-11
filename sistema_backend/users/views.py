@@ -19,6 +19,7 @@ from .serializers import (
     ResetPasswordSerializer,
     MateriaSerializer,
     UpdateMateriasSerializer,
+    UpdateProfileSerializer,
 )
 
 
@@ -56,6 +57,9 @@ def register(request):
                 'nombre_completo': user.nombre_completo,
                 'correo': user.correo,
                 'rol': user.rol,
+                'carrera': user.carrera,   
+                'telefono': user.telefono, 
+                'sexo': user.sexo,
             }, status=status.HTTP_201_CREATED)
         
         except IntegrityError as e:
@@ -140,6 +144,8 @@ def login(request):
                 'correo': user.correo,
                 'rol': user.rol,
                 'carrera': user.carrera,
+                'telefono': user.telefono, 
+                'sexo': user.sexo,
             }
         })
     
@@ -443,3 +449,47 @@ def update_materias(request):
         'message': error_message
     }, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT', 'PATCH'])
+def update_profile(request):
+    """
+    PUT/PATCH /api/users/profile/edit
+    Actualizar datos básicos del perfil
+    """
+    # 1. Obtener el ID del usuario desde los headers
+    user_id = request.headers.get('X-User-Id')
+    
+    if not user_id:
+        return Response({
+            'success': False,
+            'message': 'No se proporcionó el ID de usuario'
+        }, status=status.HTTP_400_BAD_REQUEST)
+        
+    # 2. Buscar al usuario en la base de datos
+    try:
+        user = User.objects.get(id_usuario=user_id)
+    except User.DoesNotExist:
+        return Response({
+            'success': False,
+            'message': 'Usuario no encontrado'
+        }, status=status.HTTP_404_NOT_FOUND)
+        
+    # 3. Validar y guardar los nuevos datos (partial=True permite actualizar solo algunos campos)
+    serializer = UpdateProfileSerializer(user, data=request.data, partial=True)
+    
+    if serializer.is_valid():
+        serializer.save()
+        
+        # 4. Devolver el usuario completo actualizado usando el serializador que ya tenías
+        user_data = UserSerializer(user).data
+        return Response({
+            'success': True,
+            'message': 'Perfil actualizado exitosamente',
+            'user': user_data
+        }, status=status.HTTP_200_OK)
+        
+    # Si hay errores de validación
+    error_message = str(list(serializer.errors.values())[0][0]) if serializer.errors else 'Error de validación'
+    return Response({
+        'success': False,
+        'message': error_message
+    }, status=status.HTTP_400_BAD_REQUEST)

@@ -300,3 +300,8 @@ class UpdateMateriasSerializer(serializers.Serializer):
         data['user'] = user
         return data
 
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ['telefono', 'correo', 'sexo']
