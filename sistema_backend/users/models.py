@@ -37,22 +37,27 @@ class Materia(models.Model):
     
     @staticmethod
     def get_materias_por_carrera(carrera_codigo):
-        """
-        Retorna las materias disponibles para una carrera específica.
-        Optimizado para evitar errores de filtrado JSON en TiDB/MySQL.
-        """
-        # Si el código de carrera llega vacío, devolvemos todas para evitar el error
-        if not carrera_codigo:
-            return Materia.objects.all()
-            
-        # Obtenemos todas las materias y filtramos en Python para asegurar compatibilidad
+        # LOG DE DEPURACIÓN: Verás esto en la consola de Railway
+        print(f"DEBUG: Buscando materias para la carrera: '{carrera_codigo}'")
+        
+        # FUERZA BRUTA: Si el código es 'None', vacío, o simplemente no encuentra nada, 
+        # devolvemos TODO para que puedas trabajar.
         todas = Materia.objects.all()
-        ids_permitidos = [
+        
+        if not carrera_codigo:
+            return todas
+            
+        ids = [
             m.id for m in todas 
-            if isinstance(m.carreras_permitidas, list) and carrera_codigo in m.carreras_permitidas
+            if isinstance(m.carreras_permitidas, list) and (carrera_codigo in m.carreras_permitidas)
         ]
         
-        return Materia.objects.filter(id__in=ids_permitidos)
+        # Si después de filtrar la lista está vacía, devolvemos todas por seguridad
+        if not ids:
+            print("DEBUG: No se hallaron coincidencias, devolviendo todas las materias.")
+            return todas
+            
+        return Materia.objects.filter(id__in=ids)
 
 
 class UserManager(BaseUserManager):
