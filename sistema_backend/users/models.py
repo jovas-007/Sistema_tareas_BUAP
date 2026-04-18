@@ -38,19 +38,22 @@ class Materia(models.Model):
     @staticmethod
     def get_materias_por_carrera(carrera_codigo):
         """
-        Retorna las materias disponibles para una carrera específica
-        Compatible con SQLite y MySQL/PostgreSQL
+        Retorna las materias disponibles.
+        A prueba de fallos para TiDB y usuarios sin carrera.
         """
-        from django.db import connection
+        # 1. Si el usuario (ej. Docente general) no tiene carrera, le mostramos todas
+        if not carrera_codigo:
+            return Materia.objects.all()
+            
+        # 2. Filtrado seguro en memoria para esquivar problemas de JSON_CONTAINS en MySQL/TiDB
+        todas_materias = Materia.objects.all()
+        ids_validos = [
+            m.id for m in todas_materias 
+            if m.carreras_permitidas and carrera_codigo in m.carreras_permitidas
+        ]
         
-        # Verificar si estamos usando SQLite
-        if 'sqlite' in connection.vendor:
-            # Para SQLite: filtrar manualmente usando Python
-            todas_materias = list(Materia.objects.all())
-            return [m for m in todas_materias if carrera_codigo in m.carreras_permitidas]
-        else:
-            # Para MySQL/PostgreSQL: usar contains
-            return Materia.objects.filter(carreras_permitidas__contains=[carrera_codigo])
+        # Retornamos un QuerySet real de Django para que no rompa la vista
+        return Materia.objects.filter(id__in=ids_validos)
 
 
 class UserManager(BaseUserManager):
