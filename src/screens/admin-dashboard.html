@@ -563,17 +563,7 @@
                                    placeholder="Ej: Ensayo sobre cambio climático">
                         </div>
 
-                        <div class="form-group">
-                            <label for="selectMateria">
-                                📚 Materia *
-                                <span style="font-size:12px;color:#64748b;font-weight:normal;">
-                                    (Selecciona la materia para esta tarea)
-                                </span>
-                            </label>
-                            <select id="selectMateria" class="form-control" required>
-                                <option value="">Cargando materias...</option>
-                            </select>
-                        </div>
+                       
 
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
@@ -818,7 +808,7 @@
         let currentUser = null;
         let todasLasTareas = [];
         let submissionIdActual = null;
-        let materiasDocente = [];
+        
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', async () => {
@@ -845,7 +835,7 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('fechaEntrega').min = now.toISOString().slice(0, 16);
 
-            await cargarMateriasDocente();
+            
             cargarDashboard();
         });
 
@@ -885,7 +875,7 @@
 
             switch (section) {
                 case 'dashboard':      cargarDashboard();          break;
-                case 'crear-tarea':    renderSelectorMaterias();   break;
+                case 'crear-tarea':                                break;
                 case 'mis-tareas':     cargarTareas();             break;
                 case 'calificaciones': cargarCalificaciones();      break;
                 case 'estudiantes':    cargarEstudiantes();        break;
@@ -982,16 +972,10 @@
         }
 
         async function enviarTarea(activar) {
-            const materiaId = document.getElementById('selectMateria')?.value;
-            if (!materiaId) {
-                showAlert('⚠️ Debes seleccionar una materia', 'error');
-                return;
-            }
 
             const formData = new FormData();
             formData.append('titulo',          document.getElementById('titulo').value);
-            formData.append('descripcion',     document.getElementById('descripcion').value);
-            formData.append('materia',         String(parseInt(materiaId, 10)));
+            formData.append('descripcion',     document.getElementById('descripcion').value)
             formData.append('url_recurso',     document.getElementById('urlRecurso').value);
             formData.append('fecha_entrega',   document.getElementById('fechaEntrega').value);
             formData.append('puntos_maximos',  document.getElementById('puntosMaximos').value);
@@ -1443,51 +1427,7 @@
             }
         });
 
-        // ==================== MATERIAS ====================
-        async function cargarMateriasDocente() {
-            try {
-                const response = await fetch(`${API_URL}/docente/materias/`, { headers: getHeaders() });
-                const data = await response.json();
-                if (data.success) {
-                    materiasDocente = data.materias;
-                    renderSelectorMaterias();
-                } else {
-                    showAlert('⚠️ ' + data.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error cargando materias:', error);
-                materiasDocente = [];
-                const select = document.getElementById('selectMateria');
-                if (select) select.innerHTML = '<option value="">Error cargando materias</option>';
-            }
-        }
-
-        function renderSelectorMaterias() {
-            const select = document.getElementById('selectMateria');
-            if (!select) return;
-
-            select.innerHTML = '';
-
-            if (materiasDocente.length === 0) {
-                select.innerHTML = '<option value="">No tienes materias asignadas</option>';
-                select.disabled = true;
-                return;
-            }
-
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selecciona una materia...';
-            select.appendChild(defaultOption);
-
-            materiasDocente.forEach(m => {
-                const option = document.createElement('option');
-                option.value = m.id;
-                option.textContent = `${m.nombre} - NRC: ${m.nrc}`;
-                select.appendChild(option);
-            });
-
-            select.disabled = false;
-        }
+        
     </script>
 
     <div class="footer-bottom" role="contentinfo">

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.utils import timezone
 from .models import Task, Submission, SubmissionFile
-from users.models import User, Materia
+from users.models import User
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
@@ -21,13 +21,7 @@ class StudentBasicSerializer(serializers.ModelSerializer):
         fields = ['id_usuario', 'nombre_completo', 'correo', 'carrera']
 
 
-#Serializer para Materia
-class MateriaSerializer(serializers.ModelSerializer):
-    """Serializer para información de materia"""
-    
-    class Meta:
-        model = Materia
-        fields = ['id', 'codigo', 'nombre', 'nrc']
+
 
 
 class SubmissionListSerializer(serializers.ModelSerializer):
@@ -62,11 +56,7 @@ class SubmissionStudentSerializer(serializers.ModelSerializer):
     tarea_esta_vencida = serializers.BooleanField(source='task.esta_vencida', read_only=True)
     puede_entregar = serializers.SerializerMethodField()
     
-    #Campos de materia
-    materia_id = serializers.IntegerField(source='task.materia.id', read_only=True)
-    materia_nombre = serializers.CharField(source='task.materia.nombre', read_only=True)
-    materia_codigo = serializers.CharField(source='task.materia.codigo', read_only=True)
-    materia_nrc = serializers.CharField(source='task.materia.nrc', read_only=True)
+    
     
     class Meta:
         model = Submission
@@ -77,7 +67,6 @@ class SubmissionStudentSerializer(serializers.ModelSerializer):
             'tarea_puntos_maximos', 'tarea_archivo_adjunto', 'tarea_archivo_nombre', 
             'docente_nombre', 'tarea_url_recurso',
             'tarea_esta_vencida', 'puede_entregar',
-            'materia_id', 'materia_nombre', 'materia_codigo', 'materia_nrc'
         ]
     
     def get_puede_entregar(self, obj):
@@ -108,16 +97,13 @@ class TaskListSerializer(serializers.ModelSerializer):
     esta_vencida = serializers.BooleanField(read_only=True)
     
     
-    materia_info = MateriaSerializer(source='materia', read_only=True)
-    
     class Meta:
         model = Task
         fields = [
             'id', 'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
             'fecha_creacion', 'fecha_modificacion', 'fecha_entrega',
             'docente_nombre', 'estado', 'puntos_maximos', 'permite_tardias',
-            'esta_vencida', 'total_estudiantes', 'total_entregados', 'total_calificados',
-            'materia', 'materia_info'
+            'esta_vencida', 'total_estudiantes', 'total_entregados', 'total_calificados'
         ]
     
     def get_total_estudiantes(self, obj):
@@ -137,8 +123,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         model = Task
         fields = [
             'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
-            'fecha_entrega', 'puntos_maximos', 'permite_tardias',
-            'materia'
+            'fecha_entrega', 'puntos_maximos', 'permite_tardias'
         ]
     
     def validate_fecha_entrega(self, value):
@@ -154,19 +139,6 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         return value.strip()
     
     
-    def validate(self, data):
-        """Validar que el docente esté asignado a la materia"""
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            docente = request.user
-            materia = data.get('materia')
-            
-            if materia and not docente.materias_docente.filter(id=materia.id).exists():
-                raise serializers.ValidationError({
-                    'materia': f'No tienes permisos para crear tareas en {materia.nombre}'
-                })
-        
-        return data
 
 
 class TaskDetailSerializer(serializers.ModelSerializer):
@@ -178,16 +150,13 @@ class TaskDetailSerializer(serializers.ModelSerializer):
     puede_recibir_entregas = serializers.BooleanField(read_only=True)
     
     
-    materia_info = MateriaSerializer(source='materia', read_only=True)
-    
     class Meta:
         model = Task
         fields = [
             'id', 'titulo', 'descripcion', 'archivo_adjunto', 'url_recurso',
             'fecha_creacion', 'fecha_modificacion', 'fecha_entrega',
             'docente_nombre', 'estado', 'puntos_maximos', 'permite_tardias',
-            'esta_vencida', 'puede_recibir_entregas', 'submissions',
-            'materia', 'materia_info'
+            'esta_vencida', 'puede_recibir_entregas', 'submissions'
         ]
 
 
